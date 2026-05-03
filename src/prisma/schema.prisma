@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum BookingStatus {
+  PENDING      // zarezerwowana, czeka na realizację
+  CONFIRMED    // potwierdzona (po SMS-ie potwierdzającym, lub od razu)
+  CANCELLED    // anulowana
+  COMPLETED    // wizyta się odbyła
+  NO_SHOW      // klient nie przyszedł
+}
+
+enum CancelledBy {
+  CUSTOMER
+  ADMIN
+  SYSTEM       // np. automatycznie przy usunięciu konta
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMATION       // do klienta po rezerwacji
+  BOOKING_REMINDER           // do klienta 48h przed
+  BOOKING_CANCELLED_BY_CLIENT // do admina
+  ADMIN_CUSTOM               // do uzupełnienia w przyszłości
+}
+
+enum NotificationChannel {
+  SMS
+  EMAIL
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+// ============================================
+// MODELE - KATALOG SALONU
+// ============================================
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique          // np. "Manicure", "Pedicure"
+  slug      String    @unique          // np. "manicure", do URL-i
+  order     Int       @default(0)      // kolejność wyświetlania
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  services  Service[]
+}
+
+model Service {
+  id                    String   @id @default(cuid())
+  name                  String
+  description           String?
+  categoryId            String
+  defaultDurationMin    Int      // domyślny czas trwania w minutach
+  defaultBufferAfterMin Int      @default(0)  // bufor po zabiegu (sprzątanie)
+  defaultPriceGr        Int      // cena w groszach
+  active                Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  category      Category       @relation(fields: [categoryId], references: [id])
+  staffServices StaffService[]
+  bookingItems  BookingItem[]
+
+  @@index([categoryId])
+  @@index([active])
+}
+
+model Staff {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String?  @unique
+  phone       String?
+  color       String   @default("#cbd5e1")  // kolor w kalendarzu admina
+  bio         String?
+  active      Boolean  @default(true)
+  // czy pracownik chce widzieć klientów którzy wybrali "obojętnie kto"
+  acceptsAnyAssignment Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  staffServices StaffService[]
+  workingHours  WorkingHours[]
+  timeOffs      TimeOff[]
+  bookingItems  BookingItem[]
+
+  @@index([active])
+}
+
+// Tabela łącząca - który pracownik umie który zabieg
+// + opcjonalne nadpisania czasu/ceny per pracownik
+model StaffService {
+  staffId             String
+  serviceId           String
+  durationOverrideMin Int?     // jeśli null - używa default ze Service
+  bufferOverrideMin   Int?
+  priceOverrideGr     Int?
+  createdAt           DateTime @default(now())
+
+  staff   Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([staffId, serviceId])
+  @@index([serviceId])
+}
+
+// ============================================
+// MODELE - GRAFIK
+// ============================================
+
+// Cykliczne godziny pracy - "pracuje w poniedziałki 9:00-17:00"
+model WorkingHours {
+  id        String    @id @default(cuid())
+  staffId   String
+  dayOfWeek DayOfWeek
+  startMin  Int       // minuty od północy: 540 = 9:00
+  endMin    Int       // 1020 = 17:00
+  createdAt DateTime  @default(now())
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@unique([staffId, dayOfWeek])  // jeden wpis per pracownik per dzień tygodnia
+  @@index([staffId])
+}
+
+// Jednorazowe nieobecności - urlop, L4, wolne
+model TimeOff {
+  id        String   @id @default(cuid())
+  staffId   String
+  startAt   DateTime  // pełen DateTime, w UTC
+  endAt     DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@index([staffId])
+  @@index([startAt, endAt])
+}
+
+// Dni zamknięte całego salonu (święta, remont, etc.)
+model SalonClosedDay {
+  id        String   @id @default(cuid())
+  date      DateTime @unique  // tylko data, bez czasu
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// MODELE - KLIENCI I REZERWACJE
+// ============================================
+
+model Customer {
+  id                 String   @id @default(cuid())
+  firstName          String
+  lastName           String
+  phone              String   @unique  // E.164: +48123456789
+  email              String?  @unique
+  notes              String?  // notatki kosmetyczki (alergie, preferencje)
+  marketingConsent   Boolean  @default(false)
+  // czy ma konto czy guest (żeby wiedzieć, czy może się logować)
+  hasAccount         Boolean  @default(false)
+  passwordHash       String?  // tylko jeśli hasAccount=true
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  bookings Booking[]
+
+  @@index([phone])
+  @@index([email])
+}
+
+model Booking {
+  id            String         @id @default(cuid())
+  customerId    String
+  status        BookingStatus  @default(PENDING)
+  // token do magic linku w SMS-ie/mailu - klient zarządza wizytą bez logowania
+  manageToken   String         @unique @default(cuid())
+  // notatki ogólne do wizyty
+  customerNote  String?        // od klienta przy rezerwacji
+  adminNote     String?        // od admina, niewidoczne dla klienta
+  // dane anulowania
+  cancelledAt   DateTime?
+  cancelledBy   CancelledBy?
+  cancelReason  String?
+  // metadane
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  // czy admin utworzył to ręcznie (np. telefoniczna rezerwacja)
+  createdByAdmin Boolean       @default(false)
+
+  customer      Customer       @relation(fields: [customerId], references: [id])
+  items         BookingItem[]
+  notifications Notification[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([manageToken])
+}
+
+// Pojedynczy zabieg w ramach rezerwacji
+// To tu siedzi konkretne (kto, co, kiedy)
+model BookingItem {
+  id              String   @id @default(cuid())
+  bookingId       String
+  serviceId       String
+  staffId         String
+  // konkretny czas - w UTC
+  startAt         DateTime
+  endAt           DateTime
+  // SNAPSHOTY z momentu rezerwacji - nie zmieniaj wstecz
+  durationMin     Int
+  bufferAfterMin  Int
+  priceGr         Int
+  // kolejność w ramach Bookingu (0, 1, 2...)
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id])
+  staff   Staff   @relation(fields: [staffId], references: [id])
+
+  @@index([bookingId])
+  @@index([staffId, startAt])     // kluczowy dla sprawdzania dostępności
+  @@index([startAt, endAt])
+}
+
+// ============================================
+// MODELE - POWIADOMIENIA I ADMINI
+// ============================================
+
+// Outbox pattern - notyfikacje są zapisywane tu, worker je wysyła
+model Notification {
+  id            String              @id @default(cuid())
+  bookingId     String?
+  type          NotificationType
+  channel       NotificationChannel
+  status        NotificationStatus  @default(PENDING)
+  // dane wysyłki
+  recipientPhone String?
+  recipientEmail String?
+  subject        String?            // tylko dla EMAIL
+  body           String             // treść SMS-a lub maila
+  // scheduling
+  scheduledAt    DateTime           // kiedy ma się wysłać
+  sentAt         DateTime?
+  failedAt       DateTime?
+  errorMessage   String?
+  retryCount     Int                @default(0)
+  createdAt      DateTime           @default(now())
+
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@index([status, scheduledAt])  // dla cron joba
+  @@index([bookingId])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ============================================
+// USTAWIENIA - jeden wiersz w tabeli
+// ============================================
+
+// Singleton - zawsze będzie jeden wiersz z id="settings"
+model Settings {
+  id String @id @default("settings")
+
+  // polityka anulowania
+  minCancelHoursBefore Int @default(24)
+  // polityka rezerwacji online
+  minBookingHoursAhead Int @default(2)   // nie można rezerwować na "za godzinę"
+  maxBookingDaysAhead  Int @default(60)  // ile dni naprzód można rezerwować
+
+  // generowanie slotów
+  slotIntervalMin Int @default(15)       // co ile minut generować propozycje slotów
+
+  // dane kontaktu salonu
+  salonName    String  @default("Salon")
+  salonPhone   String?
+  salonEmail   String?
+  salonAddress String?
+
+  // powiadomienia dla admina
+  adminNotificationPhone String?
+  adminNotificationEmail String?
+  adminNotifyOnCancel    Boolean @default(true)
+
+  // godziny otwarcia salonu (max bramki - pracownik nie może mieć WorkingHours wykraczających poza to)
+  // null = brak ograniczenia, decydują WorkingHours pracowników
+  salonOpenMin  Int?
+  salonCloseMin Int?
+
+  updatedAt DateTime @updatedAt
+}
