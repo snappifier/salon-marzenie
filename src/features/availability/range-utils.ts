@@ -33,3 +33,7 @@ export function subtractRange(ranges: TimeRange[], cutStart: Date, cutEnd: Date)
     }
     return result
 }
+
+export function isRangeWithinAvailability(availability: TimeRange[], start: Date, end: Date): boolean {
+    return availability.some((r) => r.start <= start && r.end >= end)
+}

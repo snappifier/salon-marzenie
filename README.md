@@ -27,7 +27,7 @@ System rezerwacji wizyt online dla salonu kosmetycznego. Klienci umawiają wizyt
 - **Resend** - wysyłka maili
 - **SMSAPI.pl** - wysyłka SMS
 - **Vitest** - testy jednostkowe logiki dostępności i slotów
-- **polish-holidays** - automatyczne zamykanie salonu w święta
+- **date-holidays** - automatyczne zamykanie salonu w święta
 
 ---
 

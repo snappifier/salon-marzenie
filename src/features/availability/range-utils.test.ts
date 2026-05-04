@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {subtractRange, type TimeRange} from "@/features/availability/range-utils";
+import {isRangeWithinAvailability} from "@/features/availability/range-utils";
 
 const d = (h: number, m: number = 0) => new Date(2026, 4, 4, h, m)
 
@@ -73,5 +74,34 @@ describe("subtractRange", () => {
         const ranges: TimeRange[] = [{ start: d(10), end: d(12) }]
         const result = subtractRange(ranges, d(12), d(13))
         expect(result).toEqual(ranges)
+    })
+})
+
+describe("isRangeWithinAvailibility", () => {
+    it("zwraca true gdy zakres mieści się w jednym z przedziałów", () => {
+        const avail: TimeRange[] = [{ start: d(9), end: d(17) }]
+        expect(isRangeWithinAvailability(avail, d(10), d(11))).toBe(true)
+    })
+
+    it("zwraca false gdy zakres wystaje poza przedział", () => {
+        const avail: TimeRange[] = [{ start: d(9), end: d(17) }]
+        expect(isRangeWithinAvailability(avail, d(16), d(18))).toBe(false)
+    })
+
+    it("zwraca false gdy zakres trafia w lukę między przedziałami", () => {
+        const avail: TimeRange[] = [
+            {start: d(9), end: d(11)},
+            {start: d(13), end: d(17)},
+        ]
+        expect(isRangeWithinAvailability(avail, d(11), d(13))).toBe(false)
+    })
+
+    it("zwraca false dla pustej dostępności", () => {
+        expect(isRangeWithinAvailability([], d(10), d(11))).toBe(false)
+    })
+
+    it("zwraca true dla zakresu pasującego dokładnie do przedziału", () => {
+        const avail: TimeRange[] = [{ start: d(9), end: d(17) }]
+        expect(isRangeWithinAvailability(avail, d(9), d(17))).toBe(true)
     })
 })
