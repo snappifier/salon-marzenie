@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test": "vitest"
   },
   "prisma": {
     "seed": "tsx src/prisma/seed.ts"
@@ -15,6 +16,9 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "date-holidays": "^3.28.0",
     "next": "16.2.4",
     "pg": "^8.20.0",
     "prisma": "^7.8.0",
@@ -28,9 +32,11 @@
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "1.0.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.5"
   }
 }

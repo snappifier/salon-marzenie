@@ -78,7 +78,7 @@ Folder w nawiasach to "route group" - nie pojawia się w URL-u, służy organiza
 Każdy feature siedzi w jednym folderze - `actions.ts`, `queries.ts`, `logic.ts`, `notifications.ts`, `types.ts`, `slots.ts`.
 
 - `availability/logic.ts` - `getStaffAvailability(staffId, date)` zwracające wolne przedziały po odjęciu rezerwacji, urlopów, dni zamkniętych
-- `availability/logic.test.ts` - testy edge case'ów (urlop w trakcie dnia, święto, brak godzin pracy)
+- `availability/range-utils.test.ts` - testy edge case'ów (urlop w trakcie dnia, święto, brak godzin pracy)
 - `booking/actions.ts` - Server Actions: createByCustomer, cancelByCustomer, createByAdmin, updateByAdmin, moveItemByAdmin
 - `booking/queries.ts` - funkcje czytające bookingi (po dacie, kliencie, pracowniku, tokenie)
 - `booking/logic.ts` - czyste funkcje walidacji (czy slot wolny, czy nie za późno na anulowanie, resolveDuration/Buffer/Price)
