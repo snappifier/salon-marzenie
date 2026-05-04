@@ -21,6 +21,7 @@ export default function LoginPage() {
         }
 
         router.push('/admin/kalendarz')
+        router.refresh()
     }
 
     return (
