@@ -94,8 +94,7 @@ export async function findSlotsForServices(
     }
 
     const candidateStartTimes = generateCandidateStartTimes(date, settings)
-
-    return findSlotsPure({requests: resolvedRequests, candidateStartTimes: [date]})
+    return findSlotsPure({requests: resolvedRequests, candidateStartTimes})
 
 }
 

@@ -7,6 +7,7 @@ import {logoutAction} from "./actions"
 const links = [
     {href: "/admin/kalendarz", label: "Kalendarz"},
     {href: "/admin/pracownicy", label: "Pracownicy"},
+    {href: "/admin/kategorie", label: "Kategorie"},
     {href: "/admin/uslugi", label: "Usługi"},
     {href: "/admin/klienci", label: "Klienci"},
     {href: "/admin/ustawienia", label: "Ustawienia"},
