@@ -80,9 +80,6 @@ export async function findSlotsForServices(
     requests: ServiceRequest[],
     date: Date,
 ): Promise<SlotProposal[]> {
-    console.log("[SLOTS] requests:", JSON.stringify(requests))
-    console.log("[SLOTS] date:", date.toISOString())
-
     if (requests.length === 0) return []
 
     const settings = await prisma.settings.findUnique({where: {id: "settings"}})
@@ -92,27 +89,12 @@ export async function findSlotsForServices(
         requests.map((req) => resolveCandidates(req, date)),
     )
 
-    console.log("[SLOTS] resolvedRequests:", JSON.stringify(
-        resolvedRequests.map(r => ({
-            serviceId: r.serviceId,
-            candidatesCount: r.candidates.length,
-            candidates: r.candidates.map(c => ({
-                staffId: c.staffId,
-                duration: c.durationMin,
-                availability: c.availability.map(a => `${a.start.toISOString()} - ${a.end.toISOString()}`),
-            })),
-        })),
-    ))
-
     if (resolvedRequests.some((r) => r.candidates.length === 0)) {
-        console.log("[SLOTS] Early return - some service has 0 candidates")
         return []
     }
 
     const candidateStartTimes = generateCandidateStartTimes(date, settings)
-    console.log("[SLOTS] candidateStartTimes count:", candidateStartTimes.length, "first:", candidateStartTimes[0]?.toISOString())
     return findSlotsPure({requests: resolvedRequests, candidateStartTimes})
-
 }
 
 async function resolveCandidates(request: ServiceRequest, date: Date): Promise<ResolvedServiceRequest> {

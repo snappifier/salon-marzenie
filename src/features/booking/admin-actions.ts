@@ -63,8 +63,6 @@ export type AdminBookingResult =
 export async function adminCreateBooking(input: AdminBookingInput): Promise<AdminBookingResult> {
     await requireAdmin()
 
-    console.log("[ADMIN] raw input:", JSON.stringify(input, null, 2))
-
     const parsed = adminBookingSchema.safeParse(input)
     if (!parsed.success) {
         return {success: false, error: "Nieprawidłowe dane"}
@@ -78,10 +76,6 @@ export async function adminCreateBooking(input: AdminBookingInput): Promise<Admi
         requests.map((r) => ({serviceId: r.serviceId, staffPreference: r.staffId})),
         day,
     )
-
-    console.log("[ADMIN BOOKING] Looking for:", desiredStart.toISOString())
-    console.log("[ADMIN BOOKING] Available slots:", slots.map(s => s.startAt.toISOString()))
-    console.log("[ADMIN BOOKING] dateIso:", dateIso, "day passed:", day.toISOString())
 
     const matchingSlot = slots.find((s) => s.startAt.getTime() === desiredStart.getTime())
 
@@ -111,27 +105,6 @@ export async function adminCreateBooking(input: AdminBookingInput): Promise<Admi
 
             const availability = await getStaffAvailability(r.staffId, day)
             if (availability.length === 0) {
-                console.log(`[DEBUG] ${name} availability empty on ${day.toISOString()}`)
-                const allBookings = await prisma.bookingItem.findMany({
-                    where: {
-                        staffId: r.staffId,
-                        booking: {status: {not: "CANCELLED"}},
-                    },
-                    orderBy: {startAt: "asc"},
-                })
-                console.log(`[DEBUG] All bookings for ${name}:`)
-                allBookings.forEach((b) =>
-                    console.log(`  - ${b.startAt.toISOString()} to ${b.endAt.toISOString()}, buffer: ${b.bufferAfterMin}min, bookingId: ${b.bookingId}`),
-                )
-
-                const allTimeOffs = await prisma.timeOff.findMany({
-                    where: {staffId: r.staffId},
-                })
-                console.log(`[DEBUG] All timeoffs for ${name}:`)
-                allTimeOffs.forEach((t) =>
-                    console.log(`  - ${t.startAt.toISOString()} to ${t.endAt.toISOString()}: ${t.reason}`),
-                )
-
                 return {
                     success: false,
                     error: `${name} ma cały dzień zajęty (wszystkie sloty zarezerwowane lub urlop).`,

@@ -17,7 +17,7 @@ export function Sidebar({userName}: {userName: string}) {
     const pathname = usePathname()
 
     return (
-        <aside className="w-64 border-r border-zinc-200bg-zinc-950 flex flex-col">
+        <aside className="w-64 border-r border-zinc-200 bg-zinc-950 flex flex-col">
             <div className="p-6">
                 <h1 className=" font-semibold text-lg">Admin panel</h1>
             </div>
