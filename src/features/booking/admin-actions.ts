@@ -7,7 +7,8 @@ import {auth} from "@/lib/auth"
 import {findSlotsForServices} from "./slots"
 import {plPhoneSchema} from "@/lib/validation"
 import {getStaffAvailability, isSalonClosedOnDate} from "@/features/availability/logic"
-import {formatTime} from "@/lib/date"
+import {formatTime, getDayOfWeekInSalonTz} from "@/lib/date"
+
 
 async function requireAdmin() {
     const session = await auth()
@@ -90,12 +91,50 @@ export async function adminCreateBooking(input: AdminBookingInput): Promise<Admi
         }
 
         for (const r of requests) {
-            const availability = await getStaffAvailability(r.staffId, day)
-            if (availability.length === 0) {
-                const staff = await prisma.staff.findUnique({where: {id: r.staffId}})
+            const staff = await prisma.staff.findUnique({
+                where: {id: r.staffId},
+                select: {firstName: true, lastName: true},
+            })
+            const name = `${staff?.firstName} ${staff?.lastName}`
+
+            const dayOfWeek = getDayOfWeekInSalonTz(day)
+            const workingHours = await prisma.workingHours.findUnique({
+                where: {staffId_dayOfWeek: {staffId: r.staffId, dayOfWeek}},
+            })
+
+            if (!workingHours) {
                 return {
                     success: false,
-                    error: `${staff?.firstName} ${staff?.lastName} nie pracuje tego dnia lub ma urlop.`,
+                    error: `${name} nie pracuje w ten dzień tygodnia.`,
+                }
+            }
+
+            const availability = await getStaffAvailability(r.staffId, day)
+            if (availability.length === 0) {
+                console.log(`[DEBUG] ${name} availability empty on ${day.toISOString()}`)
+                const allBookings = await prisma.bookingItem.findMany({
+                    where: {
+                        staffId: r.staffId,
+                        booking: {status: {not: "CANCELLED"}},
+                    },
+                    orderBy: {startAt: "asc"},
+                })
+                console.log(`[DEBUG] All bookings for ${name}:`)
+                allBookings.forEach((b) =>
+                    console.log(`  - ${b.startAt.toISOString()} to ${b.endAt.toISOString()}, buffer: ${b.bufferAfterMin}min, bookingId: ${b.bookingId}`),
+                )
+
+                const allTimeOffs = await prisma.timeOff.findMany({
+                    where: {staffId: r.staffId},
+                })
+                console.log(`[DEBUG] All timeoffs for ${name}:`)
+                allTimeOffs.forEach((t) =>
+                    console.log(`  - ${t.startAt.toISOString()} to ${t.endAt.toISOString()}: ${t.reason}`),
+                )
+
+                return {
+                    success: false,
+                    error: `${name} ma cały dzień zajęty (wszystkie sloty zarezerwowane lub urlop).`,
                 }
             }
         }
@@ -109,6 +148,15 @@ export async function adminCreateBooking(input: AdminBookingInput): Promise<Admi
         }
 
         return {success: false, error: "Brak wolnych terminów na ten dzień dla tej kombinacji."}
+    }
+
+    const MAX_ITEM_DURATION_MS = 10 * 60 * 60 * 1000
+    for (const a of matchingSlot.assignments) {
+        const duration = a.endAt.getTime() - a.startAt.getTime()
+        if (duration > MAX_ITEM_DURATION_MS) {
+            console.error("Suspicious booking duration:", duration, "for", a.serviceId)
+            return {success: false, error: "Nieprawidłowy czas trwania zabiegu - skontaktuj się z administratorem."}
+        }
     }
 
     try {
