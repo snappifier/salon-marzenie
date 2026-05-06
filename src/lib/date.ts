@@ -14,6 +14,16 @@ const DAY_OF_WEEK_MAP: Record<number, DayOfWeek> = {
     6: "SATURDAY",
 }
 
+export const DAY_OF_WEEK_TO_NUMBER: Record<DayOfWeek, number> = {
+    SUNDAY: 0,
+    MONDAY: 1,
+    TUESDAY: 2,
+    WEDNESDAY: 3,
+    THURSDAY: 4,
+    FRIDAY: 5,
+    SATURDAY: 6,
+}
+
 export function getDayOfWeekInSalonTz(date: Date): DayOfWeek {
     const zoned = toZonedTime(date, SALON_TIMEZONE)
     return DAY_OF_WEEK_MAP[getDay(zoned)]
