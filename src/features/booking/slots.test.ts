@@ -107,6 +107,54 @@ describe("findSlotsPure", () => {
         expect(findSlotsPure({ requests, candidateStartTimes: [d(9)] })).toEqual([])
     })
 
+    it("zwraca pustą listę dla pustego requests (bez crashu)", () => {
+        const slots = findSlotsPure({requests: [], candidateStartTimes: [d(9), d(10), d(11)]})
+        expect(slots).toEqual([])
+    })
+
+    it("zwraca pustą listę dla pustego candidateStartTimes", () => {
+        const requests: ResolvedServiceRequest[] = [
+            {serviceId: "mani", candidates: [candidate("ania", 60, d(9), d(17))]},
+        ]
+        const slots = findSlotsPure({requests, candidateStartTimes: []})
+        expect(slots).toEqual([])
+    })
+
+    it("dla 3 zabiegów sekwencyjnie z różnymi pracownikami i buforem", () => {
+        const requests: ResolvedServiceRequest[] = [
+            {serviceId: "mani", candidates: [candidate("ania", 60, d(9), d(17), 10)]},
+            {serviceId: "brwi", candidates: [candidate("beata", 30, d(9), d(17), 5)]},
+            {serviceId: "depilacja", candidates: [candidate("ania", 45, d(9), d(17), 0)]},
+        ]
+        const slots = findSlotsPure({requests, candidateStartTimes: [d(9)]})
+
+        expect(slots).toHaveLength(1)
+        expect(slots[0].assignments).toHaveLength(3)
+
+        // Mani: 9:00-10:00 (Ania), bufor 10
+        expect(slots[0].assignments[0]).toMatchObject({serviceId: "mani", staffId: "ania", startAt: d(9), endAt: d(10)})
+        // Brwi: 10:10-10:40 (Beata), bufor 5
+        expect(slots[0].assignments[1]).toMatchObject({serviceId: "brwi", staffId: "beata", startAt: d(10, 10), endAt: d(10, 40)})
+        // Depilacja: 10:45-11:30 (Ania)
+        expect(slots[0].assignments[2]).toMatchObject({serviceId: "depilacja", staffId: "ania", startAt: d(10, 45), endAt: d(11, 30)})
+
+        expect(slots[0].startAt).toEqual(d(9))
+        expect(slots[0].endAt).toEqual(d(11, 30))
+    })
+
+    it("dla wielu candidateStartTimes zwraca wiele slotów posortowanych po start", () => {
+        const requests: ResolvedServiceRequest[] = [
+            {serviceId: "mani", candidates: [candidate("ania", 60, d(9), d(17))]},
+        ]
+        const slots = findSlotsPure({
+            requests,
+            candidateStartTimes: [d(9), d(11), d(14), d(15, 30)],
+        })
+
+        expect(slots).toHaveLength(4)
+        expect(slots.map((s) => s.startAt)).toEqual([d(9), d(11), d(14), d(15, 30)])
+    })
+
     it("pomija sloty w których zabieg trafia w bookingiem zajęty przedział", () => {
         // Ania ma dostępność 9-12 i 13-17 (przerwa 12-13 to istniejąca rezerwacja)
         const requests: ResolvedServiceRequest[] = [

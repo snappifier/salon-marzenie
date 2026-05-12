@@ -34,3 +34,16 @@ export const plPhoneOptionalSchema = z.string().trim().transform((val, ctx) => {
     }
     return normalized
 })
+
+// Trim BEFORE validating, then refine: empty (po trimie) lub poprawny email.
+// Dzięki temu wpisanie samych spacji traktujemy jak pusty string (graceful UX)
+// i mamy kontrolę nad komunikatami błędów (z .email() w refine zamiast .or
+// którego komunikat byłby z literal "expected '' got X").
+export const optionalEmailSchema = z
+    .string()
+    .trim()
+    .refine((val) => val.length <= 100, "Email jest zbyt długi")
+    .refine(
+        (val) => val === "" || z.string().email().safeParse(val).success,
+        "Wpisz poprawny adres email",
+    )

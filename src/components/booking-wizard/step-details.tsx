@@ -1,7 +1,16 @@
 "use client"
 
+import {useState} from "react"
+import {motion} from "motion/react"
+import {ArrowLeft, ArrowRight, Check} from "lucide-react"
 import {useWizardStore} from "./wizard-store"
-import {plPhoneSchema} from "@/lib/validation";
+import {groupVariants, itemVariants} from "./animations"
+import {plPhoneSchema, optionalEmailSchema} from "@/lib/validation"
+import {Button} from "@/components/ui/button"
+import {Field} from "@/components/ui/field"
+import {Textarea} from "@/components/ui/textarea"
+import {Heading} from "@/components/ui/heading"
+import {cn} from "@/lib/cn"
 
 export function StepDetails() {
     const customer = useWizardStore((s) => s.customer)
@@ -9,136 +18,196 @@ export function StepDetails() {
     const nextStep = useWizardStore((s) => s.nextStep)
     const prevStep = useWizardStore((s) => s.prevStep)
 
+    const [emailTouched, setEmailTouched] = useState(false)
+    const [phoneTouched, setPhoneTouched] = useState(false)
+
+    const phoneParse = plPhoneSchema.safeParse(customer.phone)
+    const phoneOk = phoneParse.success
+    const phoneErrorMsg = !phoneOk ? phoneParse.error.issues[0]?.message : undefined
+
+    const emailParse = optionalEmailSchema.safeParse(customer.email)
+    const emailOk = emailParse.success
+    const emailErrorMsg = !emailOk ? emailParse.error.issues[0]?.message : undefined
+
+    const accountOk = !customer.createAccount || (customer.email.trim().length > 0 && customer.password.length >= 8)
     const isValid =
         customer.firstName.trim().length > 0 &&
         customer.lastName.trim().length > 0 &&
-        plPhoneSchema.safeParse(customer.phone).success &&
-        (!customer.createAccount || (customer.email.trim().length > 0 && customer.password.length >= 8))
+        phoneOk &&
+        emailOk &&
+        accountOk
+
+    const showEmailError = emailTouched && customer.email.trim().length > 0 && !emailOk
+    const showPhoneError = phoneTouched && customer.phone.trim().length > 0 && !phoneOk
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-xl font-semibold">Twoje dane</h2>
+        <motion.div className="space-y-7" variants={groupVariants}>
+            <motion.div variants={itemVariants}>
+                <Heading level="h3" className="mb-1">Twoje dane</Heading>
+                <p className="text-sm text-graphite-600 leading-relaxed">
+                    Wyślemy SMS-a z potwierdzeniem na podany numer.
+                </p>
+            </motion.div>
 
-            <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm mb-1">Imię *</label>
-                        <input
-                            value={customer.firstName}
-                            onChange={(e) => setCustomer({firstName: e.target.value})}
-                            className="w-full border p-2 rounded"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm mb-1">Nazwisko *</label>
-                        <input
-                            value={customer.lastName}
-                            onChange={(e) => setCustomer({lastName: e.target.value})}
-                            className="w-full border p-2 rounded"
-                            required
-                        />
-                    </div>
-                </div>
+            <motion.div className="space-y-5" variants={groupVariants}>
+                <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-4" variants={itemVariants}>
+                    <Field
+                        label="Imię"
+                        value={customer.firstName}
+                        onChange={(e) => setCustomer({firstName: e.target.value})}
+                        required
+                        autoComplete="given-name"
+                    />
+                    <Field
+                        label="Nazwisko"
+                        value={customer.lastName}
+                        onChange={(e) => setCustomer({lastName: e.target.value})}
+                        required
+                        autoComplete="family-name"
+                    />
+                </motion.div>
 
-                <div>
-                    <label className="block text-sm mb-1">Telefon *</label>
-                    <input
+                <motion.div variants={itemVariants}>
+                    <Field
+                        label="Telefon"
                         type="tel"
                         value={customer.phone}
                         onChange={(e) => setCustomer({phone: e.target.value})}
-                        className="w-full border p-2 rounded"
-                        placeholder="+48123456789"
+                        onBlur={() => setPhoneTouched(true)}
+                        placeholder="+48 123 456 789"
+                        hint="9 cyfr (Polska) lub międzynarodowy z prefiksem"
+                        error={showPhoneError ? phoneErrorMsg : undefined}
                         required
+                        autoComplete="tel"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                        9 cyfr (Polska) lub międzynarodowy z prefiksem (np. +49). Wyślemy SMS-a z potwierdzeniem.
-                    </p>
-                </div>
+                </motion.div>
 
-                <div>
-                    <label className="block text-sm mb-1">
-                        Email {customer.createAccount && "*"}
-                    </label>
-                    <input
+                <motion.div variants={itemVariants}>
+                    <Field
+                        label={customer.createAccount ? "Email" : "Email (opcjonalnie)"}
                         type="email"
                         value={customer.email}
                         onChange={(e) => setCustomer({email: e.target.value})}
-                        className="w-full border p-2 rounded"
+                        onBlur={() => setEmailTouched(true)}
+                        placeholder="adres@email.pl"
+                        autoComplete="email"
+                        required={customer.createAccount}
+                        error={showEmailError ? emailErrorMsg : undefined}
                     />
-                </div>
+                </motion.div>
 
-                <div>
-                    <label className="block text-sm mb-1">Notatka do wizyty</label>
-                    <textarea
+                <motion.div variants={itemVariants}>
+                    <Textarea
+                        label="Notatka do wizyty (opcjonalnie)"
                         value={customer.customerNote}
                         onChange={(e) => setCustomer({customerNote: e.target.value})}
-                        className="w-full border p-2 rounded"
                         rows={2}
-                        placeholder="Opcjonalnie - alergie, preferencje, dodatkowe informacje"
+                        placeholder="Alergie, preferencje, dodatkowe informacje"
                     />
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
 
-            <div className="border-t pt-4 space-y-3">
-                <label className="flex items-start gap-2">
-                    <input
-                        type="checkbox"
-                        checked={customer.createAccount}
-                        onChange={(e) => setCustomer({createAccount: e.target.checked})}
-                        className="w-4 h-4 mt-1"
-                    />
-                    <div>
-                        <div className="text-sm">Załóż konto</div>
-                        <div className="text-xs text-gray-500">
-                            Dzięki kontu zobaczysz historię swoich wizyt i łatwiej zrobisz kolejną rezerwację.
-                        </div>
-                    </div>
-                </label>
+            <motion.div
+                className="pt-5 border-t border-border-soft space-y-4"
+                variants={itemVariants}
+            >
+                <Checkbox
+                    checked={customer.createAccount}
+                    onChange={(v) => setCustomer({createAccount: v})}
+                    label="Załóż konto"
+                    hint="Zobaczysz historię swoich wizyt i łatwiej zrobisz kolejną rezerwację."
+                />
 
                 {customer.createAccount && (
-                    <div className="ml-6">
-                        <label className="block text-sm mb-1">Hasło * (min. 8 znaków)</label>
-                        <input
+                    <div className="pl-8 max-w-md">
+                        <Field
+                            label="Hasło"
                             type="password"
                             value={customer.password}
                             onChange={(e) => setCustomer({password: e.target.value})}
-                            className="w-full border p-2 rounded max-w-md"
+                            hint="Minimum 8 znaków"
                             required
+                            autoComplete="new-password"
                         />
                     </div>
                 )}
 
-                <label className="flex items-start gap-2">
-                    <input
-                        type="checkbox"
-                        checked={customer.marketingConsent}
-                        onChange={(e) => setCustomer({marketingConsent: e.target.checked})}
-                        className="w-4 h-4 mt-1"
-                    />
-                    <div className="text-sm">
-                        Wyrażam zgodę na otrzymywanie informacji marketingowych (promocje, nowe usługi).
-                    </div>
-                </label>
-            </div>
+                <Checkbox
+                    checked={customer.marketingConsent}
+                    onChange={(v) => setCustomer({marketingConsent: v})}
+                    label="Zgoda marketingowa"
+                    hint="Wyrażam zgodę na otrzymywanie informacji o promocjach i nowych usługach."
+                />
+            </motion.div>
 
-            <div className="flex justify-between pt-4 border-t">
-                <button
-                    type="button"
-                    onClick={prevStep}
-                    className="px-4 py-2 border rounded"
-                >
-                    Wstecz
-                </button>
-                <button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!isValid}
-                    className="px-6 py-2 bg-black text-white rounded disabled:opacity-50"
-                >
-                    Dalej
-                </button>
+            <motion.p
+                className="text-[11px] text-graphite-400 leading-relaxed"
+                variants={itemVariants}
+            >
+                Zaznaczając „Dalej" potwierdzasz zapoznanie się z{" "}
+                <a href="/polityka-prywatnosci" className="underline hover:text-rose-600 transition-[color] duration-150 ease-out">
+                    polityką prywatności
+                </a>.
+            </motion.p>
+
+            <motion.div
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                variants={itemVariants}
+            >
+                <div className="flex items-center justify-between gap-3">
+                    <Button variant="secondary" type="button" onClick={prevStep}>
+                        <ArrowLeft size={16} />
+                        Wstecz
+                    </Button>
+                    <Button type="button" onClick={nextStep} disabled={!isValid}>
+                        Dalej
+                        <ArrowRight size={16} />
+                    </Button>
+                </div>
+            </motion.div>
+        </motion.div>
+    )
+}
+
+interface CheckboxProps {
+    checked: boolean
+    onChange: (checked: boolean) => void
+    label: string
+    hint?: string
+}
+
+function Checkbox({checked, onChange, label, hint}: CheckboxProps) {
+    return (
+        <label className="flex items-start gap-3 cursor-pointer group">
+            <input
+                className="sr-only"
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+            />
+            <div
+                className={cn(
+                    "shrink-0 mt-0.5 w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center",
+                    "transition-[background-color,border-color] duration-150 ease-out",
+                    checked
+                        ? "bg-rose-500 border-rose-500 text-white"
+                        : "bg-white border-graphite-200 group-hover:border-graphite-400",
+                )}
+                aria-hidden="true"
+            >
+                <Check
+                    className={cn(
+                        "transition-[opacity] duration-150 ease-out",
+                        checked ? "opacity-100" : "opacity-0",
+                    )}
+                    size={12}
+                    strokeWidth={3}
+                />
             </div>
-        </div>
+            <div className="flex-1">
+                <div className="text-sm text-graphite-900 font-medium leading-snug">{label}</div>
+                {hint && <div className="text-xs text-graphite-600 leading-relaxed mt-0.5">{hint}</div>}
+            </div>
+        </label>
     )
 }

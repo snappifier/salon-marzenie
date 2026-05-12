@@ -55,20 +55,20 @@ export function FinalCta({
                         {salon.salonPhone && phoneDisplay && (
                             <a
                                 href={`tel:${salon.salonPhone}`}
-                                className="flex items-center gap-1.5 text-sm text-graphite-600 hover:text-rose-600 transition-[color] duration-150 ease-out"
+                                className="flex items-center gap-1.5 text-sm text-graphite-600 hover-supported:hover:text-rose-600 transition-[color] duration-150 ease-out"
                             >
-                            <Phone size={14} />
-                            <span>
-                            lub zadzwoń:{" "}
-                        <strong className="font-serif font-medium text-base text-graphite-900">
-                            {phoneDisplay}
-                        </strong>
-                    </span>
-                </a>
-                )}
-            </div>
-        </Reveal>
-</Container>
-</section>
-)
+                                <Phone size={14} />
+                                <span>
+                                    lub zadzwoń:{" "}
+                                    <strong className="font-serif font-medium text-base text-graphite-900">
+                                        {phoneDisplay}
+                                    </strong>
+                                </span>
+                            </a>
+                        )}
+                    </div>
+                </Reveal>
+            </Container>
+        </section>
+    )
 }

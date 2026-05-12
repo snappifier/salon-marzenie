@@ -5,6 +5,11 @@
     "headlineHighlight": "W salonie, do którego się wraca.",
     "subtitle": "Profesjonalna pielęgnacja w kameralnej atmosferze. Zarezerwuj online lub zadzwoń kiedy chcesz."
   },
+  "heroQuote": {
+    "text": "Zawsze profesjonalnie i z dbałością o szczegóły. Polecam!",
+    "author": "Anna K.",
+    "source": "FB"
+  },
   "stats": [
     {"num": "12", "suffix": "+", "label": "lat doświadczenia\nw pielęgnacji"},
     {"num": "1500", "suffix": "+", "label": "zadowolonych\nklientek"},

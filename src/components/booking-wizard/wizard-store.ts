@@ -1,13 +1,7 @@
 "use client"
 
 import {create} from "zustand"
-
-export type StaffPreference = string | "any"
-
-export interface SelectedServiceState {
-    serviceId: string
-    staffPreference: StaffPreference
-}
+import type {SlotProposal} from "@/features/booking/types"
 
 export interface CustomerData {
     firstName: string
@@ -18,6 +12,23 @@ export interface CustomerData {
     marketingConsent: boolean
     createAccount: boolean
     password: string
+}
+
+export type StaffOption = {
+    id: string
+    firstName: string
+    lastName: string
+    acceptsAnyAssignment: boolean
+}
+
+export type DayWithSlotCount = {
+    dateIso: string
+    slotsCount: number
+}
+
+export type StaffRequest = {
+    serviceId: string
+    staffPreference: string
 }
 
 const emptyCustomer: CustomerData = {
@@ -33,10 +44,14 @@ const emptyCustomer: CustomerData = {
 
 interface WizardState {
     step: number
-    selectedServices: SelectedServiceState[]
+    selectedServices: string[]
+    preferredStaffId: string
     selectedDate: string | null
     selectedSlotStartIso: string | null
     customer: CustomerData
+
+    daysCache: Record<string, DayWithSlotCount[]>
+    slotsCache: Record<string, SlotProposal[]>
 
     setStep: (step: number) => void
     nextStep: () => void
@@ -44,55 +59,92 @@ interface WizardState {
 
     addService: (serviceId: string) => void
     removeService: (serviceId: string) => void
-    setStaffPreference: (serviceId: string, staffPreference: StaffPreference) => void
+    setPreferredStaffId: (id: string) => void
 
     setSelectedDate: (date: string | null) => void
     setSelectedSlot: (startIso: string | null) => void
 
     setCustomer: (patch: Partial<CustomerData>) => void
 
+    setDaysCache: (key: string, data: DayWithSlotCount[]) => void
+    setSlotsCache: (key: string, data: SlotProposal[]) => void
+
+    initWith: (patch: Partial<Pick<WizardState, "selectedServices" | "selectedDate" | "selectedSlotStartIso">>) => void
     reset: () => void
 }
 
 export const useWizardStore = create<WizardState>((set) => ({
     step: 1,
     selectedServices: [],
+    preferredStaffId: "any",
     selectedDate: null,
     selectedSlotStartIso: null,
     customer: emptyCustomer,
+
+    daysCache: {},
+    slotsCache: {},
 
     setStep: (step) => set({step}),
     nextStep: () => set((s) => ({step: s.step + 1})),
     prevStep: () => set((s) => ({step: Math.max(1, s.step - 1)})),
 
     addService: (serviceId) => set((s) => {
-        if (s.selectedServices.some((x) => x.serviceId === serviceId)) return s
+        if (s.selectedServices.includes(serviceId)) return s
         return {
-            selectedServices: [...s.selectedServices, {serviceId, staffPreference: "any"}],
+            selectedServices: [...s.selectedServices, serviceId],
             selectedSlotStartIso: null,
         }
     }),
     removeService: (serviceId) => set((s) => ({
-        selectedServices: s.selectedServices.filter((x) => x.serviceId !== serviceId),
+        selectedServices: s.selectedServices.filter((id) => id !== serviceId),
         selectedSlotStartIso: null,
     })),
-    setStaffPreference: (serviceId, staffPreference) => set((s) => ({
-        selectedServices: s.selectedServices.map((x) =>
-            x.serviceId === serviceId ? {...x, staffPreference} : x,
-        ),
-        selectedSlotStartIso: null,
-    })),
+    setPreferredStaffId: (id) => set({preferredStaffId: id, selectedSlotStartIso: null}),
 
     setSelectedDate: (date) => set({selectedDate: date, selectedSlotStartIso: null}),
     setSelectedSlot: (startIso) => set({selectedSlotStartIso: startIso}),
 
     setCustomer: (patch) => set((s) => ({customer: {...s.customer, ...patch}})),
 
+    setDaysCache: (key, data) => set((s) => ({daysCache: {...s.daysCache, [key]: data}})),
+    setSlotsCache: (key, data) => set((s) => ({slotsCache: {...s.slotsCache, [key]: data}})),
+
+    initWith: (patch) => set((s) => ({...s, ...patch})),
     reset: () => set({
         step: 1,
         selectedServices: [],
+        preferredStaffId: "any",
         selectedDate: null,
         selectedSlotStartIso: null,
         customer: emptyCustomer,
+        daysCache: {},
+        slotsCache: {},
     }),
 }))
+
+export function serviceIdsKey(serviceIds: string[]): string {
+    return serviceIds.slice().sort().join(",")
+}
+
+export function prefsKey(serviceIds: string[], preferredStaffId: string): string {
+    return `${serviceIdsKey(serviceIds)}|${preferredStaffId}`
+}
+
+export function slotsKey(serviceIds: string[], preferredStaffId: string, dateIso: string): string {
+    return `${prefsKey(serviceIds, preferredStaffId)}|${dateIso}`
+}
+
+export function deriveRequests(
+    serviceIds: string[],
+    preferredStaffId: string,
+    staffByService: Record<string, StaffOption[]>,
+): StaffRequest[] {
+    return serviceIds.map((serviceId) => {
+        if (preferredStaffId === "any") {
+            return {serviceId, staffPreference: "any"}
+        }
+        const staffForService = staffByService[serviceId] ?? []
+        const canDo = staffForService.some((s) => s.id === preferredStaffId)
+        return {serviceId, staffPreference: canDo ? preferredStaffId : "any"}
+    })
+}

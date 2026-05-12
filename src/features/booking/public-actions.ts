@@ -1,48 +1,77 @@
 "use server"
 
 import {hash} from "bcryptjs"
-import {z} from "zod"
 import {prisma} from "@/lib/prisma"
 import {dateToIsoDay, isoDayToDate} from "@/lib/date"
-import {getStaffForServiceSelection} from "./public-queries"
 import {findSlotsForServices} from "./slots"
 import type {SlotProposal} from "./types"
-import {plPhoneSchema} from "@/lib/validation";
-import {revalidateTag} from "next/cache"
-
-export async function fetchStaffForServices(serviceIds: string[]) {
-    return getStaffForServiceSelection(serviceIds)
-}
+import {createBookingSchema, type CreateBookingInput, type CreateBookingResult} from "./booking-schema"
+import {revalidateTag, unstable_cache} from "next/cache"
 
 export interface DayWithSlotCount {
     dateIso: string
     slotsCount: number
 }
 
-export async function fetchDaysWithSlotCounts(
+export interface AvailabilityResult {
+    days: DayWithSlotCount[]
+    slotsByDay: Record<string, SlotProposal[]>
+}
+
+// Pure async impl — wrapped przez unstable_cache poniżej. Trzymamy oddzielnie
+// żeby cache mógł wziąć ją jako pierwszy arg (cached function), public Server
+// Action jest tylko cienkim wrapperem.
+async function fetchAvailabilityImpl(
     requests: Array<{serviceId: string; staffPreference: string}>,
     startDateIso: string,
-    daysAhead: number = 14,
-): Promise<DayWithSlotCount[]> {
+    daysAhead: number,
+): Promise<AvailabilityResult> {
     const settings = await prisma.settings.findUnique({where: {id: "settings"}})
     if (!settings) throw new Error("Settings not found")
 
     const earliest = new Date(Date.now() + settings.minBookingHoursAhead * 60 * 60 * 1000)
     const startDate = isoDayToDate(startDateIso)
-    const results: DayWithSlotCount[] = []
 
-    for (let i = 0; i < daysAhead; i++) {
-        const day = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000)
-        const slots = await findSlotsForServices(requests, day)
-        const futureSlots = slots.filter((s) => s.startAt >= earliest)
+    const perDay = await Promise.all(
+        Array.from({length: daysAhead}, async (_, i) => {
+            const day = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000)
+            const allSlots = await findSlotsForServices(requests, day)
+            const slots = allSlots.filter((s) => s.startAt >= earliest)
+            return {dateIso: dateToIsoDay(day), slots}
+        }),
+    )
 
-        results.push({
-            dateIso: dateToIsoDay(day),
-            slotsCount: futureSlots.length,
-        })
+    const days: DayWithSlotCount[] = perDay.map((d) => ({
+        dateIso: d.dateIso,
+        slotsCount: d.slots.length,
+    }))
+
+    const slotsByDay: Record<string, SlotProposal[]> = {}
+    for (const d of perDay) {
+        slotsByDay[d.dateIso] = d.slots
     }
 
-    return results
+    return {days, slotsByDay}
+}
+
+// Cache cross-request. Klucz hashowany z args (requests jako JSON, dateIso, days).
+// Tag "bookings" — invalidated przez revalidateTag w createBooking/cancelBooking/etc.
+// 300s revalidate = max stale time przy braku invalidacji tag (safety net).
+const cachedFetchAvailability = unstable_cache(
+    fetchAvailabilityImpl,
+    ["fetchAvailability"],
+    {revalidate: 300, tags: ["bookings"]},
+)
+
+// Combined fetch: zwraca day-level counts i per-day slot proposals w jednym roundtripie.
+// Pierwsze wywołanie ~500ms-2s (zależnie od bazy), kolejne dla tych samych argów ~5ms
+// (cache hit). Invalidacja przy każdym createBooking / cancelBooking przez tag.
+export async function fetchAvailability(
+    requests: Array<{serviceId: string; staffPreference: string}>,
+    startDateIso: string,
+    daysAhead: number = 14,
+): Promise<AvailabilityResult> {
+    return cachedFetchAvailability(requests, startDateIso, daysAhead)
 }
 
 export async function fetchSlotsForDay(
@@ -59,38 +88,11 @@ export async function fetchSlotsForDay(
     return slots.filter((s) => s.startAt >= earliest)
 }
 
-const createBookingSchema = z.object({
-    requests: z.array(z.object({
-        serviceId: z.string().min(1),
-        staffPreference: z.string().min(1),
-    })).min(1),
-    dateIso: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    startIso: z.string().min(1),
-    customer: z.object({
-        firstName: z.string().trim().min(1).max(50),
-        lastName: z.string().trim().min(1).max(50),
-        phone: plPhoneSchema,
-        email: z.string().trim().email().max(100).optional().or(z.literal("")),
-        customerNote: z.string().trim().max(2000).optional().or(z.literal("")),
-        marketingConsent: z.boolean(),
-        createAccount: z.boolean(),
-        password: z.string().optional().or(z.literal("")),
-    }).refine(
-        (c) => !c.createAccount || ((c.email?.length ?? 0) > 0 && (c.password?.length ?? 0) >= 8),
-        {message: "Konto wymaga emaila i hasła min. 8 znaków"},
-    ),
-})
-
-export type CreateBookingInput = z.infer<typeof createBookingSchema>
-
-export type CreateBookingResult =
-    | {success: true; bookingId: string; manageToken: string}
-    | {success: false; error: string}
-
 export async function createBooking(input: CreateBookingInput): Promise<CreateBookingResult> {
     const parsed = createBookingSchema.safeParse(input)
     if (!parsed.success) {
-        return {success: false, error: "Nieprawidłowe dane formularza"}
+        const firstIssue = parsed.error.issues[0]
+        return {success: false, error: firstIssue?.message ?? "Nieprawidłowe dane formularza"}
     }
 
     const {requests, dateIso, startIso, customer} = parsed.data

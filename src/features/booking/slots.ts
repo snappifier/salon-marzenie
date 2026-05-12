@@ -19,6 +19,7 @@ interface FindSlotsPureInput {
 
 export function findSlotsPure(input: FindSlotsPureInput): SlotProposal[] {
     const {requests, candidateStartTimes} = input
+    if (requests.length === 0) return []
     const results: SlotProposal[] = []
 
     for (const startTime of candidateStartTimes) {

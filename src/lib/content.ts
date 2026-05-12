@@ -7,7 +7,6 @@ const siteSchema = z.object({
     tagline: z.string().min(1),
     socials: z.object({
         facebook: z.string().url().optional(),
-        instagram: z.string().url().optional(),
     }),
 })
 
@@ -18,17 +17,22 @@ const landingSchema = z.object({
         headlineHighlight: z.string(),
         subtitle: z.string(),
     }),
+    heroQuote: z.object({
+        text: z.string(),
+        author: z.string(),
+        source: z.string(),
+    }),
     stats: z.array(z.object({
         num: z.string(),
         suffix: z.string(),
         label: z.string(),
-    })),
+    })).min(1),
     brands: z.array(z.string()),
     reviews: z.array(z.object({
         text: z.string(),
         author: z.string(),
         source: z.string(),
-    })),
+    })).min(1),
     certs: z.array(z.object({
         name: z.string(),
         desc: z.string(),

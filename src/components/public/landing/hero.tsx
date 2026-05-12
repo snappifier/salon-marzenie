@@ -20,6 +20,8 @@ function StarIcon({size = 11}: {size?: number}) {
 
 export async function Hero() {
     const nextSlot = await getNextAvailableSlot()
+    const heroStat = landing.stats[0]
+    const heroQuote = landing.heroQuote
 
     return (
         <section className="relative overflow-hidden py-16 md:py-24">
@@ -66,18 +68,18 @@ export async function Hero() {
                 <Reveal delay={0.15} className="hidden lg:block relative min-h-[360px]">
                     <ButterflyWatermark className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[480px] opacity-60" />
 
-                    <div className=" absolute top-[8%] right-0 -rotate-2 bg-white border border-border-soft rounded-2xl p-5 shadow-md min-w-[180px]">
+                    <div className="absolute top-[8%] right-0 -rotate-2 bg-white border border-border-soft rounded-2xl p-5 shadow-md min-w-[180px]">
                         <div className="font-serif font-medium text-[44px] leading-none tracking-[-0.02em] text-graphite-900">
-                            12<em className="italic text-[22px] text-rose-500 ml-0.5">+</em>
+                            {heroStat.num}<em className="italic text-[22px] text-rose-500 ml-0.5">{heroStat.suffix}</em>
                         </div>
-                        <div className="text-[13px] text-graphite-600 mt-1.5 leading-tight">
-                            lat doświadczenia<br />w pielęgnacji
+                        <div className="text-[13px] text-graphite-600 mt-1.5 leading-tight whitespace-pre-line">
+                            {heroStat.label}
                         </div>
                     </div>
 
-                    <div className=" absolute bottom-[8%] left-0 rotate-2 bg-white border border-border-soft rounded-2xl p-5 shadow-md max-w-[280px]">
+                    <div className="absolute bottom-[8%] left-0 rotate-2 bg-white border border-border-soft rounded-2xl p-5 shadow-md max-w-[280px]">
                         <p className="text-sm leading-snug text-graphite-900 italic mb-2.5">
-                            &bdquo;Zawsze profesjonalnie i z dbałością o szczegóły. Polecam!&rdquo;
+                            &bdquo;{heroQuote.text}&rdquo;
                         </p>
                         <div className="flex items-center gap-2 pt-2.5 border-t border-border-soft">
                             <div className="flex gap-px text-rose-500" aria-label="5 z 5 gwiazdek">
@@ -85,7 +87,7 @@ export async function Hero() {
                                     <StarIcon key={i} />
                                 ))}
                             </div>
-                            <div className="text-[11px] font-medium text-graphite-600">Anna K., FB</div>
+                            <div className="text-[11px] font-medium text-graphite-600">{heroQuote.author}, {heroQuote.source}</div>
                         </div>
                     </div>
                 </Reveal>

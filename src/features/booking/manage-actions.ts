@@ -2,6 +2,7 @@
 
 import {revalidatePath, revalidateTag} from "next/cache"
 import {prisma} from "@/lib/prisma"
+import {canCancelByPolicy, canCancelByStatus} from "./manage-logic"
 
 export type CancelBookingResult =
     | {success: true}
@@ -17,11 +18,10 @@ export async function cancelBooking(token: string): Promise<CancelBookingResult>
         return {success: false, error: "Nie znaleziono rezerwacji."}
     }
 
-    if (booking.status === "CANCELLED") {
-        return {success: false, error: "Rezerwacja jest już anulowana."}
-    }
-
-    if (booking.status === "COMPLETED" || booking.status === "NO_SHOW") {
+    if (!canCancelByStatus(booking.status)) {
+        if (booking.status === "CANCELLED") {
+            return {success: false, error: "Rezerwacja jest już anulowana."}
+        }
         return {success: false, error: "Nie można anulować zakończonej wizyty."}
     }
 
@@ -33,13 +33,10 @@ export async function cancelBooking(token: string): Promise<CancelBookingResult>
     const settings = await prisma.settings.findUnique({where: {id: "settings"}})
     if (!settings) throw new Error("Settings not found")
 
-    const minHoursBefore = settings.minCancelHoursBefore
-    const earliestCancelDeadline = new Date(firstItem.startAt.getTime() - minHoursBefore * 60 * 60 * 1000)
-
-    if (new Date() > earliestCancelDeadline) {
+    if (!canCancelByPolicy(firstItem.startAt, settings.minCancelHoursBefore, new Date())) {
         return {
             success: false,
-            error: `Wizytę można anulować najpóźniej ${minHoursBefore}h przed jej rozpoczęciem. Skontaktuj się z salonem.`,
+            error: `Wizytę można anulować najpóźniej ${settings.minCancelHoursBefore}h przed jej rozpoczęciem. Skontaktuj się z salonem.`,
         }
     }
 

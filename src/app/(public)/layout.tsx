@@ -3,6 +3,7 @@ import {toPublicSalonInfo} from "@/lib/dto"
 import {MotionProvider} from "@/components/public/motion-provider"
 import {PublicHeader} from "@/components/public/header"
 import {PublicFooter} from "@/components/public/footer"
+import {SmoothHeight} from "@/components/public/smooth-height"
 
 export default async function PublicLayout({children}: {children: React.ReactNode}) {
     const settings = await getSettings()
@@ -11,7 +12,9 @@ export default async function PublicLayout({children}: {children: React.ReactNod
     return (
         <MotionProvider>
             <PublicHeader />
-            <main className="flex-1">{children}</main>
+            <main className="min-h-screen">
+                <SmoothHeight>{children}</SmoothHeight>
+            </main>
             <PublicFooter salon={salon} />
         </MotionProvider>
     )
