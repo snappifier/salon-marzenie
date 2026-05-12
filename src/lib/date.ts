@@ -1,5 +1,6 @@
 import { formatInTimeZone, toZonedTime, fromZonedTime } from 'date-fns-tz'
-import {getDay} from "date-fns";
+import {getDay, differenceInCalendarDays} from "date-fns";
+import {pl} from "date-fns/locale"
 import {DayOfWeek} from "@/generated/prisma/client";
 
 export const SALON_TIMEZONE = "Europe/Warsaw"
@@ -73,4 +74,18 @@ export function isoDayToDate(iso: string): Date {
     const [y, m, d] = iso.split("-").map(Number)
     const zoned = new Date(y, m - 1, d, 0, 0, 0, 0)
     return fromZonedTime(zoned, SALON_TIMEZONE)
+}
+
+export function formatRelativeSlot(slot: Date): string {
+    const time = formatInTimeZone(slot, SALON_TIMEZONE, "HH:mm")
+    const now = new Date()
+    const diff = differenceInCalendarDays(slot, now)
+
+    if (diff === 0) return `dzisiaj o ${time}`
+    if (diff === 1) return `jutro o ${time}`
+    if (diff < 7) {
+        const dayName = formatInTimeZone(slot, SALON_TIMEZONE, "EEEE", {locale: pl})
+        return `w ${dayName} o ${time}`
+    }
+    return `${formatInTimeZone(slot, SALON_TIMEZONE, "d MMMM", {locale: pl})} o ${time}`
 }

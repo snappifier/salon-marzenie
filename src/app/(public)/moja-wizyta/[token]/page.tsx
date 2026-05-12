@@ -121,11 +121,8 @@ export default async function ManageBookingPage({params}: Props) {
             )}
 
             <div className="pt-4">
-                <Link
-                    href="/"
-                    className="text-sm text-gray-500 hover:underline"
-                >
-                    ← Powrót na stronę główną
+                <Link href="/" className="text-sm text-gray-500 hover:underline">
+                    Powrót na stronę główną
                 </Link>
             </div>
         </div>

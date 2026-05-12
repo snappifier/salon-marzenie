@@ -8,6 +8,7 @@ import {getStaffForServiceSelection} from "./public-queries"
 import {findSlotsForServices} from "./slots"
 import type {SlotProposal} from "./types"
 import {plPhoneSchema} from "@/lib/validation";
+import {revalidateTag} from "next/cache"
 
 export async function fetchStaffForServices(serviceIds: string[]) {
     return getStaffForServiceSelection(serviceIds)
@@ -173,7 +174,7 @@ export async function createBooking(input: CreateBookingInput): Promise<CreateBo
 
             return {bookingId: booking.id, manageToken: booking.manageToken}
         }, {isolationLevel: "Serializable"})
-
+        revalidateTag("bookings", "max")
         return {success: true, ...result}
     } catch (e: unknown) {
         if (e instanceof Error && e.message === "CONFLICT") {

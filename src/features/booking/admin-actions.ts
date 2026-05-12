@@ -8,6 +8,7 @@ import {findSlotsForServices} from "./slots"
 import {plPhoneSchema} from "@/lib/validation"
 import {getStaffAvailability, isSalonClosedOnDate} from "@/features/availability/logic"
 import {formatTime, getDayOfWeekInSalonTz} from "@/lib/date"
+import {revalidateTag} from "next/cache";
 
 
 async function requireAdmin() {
@@ -195,7 +196,7 @@ export async function adminCreateBooking(input: AdminBookingInput): Promise<Admi
 
             return {bookingId: booking.id}
         }, {isolationLevel: "Serializable"})
-
+        revalidateTag("bookings", "max")
         return {success: true, ...result}
     } catch (e: unknown) {
         if (e instanceof Error) {

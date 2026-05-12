@@ -1,41 +1,48 @@
-import Link from "next/link"
-import {getActiveServicesGrouped} from "@/features/booking/public-queries"
-import {formatMoney} from "@/lib/money"
+import {getSettings} from "@/features/settings/queries"
+import {toPublicSalonInfo} from "@/lib/dto"
+import {getCategoriesWithServices} from "@/features/landing/queries"
+import {Container} from "@/components/ui/container"
+import {ServicesHero} from "@/components/public/services/services-hero"
+import {CategoryNav} from "@/components/public/services/category-nav"
+import {HintBanner} from "@/components/public/services/hint-banner"
+import {CategorySection} from "@/components/public/services/category-section"
+import {FinalCta} from "@/components/public/landing/final-cta"
+
+export const metadata = {
+    title: "Usługi i cennik",
+    description: "Pełna oferta studia kosmetyki estetycznej Marzenie - manicure, pedicure, brwi, rzęsy i więcej.",
+}
+
+const servicesCtaHeading = (
+    <>
+        Wybrałaś <span className="italic font-normal text-rose-600">swoją usługę</span>?
+    </>
+)
 
 export default async function ServicesPage() {
-    const groups = await getActiveServicesGrouped()
+    const settings = await getSettings()
+    const salon = toPublicSalonInfo(settings)
+    const categories = await getCategoriesWithServices()
+
+    const navCategories = categories.map((c) => ({id: c.id, name: c.name, slug: c.slug}))
 
     return (
-        <div className="max-w-4xl mx-auto p-6 space-y-8">
+        <>
+            <ServicesHero />
+            <CategoryNav categories={navCategories} />
+            <Container className="pt-6 md:pt-8">
+                <HintBanner />
+            </Container>
             <div>
-                <h1 className="text-2xl font-bold mb-2">Nasza oferta</h1>
-                <Link
-                    href="/rezerwacja"
-                    className="inline-block px-4 py-2 bg-black text-white rounded"
-                >
-                    Zarezerwuj wizytę
-                </Link>
+                {categories.map((cat, i) => (
+                    <CategorySection key={cat.id} category={cat} index={i} />
+                ))}
             </div>
-
-            {groups.map((group) => (
-                <section key={group.categoryName}>
-                    <h2 className="text-xl font-semibold mb-3">{group.categoryName}</h2>
-                    <div className="space-y-2">
-                        {group.services.map((service) => (
-                            <div key={service.id} className="border rounded p-3 flex items-center justify-between">
-                                <div>
-                                    <div className="font-medium">{service.name}</div>
-                                    {service.description && (
-                                        <div className="text-sm text-gray-500 mt-1">{service.description}</div>
-                                    )}
-                                    <div className="text-sm text-gray-500 mt-1">{service.defaultDurationMin} min</div>
-                                </div>
-                                <div className="font-medium">{formatMoney(service.defaultPriceGr)}</div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            ))}
-        </div>
+            <FinalCta
+                salon={salon}
+                heading={servicesCtaHeading}
+                description="Zarezerwuj online w kilka kliknięć - wybierz pasujący termin i potwierdź. Lub po prostu zadzwoń, dopasujemy."
+            />
+        </>
     )
 }

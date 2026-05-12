@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "eyebrow": "Studio kosmetyki estetycznej",
+    "headline": "Manicure, brwi, kosmetyka.",
+    "headlineHighlight": "W salonie, do którego się wraca.",
+    "subtitle": "Profesjonalna pielęgnacja w kameralnej atmosferze. Zarezerwuj online lub zadzwoń kiedy chcesz."
+  },
+  "stats": [
+    {"num": "12", "suffix": "+", "label": "lat doświadczenia\nw pielęgnacji"},
+    {"num": "1500", "suffix": "+", "label": "zadowolonych\nklientek"},
+    {"num": "4.9", "suffix": "/5", "label": "średnia ocen\nna Facebooku"}
+  ],
+  "brands": ["ARKANA", "IBX System", "GERWOL", "PRP", "Estetyka"],
+  "reviews": [
+    {
+      "text": "PLACEHOLDER: Chodzę do Marzeny od kilku lat i nigdy mnie nie zawiodła. Zawsze profesjonalnie, miło i z dbałością o szczegóły.",
+      "author": "Anna K.",
+      "source": "Facebook"
+    },
+    {
+      "text": "PLACEHOLDER: Najlepszy salon w okolicy. Hybryda trzyma się idealnie 3 tygodnie, brwi zawsze zrobione tak jak chcę.",
+      "author": "Magdalena S.",
+      "source": "Google"
+    },
+    {
+      "text": "PLACEHOLDER: Pierwszy raz byłam wczoraj na pedicure i jestem zachwycona. Bardzo dokładnie, miłe podejście, dobra cena.",
+      "author": "Karolina W.",
+      "source": "Facebook"
+    }
+  ],
+  "certs": [
+    {"name": "ARKANA Eye Complex Care", "desc": "Specjalistyczna pielęgnacja okolic oczu"},
+    {"name": "IBX System Repair", "desc": "Regeneracja i wzmocnienie płytki paznokcia"},
+    {"name": "PRP Therapy", "desc": "Zabiegi z osoczem bogatopłytkowym"}
+  ],
+  "categoryDescriptions": {
+    "manicure": "Klasyczny, hybrydowy, japoński. Pielęgnacja skórek i wzmocnienie płytki.",
+    "pedicure": "Klasyczny i SPA dla zmęczonych stóp. Dla codziennego komfortu.",
+    "brwi-rzesy": "Henna, stylizacja, laminacja, lifting. Naturalne podkreślenie spojrzenia.",
+    "twarz": "Oczyszczanie, peelingi, zabiegi przeciwzmarszczkowe.",
+    "depilacja": "Profesjonalna depilacja woskiem - precyzyjnie i delikatnie."
+  }
+}
