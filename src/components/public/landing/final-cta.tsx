@@ -36,7 +36,7 @@ export function FinalCta({
 
     return (
         <section id="rezerwacja" className="relative overflow-hidden py-16 md:py-24 cta-bloom">
-            <ButterflyWatermark className="absolute -bottom-16 -right-10 w-80 opacity-50" />
+            <ButterflyWatermark className="hidden md:block absolute -bottom-16 -right-10 w-80 opacity-50" />
 
             <Container>
                 <Reveal className="max-w-[720px] mx-auto text-center">

@@ -1,6 +1,7 @@
 "use client"
 
 import {useEffect, useRef, useState} from "react"
+import {motion} from "motion/react"
 import {Container} from "@/components/ui/container"
 import {cn} from "@/lib/cn"
 
@@ -47,9 +48,13 @@ export function CategoryNav({categories}: Props) {
     }, [activeSlug])
 
     return (
-        <nav
+        <motion.nav
             aria-label="Kategorie usług"
-            className="sticky top-[60px] z-40 bg-cream/92 backdrop-blur-md backdrop-saturate-150 border-y border-border-soft"
+            className="sticky top-[64px] z-40 bg-cream/92 backdrop-blur-md backdrop-saturate-150 border-y border-border-soft"
+            initial={{opacity: 0, y: 16}}
+            whileInView={{opacity: 1, y: 0}}
+            viewport={{once: true, margin: "-50px"}}
+            transition={{duration: 0.5, ease: [0.23, 1, 0.32, 1], delay: 0.1}}
         >
             <Container>
                 <div
@@ -76,6 +81,6 @@ export function CategoryNav({categories}: Props) {
                     })}
                 </div>
             </Container>
-        </nav>
+        </motion.nav>
     )
 }
