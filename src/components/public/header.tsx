@@ -12,8 +12,7 @@ import {cn} from "@/lib/cn"
 
 const NAV_LINKS = [
     {href: "/uslugi", label: "Usługi"},
-    {href: "/#opinie", label: "Opinie"},
-    {href: "/#kontakt", label: "Kontakt"},
+    {href: "/kontakt", label: "Kontakt"},
 ]
 
 export function PublicHeader() {
