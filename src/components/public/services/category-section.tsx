@@ -21,9 +21,9 @@ export function CategorySection({category, index}: Props) {
                 <Reveal className="mb-8 md:mb-10">
                     <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 md:gap-12">
                         <div className="flex items-baseline gap-4 flex-wrap">
-							<span className="font-serif italic font-normal text-lg text-rose-500 opacity-70">
-								{String(index + 1).padStart(2, "0")}
-							</span>
+                            <span className="font-serif italic font-normal text-lg text-rose-500 opacity-70">
+                                {String(index + 1).padStart(2, "0")}
+                            </span>
                             <h2 className="font-serif font-medium text-[clamp(28px,4vw,38px)] leading-tight tracking-tight text-graphite-900">
                                 {category.name}
                             </h2>
@@ -36,13 +36,13 @@ export function CategorySection({category, index}: Props) {
                     </div>
                 </Reveal>
 
-                <Reveal delay={0.1}>
-                    <div className="flex flex-col">
-                        {category.services.map((service) => (
-                            <ServiceRow key={service.id} service={service} />
-                        ))}
-                    </div>
-                </Reveal>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                    {category.services.map((service, i) => (
+                        <Reveal key={service.id} delay={0.1 + i * 0.04} className="h-full">
+                            <ServiceRow service={service} />
+                        </Reveal>
+                    ))}
+                </div>
             </Container>
         </section>
     )
