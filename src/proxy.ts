@@ -1,24 +1,48 @@
 import NextAuth from "next-auth"
-import {NextResponse} from "next/server"
-import {authConfig} from "@/lib/auth.config"
+import { NextResponse } from "next/server"
+import { authConfig } from "@/lib/auth.config"
 
-const {auth} = NextAuth(authConfig)
+const { auth } = NextAuth(authConfig)
 
 export default auth((req) => {
+    const { nextUrl } = req
     const isLoggedIn = !!req.auth
-    const isOnLogin = req.nextUrl.pathname === "/admin/login"
+    const role = req.auth?.user?.role
 
-    if (!isLoggedIn && !isOnLogin) {
-        return NextResponse.redirect(new URL("/admin/login", req.url))
+    const isAdminRoute = nextUrl.pathname.startsWith("/admin")
+    const isCustomerRoute = nextUrl.pathname.startsWith("/konto")
+
+    const isAdminLogin = nextUrl.pathname === "/admin/login"
+    const isCustomerLogin = nextUrl.pathname === "/logowanie"
+
+    if (isAdminRoute) {
+        if (isAdminLogin) {
+            if (isLoggedIn && role === "admin") {
+                return NextResponse.redirect(new URL("/admin/kalendarz", nextUrl))
+            }
+            return NextResponse.next()
+        }
+
+        if (!isLoggedIn || role !== "admin") {
+            return NextResponse.redirect(new URL("/admin/login", nextUrl))
+        }
     }
 
-    if (isLoggedIn && isOnLogin) {
-        return NextResponse.redirect(new URL("/admin/kalendarz", req.url))
+    if (isCustomerRoute) {
+        if (!isLoggedIn || role !== "customer") {
+            return NextResponse.redirect(new URL("/logowanie", nextUrl))
+        }
+    }
+
+    if (isCustomerLogin) {
+        if (isLoggedIn && role === "customer") {
+            return NextResponse.redirect(new URL("/konto", nextUrl))
+        }
     }
 
     return NextResponse.next()
 })
 
 export const config = {
-    matcher: ["/admin/:path*"],
+    matcher: ["/admin/:path*", "/konto/:path*", "/logowanie", "/rejestracja"],
 }
