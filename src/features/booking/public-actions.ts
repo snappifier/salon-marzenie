@@ -2,6 +2,7 @@
 
 import {hash} from "bcryptjs"
 import {prisma} from "@/lib/prisma"
+import {auth} from "@/lib/auth"
 import {dateToIsoDay, isoDayToDate} from "@/lib/date"
 import {findSlotsForServices} from "./slots"
 import type {SlotProposal} from "./types"
@@ -18,9 +19,6 @@ export interface AvailabilityResult {
     slotsByDay: Record<string, SlotProposal[]>
 }
 
-// Pure async impl — wrapped przez unstable_cache poniżej. Trzymamy oddzielnie
-// żeby cache mógł wziąć ją jako pierwszy arg (cached function), public Server
-// Action jest tylko cienkim wrapperem.
 async function fetchAvailabilityImpl(
     requests: Array<{serviceId: string; staffPreference: string}>,
     startDateIso: string,
@@ -54,24 +52,35 @@ async function fetchAvailabilityImpl(
     return {days, slotsByDay}
 }
 
-// Cache cross-request. Klucz hashowany z args (requests jako JSON, dateIso, days).
-// Tag "bookings" — invalidated przez revalidateTag w createBooking/cancelBooking/etc.
-// 300s revalidate = max stale time przy braku invalidacji tag (safety net).
 const cachedFetchAvailability = unstable_cache(
     fetchAvailabilityImpl,
     ["fetchAvailability"],
     {revalidate: 300, tags: ["bookings"]},
 )
 
-// Combined fetch: zwraca day-level counts i per-day slot proposals w jednym roundtripie.
-// Pierwsze wywołanie ~500ms-2s (zależnie od bazy), kolejne dla tych samych argów ~5ms
-// (cache hit). Invalidacja przy każdym createBooking / cancelBooking przez tag.
+function rehydrateSlot(slot: SlotProposal): SlotProposal {
+    return {
+        startAt: new Date(slot.startAt),
+        endAt: new Date(slot.endAt),
+        assignments: slot.assignments.map((a) => ({
+            ...a,
+            startAt: new Date(a.startAt),
+            endAt: new Date(a.endAt),
+        })),
+    }
+}
+
 export async function fetchAvailability(
     requests: Array<{serviceId: string; staffPreference: string}>,
     startDateIso: string,
     daysAhead: number = 14,
 ): Promise<AvailabilityResult> {
-    return cachedFetchAvailability(requests, startDateIso, daysAhead)
+    const cached = await cachedFetchAvailability(requests, startDateIso, daysAhead)
+    const slotsByDay: Record<string, SlotProposal[]> = {}
+    for (const dateIso in cached.slotsByDay) {
+        slotsByDay[dateIso] = cached.slotsByDay[dateIso].map(rehydrateSlot)
+    }
+    return {days: cached.days, slotsByDay}
 }
 
 export async function fetchSlotsForDay(
@@ -106,11 +115,14 @@ export async function createBooking(input: CreateBookingInput): Promise<CreateBo
         return {success: false, error: "Wybrany termin nie jest już dostępny. Wybierz inny."}
     }
 
+    const session = await auth()
+    const loggedInCustomerId = session?.user?.role === "customer" ? session.user.id : null
+
     try {
         const result = await prisma.$transaction(async (tx) => {
-            let customerRecord = await tx.customer.findUnique({
-                where: {phone: customer.phone},
-            })
+            let customerRecord = loggedInCustomerId
+                ? await tx.customer.findUnique({where: {id: loggedInCustomerId}})
+                : await tx.customer.findUnique({where: {phone: customer.phone}})
 
             if (customerRecord) {
                 if (customer.email && !customerRecord.email) {

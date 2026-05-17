@@ -2,7 +2,7 @@
 
 import {useEffect, useMemo, useRef, useState} from "react"
 import {AnimatePresence, motion, type Variants} from "motion/react"
-import {useWizardStore, prefsKey, slotsKey, deriveRequests, type StaffOption} from "./wizard-store"
+import {useWizardStore, prefsKey, slotsKey, deriveRequests, type StaffOption, type CustomerData} from "./wizard-store"
 import {StepIndicator} from "./step-indicator"
 import {StepServices} from "./step-services"
 import {StepStaff} from "./step-staff"
@@ -34,6 +34,8 @@ interface Props {
     staffNames: StaffName[]
     allStaffByService: Record<string, StaffOption[]>
     initialServiceIds?: string[]
+    prefilledCustomer?: Partial<CustomerData>
+    isLoggedIn?: boolean
 }
 
 const STEP_LABELS = [
@@ -65,7 +67,7 @@ const stepVariants: Variants = {
     }),
 }
 
-export function Wizard({groupedServices, staffNames, allStaffByService, initialServiceIds}: Props) {
+export function Wizard({groupedServices, staffNames, allStaffByService, initialServiceIds, prefilledCustomer, isLoggedIn}: Props) {
     const step = useWizardStore((s) => s.step)
     const selectedServices = useWizardStore((s) => s.selectedServices)
     const preferredStaffId = useWizardStore((s) => s.preferredStaffId)
@@ -75,11 +77,27 @@ export function Wizard({groupedServices, staffNames, allStaffByService, initialS
     const setSlotsCache = useWizardStore((s) => s.setSlotsCache)
 
     useEffect(() => {
+        const patch: Parameters<typeof initWith>[0] = {}
         if (initialServiceIds && initialServiceIds.length > 0) {
-            initWith({selectedServices: initialServiceIds})
+            patch.selectedServices = initialServiceIds
+        }
+        if (prefilledCustomer) {
+            patch.customer = {
+                firstName: prefilledCustomer.firstName ?? "",
+                lastName: prefilledCustomer.lastName ?? "",
+                phone: prefilledCustomer.phone ?? "",
+                email: prefilledCustomer.email ?? "",
+                customerNote: "",
+                marketingConsent: prefilledCustomer.marketingConsent ?? false,
+                createAccount: false,
+                password: "",
+            }
+        }
+        if (Object.keys(patch).length > 0) {
+            initWith(patch)
         }
         return () => reset()
-    }, [reset, initWith, initialServiceIds])
+    }, [reset, initWith, initialServiceIds, prefilledCustomer])
 
     const prevStepRef = useRef(step)
     const direction: 1 | -1 = step >= prevStepRef.current ? 1 : -1
@@ -177,7 +195,7 @@ export function Wizard({groupedServices, staffNames, allStaffByService, initialS
                             {step === 2 && <StepStaff groupedServices={groupedServices} allStaffByService={allStaffByService} />}
                             {step === 3 && <StepDate />}
                             {step === 4 && <StepTime />}
-                            {step === 5 && <StepDetails />}
+                            {step === 5 && <StepDetails isLoggedIn={isLoggedIn} />}
                             {step === 6 && <StepSummary serviceNames={serviceNames} staffNames={staffNames} allStaffByService={allStaffByService} />}
                         </motion.div>
                     </AnimatePresence>

@@ -12,7 +12,11 @@ import {Textarea} from "@/components/ui/textarea"
 import {Heading} from "@/components/ui/heading"
 import {cn} from "@/lib/cn"
 
-export function StepDetails() {
+interface StepDetailsProps {
+    isLoggedIn?: boolean
+}
+
+export function StepDetails({isLoggedIn = false}: StepDetailsProps) {
     const customer = useWizardStore((s) => s.customer)
     const setCustomer = useWizardStore((s) => s.setCustomer)
     const nextStep = useWizardStore((s) => s.nextStep)
@@ -29,7 +33,7 @@ export function StepDetails() {
     const emailOk = emailParse.success
     const emailErrorMsg = !emailOk ? emailParse.error.issues[0]?.message : undefined
 
-    const accountOk = !customer.createAccount || (customer.email.trim().length > 0 && customer.password.length >= 8)
+    const accountOk = isLoggedIn || !customer.createAccount || (customer.email.trim().length > 0 && customer.password.length >= 8)
     const isValid =
         customer.firstName.trim().length > 0 &&
         customer.lastName.trim().length > 0 &&
@@ -45,7 +49,9 @@ export function StepDetails() {
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Twoje dane</Heading>
                 <p className="text-sm text-graphite-600 leading-relaxed">
-                    Wyślemy SMS-a z potwierdzeniem na podany numer.
+                    {isLoggedIn
+                        ? "Dane uzupełnione z Twojego konta. SMS-a z potwierdzeniem wyślemy na zapisany numer."
+                        : "Wyślemy SMS-a z potwierdzeniem na podany numer."}
                 </p>
             </motion.div>
 
@@ -84,14 +90,14 @@ export function StepDetails() {
 
                 <motion.div variants={itemVariants}>
                     <Field
-                        label={customer.createAccount ? "Email" : "Email (opcjonalnie)"}
+                        label={isLoggedIn || !customer.createAccount ? "Email (opcjonalnie)" : "Email"}
                         type="email"
                         value={customer.email}
                         onChange={(e) => setCustomer({email: e.target.value})}
                         onBlur={() => setEmailTouched(true)}
                         placeholder="adres@email.pl"
                         autoComplete="email"
-                        required={customer.createAccount}
+                        required={!isLoggedIn && customer.createAccount}
                         error={showEmailError ? emailErrorMsg : undefined}
                     />
                 </motion.div>
@@ -107,38 +113,40 @@ export function StepDetails() {
                 </motion.div>
             </motion.div>
 
-            <motion.div
-                className="pt-5 border-t border-border-soft space-y-4"
-                variants={itemVariants}
-            >
-                <Checkbox
-                    checked={customer.createAccount}
-                    onChange={(v) => setCustomer({createAccount: v})}
-                    label="Załóż konto"
-                    hint="Zobaczysz historię swoich wizyt i łatwiej zrobisz kolejną rezerwację."
-                />
+            {!isLoggedIn && (
+                <motion.div
+                    className="pt-5 border-t border-border-soft space-y-4"
+                    variants={itemVariants}
+                >
+                    <Checkbox
+                        checked={customer.createAccount}
+                        onChange={(v) => setCustomer({createAccount: v})}
+                        label="Załóż konto"
+                        hint="Zobaczysz historię swoich wizyt i łatwiej zrobisz kolejną rezerwację."
+                    />
 
-                {customer.createAccount && (
-                    <div className="pl-8 max-w-md">
-                        <Field
-                            label="Hasło"
-                            type="password"
-                            value={customer.password}
-                            onChange={(e) => setCustomer({password: e.target.value})}
-                            hint="Minimum 8 znaków"
-                            required
-                            autoComplete="new-password"
-                        />
-                    </div>
-                )}
+                    {customer.createAccount && (
+                        <div className="pl-8 max-w-md">
+                            <Field
+                                label="Hasło"
+                                type="password"
+                                value={customer.password}
+                                onChange={(e) => setCustomer({password: e.target.value})}
+                                hint="Minimum 8 znaków"
+                                required
+                                autoComplete="new-password"
+                            />
+                        </div>
+                    )}
 
-                <Checkbox
-                    checked={customer.marketingConsent}
-                    onChange={(v) => setCustomer({marketingConsent: v})}
-                    label="Zgoda marketingowa"
-                    hint="Wyrażam zgodę na otrzymywanie informacji o promocjach i nowych usługach."
-                />
-            </motion.div>
+                    <Checkbox
+                        checked={customer.marketingConsent}
+                        onChange={(v) => setCustomer({marketingConsent: v})}
+                        label="Zgoda marketingowa"
+                        hint="Wyrażam zgodę na otrzymywanie informacji o promocjach i nowych usługach."
+                    />
+                </motion.div>
+            )}
 
             <motion.p
                 className="text-[11px] text-graphite-400 leading-relaxed"

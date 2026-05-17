@@ -69,7 +69,7 @@ interface WizardState {
     setDaysCache: (key: string, data: DayWithSlotCount[]) => void
     setSlotsCache: (key: string, data: SlotProposal[]) => void
 
-    initWith: (patch: Partial<Pick<WizardState, "selectedServices" | "selectedDate" | "selectedSlotStartIso">>) => void
+    initWith: (patch: Partial<Pick<WizardState, "selectedServices" | "selectedDate" | "selectedSlotStartIso" | "customer">>) => void
     reset: () => void
 }
 
