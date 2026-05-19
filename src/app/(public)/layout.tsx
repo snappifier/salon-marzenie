@@ -7,6 +7,7 @@ import {PublicHeader, type HeaderCustomer} from "@/components/public/header"
 import {PublicFooter} from "@/components/public/footer"
 import {ScrollToTop} from "@/components/public/scroll-to-top"
 import {SmoothHeight} from "@/components/public/smooth-height"
+import {CookieBanner} from "@/components/public/cookie-banner"
 
 export default async function PublicLayout({children}: {children: React.ReactNode}) {
     const [settings, session] = await Promise.all([getSettings(), auth()])
@@ -29,6 +30,7 @@ export default async function PublicLayout({children}: {children: React.ReactNod
                 <SmoothHeight>{children}</SmoothHeight>
             </main>
             <PublicFooter salon={salon} />
+            <CookieBanner />
         </MotionProvider>
     )
 }

@@ -2,7 +2,13 @@
 
 import {revalidatePath, revalidateTag} from "next/cache"
 import {prisma} from "@/lib/prisma"
-import {canCancelByPolicy, canCancelByStatus} from "./manage-logic"
+import {
+    MIN_CONFIRM_HOURS_BEFORE,
+    canCancelByPolicy,
+    canCancelByStatus,
+    canConfirmByPolicy,
+    canConfirmByStatus,
+} from "./manage-logic"
 
 export type CancelBookingResult =
     | {success: true}
@@ -47,6 +53,52 @@ export async function cancelBooking(token: string): Promise<CancelBookingResult>
             cancelledAt: new Date(),
             cancelledBy: "CUSTOMER",
         },
+    })
+
+    revalidatePath(`/moja-wizyta/${token}`)
+    revalidateTag("bookings", "max")
+    return {success: true}
+}
+
+export type ConfirmBookingResult =
+    | {success: true}
+    | {success: false; error: string}
+
+export async function confirmBooking(token: string): Promise<ConfirmBookingResult> {
+    const booking = await prisma.booking.findUnique({
+        where: {manageToken: token},
+        include: {items: {orderBy: {startAt: "asc"}, take: 1}},
+    })
+
+    if (!booking) {
+        return {success: false, error: "Nie znaleziono rezerwacji."}
+    }
+
+    if (!canConfirmByStatus(booking.status)) {
+        if (booking.status === "CONFIRMED") {
+            return {success: false, error: "Wizyta jest już potwierdzona."}
+        }
+        if (booking.status === "CANCELLED") {
+            return {success: false, error: "Rezerwacja została anulowana."}
+        }
+        return {success: false, error: "Tej wizyty nie można potwierdzić."}
+    }
+
+    const firstItem = booking.items[0]
+    if (!firstItem) {
+        return {success: false, error: "Rezerwacja nie ma zabiegów - skontaktuj się z salonem."}
+    }
+
+    if (!canConfirmByPolicy(firstItem.startAt, MIN_CONFIRM_HOURS_BEFORE, new Date())) {
+        return {
+            success: false,
+            error: "Okno potwierdzenia online minęło (wymagane min. 3 dni przed wizytą). Skontaktuj się z salonem.",
+        }
+    }
+
+    await prisma.booking.update({
+        where: {id: booking.id},
+        data: {status: "CONFIRMED"},
     })
 
     revalidatePath(`/moja-wizyta/${token}`)

@@ -1,12 +1,17 @@
 import {describe, expect, it} from "vitest"
-import {canCancelByPolicy, canCancelByStatus} from "./manage-logic"
+import {
+    canCancelByPolicy,
+    canCancelByStatus,
+    canConfirmByPolicy,
+    canConfirmByStatus,
+} from "./manage-logic"
 
 describe("canCancelByStatus", () => {
     it("PENDING — można", () => {
         expect(canCancelByStatus("PENDING")).toBe(true)
     })
-    it("CONFIRMED — można", () => {
-        expect(canCancelByStatus("CONFIRMED")).toBe(true)
+    it("CONFIRMED — nie można (po potwierdzeniu wymaga kontaktu z salonem)", () => {
+        expect(canCancelByStatus("CONFIRMED")).toBe(false)
     })
     it("CANCELLED — nie można", () => {
         expect(canCancelByStatus("CANCELLED")).toBe(false)
@@ -16,6 +21,24 @@ describe("canCancelByStatus", () => {
     })
     it("NO_SHOW — nie można", () => {
         expect(canCancelByStatus("NO_SHOW")).toBe(false)
+    })
+})
+
+describe("canConfirmByStatus", () => {
+    it("PENDING — można", () => {
+        expect(canConfirmByStatus("PENDING")).toBe(true)
+    })
+    it("CONFIRMED — nie można (już potwierdzona)", () => {
+        expect(canConfirmByStatus("CONFIRMED")).toBe(false)
+    })
+    it("CANCELLED — nie można", () => {
+        expect(canConfirmByStatus("CANCELLED")).toBe(false)
+    })
+    it("COMPLETED — nie można", () => {
+        expect(canConfirmByStatus("COMPLETED")).toBe(false)
+    })
+    it("NO_SHOW — nie można", () => {
+        expect(canConfirmByStatus("NO_SHOW")).toBe(false)
     })
 })
 
@@ -61,5 +84,39 @@ describe("canCancelByPolicy", () => {
 
         const twoDaysBefore = new Date(2026, 4, 13, 14, 0)
         expect(canCancelByPolicy(startsAt, 48, twoDaysBefore)).toBe(true) // dokładnie 48h, OK
+    })
+})
+
+describe("canConfirmByPolicy", () => {
+    const startsAt = new Date(2026, 4, 15, 14, 0) // 15 maja 14:00
+
+    it("daleko przed deadline (7 dni)", () => {
+        const now = new Date(2026, 4, 8, 14, 0)
+        expect(canConfirmByPolicy(startsAt, 72, now)).toBe(true)
+    })
+
+    it("dokładnie w deadline (72h przed)", () => {
+        const now = new Date(2026, 4, 12, 14, 0)
+        expect(canConfirmByPolicy(startsAt, 72, now)).toBe(true)
+    })
+
+    it("tuż przed deadline (72h 1min)", () => {
+        const now = new Date(2026, 4, 12, 13, 59)
+        expect(canConfirmByPolicy(startsAt, 72, now)).toBe(true)
+    })
+
+    it("zaraz po deadline (71h 59min przed)", () => {
+        const now = new Date(2026, 4, 12, 14, 1)
+        expect(canConfirmByPolicy(startsAt, 72, now)).toBe(false)
+    })
+
+    it("1 dzień przed — za późno", () => {
+        const now = new Date(2026, 4, 14, 14, 0)
+        expect(canConfirmByPolicy(startsAt, 72, now)).toBe(false)
+    })
+
+    it("po starcie wizyty — za późno", () => {
+        const now = new Date(2026, 4, 15, 15, 0)
+        expect(canConfirmByPolicy(startsAt, 72, now)).toBe(false)
     })
 })
