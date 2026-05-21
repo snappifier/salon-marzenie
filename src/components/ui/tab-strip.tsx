@@ -1,0 +1,91 @@
+// src/components/ui/tab-strip.tsx
+"use client"
+
+import {motion} from "motion/react"
+import {cn} from "@/lib/cn"
+
+export interface Tab {
+	id: string
+	label: string
+	badge?: number | string
+}
+
+interface TabStripProps {
+	className?: string
+	tabs: Tab[]
+	active: string
+	onChange: (id: string) => void
+	layoutId?: string
+	"aria-label"?: string
+}
+
+const EASE_OUT_QUINT: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+export function TabStrip({
+	className,
+	tabs,
+	active,
+	onChange,
+	layoutId = "tab-strip-underline",
+	"aria-label": ariaLabel,
+}: TabStripProps) {
+	return (
+		<div
+			className={cn(
+				"relative border-b border-border-soft",
+				"overflow-x-auto scrollbar-none -mx-1",
+				className,
+			)}
+			role="tablist"
+			aria-label={ariaLabel}
+		>
+			<div className="inline-flex items-stretch gap-6 px-1 min-w-full">
+				{tabs.map((tab) => {
+					const isActive = tab.id === active
+					return (
+						<button
+							key={tab.id}
+							type="button"
+							role="tab"
+							aria-selected={isActive}
+							aria-controls={`panel-${tab.id}`}
+							id={`tab-${tab.id}`}
+							tabIndex={isActive ? 0 : -1}
+							onClick={() => onChange(tab.id)}
+							className={cn(
+								"relative shrink-0 inline-flex items-center gap-2 pb-3 pt-2 text-sm font-medium whitespace-nowrap",
+								"transition-[color] duration-150 ease-out",
+								isActive
+									? "text-rose-600"
+									: "text-graphite-600 hover-supported:hover:text-graphite-900",
+							)}
+						>
+							<span>{tab.label}</span>
+							{tab.badge !== undefined && (
+								<span
+									className={cn(
+										"inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[11px] tabular-nums font-medium",
+										"transition-[background-color,color] duration-150 ease-out",
+										isActive
+											? "bg-rose-100 text-rose-700"
+											: "bg-graphite-100 text-graphite-600",
+									)}
+								>
+									{tab.badge}
+								</span>
+							)}
+							{isActive && (
+								<motion.span
+									className="absolute left-0 right-0 -bottom-px h-[2px] bg-rose-600 rounded-full"
+									layoutId={layoutId}
+									transition={{duration: 0.24, ease: EASE_OUT_QUINT}}
+									aria-hidden="true"
+								/>
+							)}
+						</button>
+					)
+				})}
+			</div>
+		</div>
+	)
+}

@@ -168,7 +168,10 @@ export async function createBooking(input: CreateBookingInput): Promise<CreateBo
             const booking = await tx.booking.create({
                 data: {
                     customerId: customerRecord.id,
-                    status: "PENDING",
+                    // Online bookings są od razu potwierdzone — nie ma osobnego confirm flow
+                    // dla klientów. PENDING zostaje w enum dla bookingów tworzonych z admina
+                    // (np. wymagających review lub zaliczki).
+                    status: "CONFIRMED",
                     customerNote: customer.customerNote || null,
                     createdByAdmin: false,
                     items: {

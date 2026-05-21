@@ -1,135 +1,226 @@
+// src/components/staff/staff-services-form.tsx
 "use client"
 
-import {useActionState} from "react"
 import {useRouter} from "next/navigation"
-import type {Service, Category, StaffService} from "@/generated/prisma/client"
-import {saveStaffServices, type StaffServicesFormState} from "@/features/staff/services-actions"
+import {useMemo, useState, useTransition} from "react"
+import {ChevronDown, Sparkles} from "lucide-react"
+import {motion, AnimatePresence} from "motion/react"
+import {CheckboxField} from "@/components/ui/checkbox-field"
+import {EmptyState} from "@/components/ui/empty-state"
+import {StickySaveBar} from "@/components/admin-shell/sticky-save-bar"
+import {useToast} from "@/components/ui/toast"
+import {saveStaffServicesJson} from "@/features/staff/services-actions"
 import {formatMoney} from "@/lib/money"
+import {cn} from "@/lib/cn"
+import type {StaffServiceAssignment} from "@/features/staff/queries"
 
-type ServiceWithCategory = Service & {category: Category}
-
-type Props = {
-    staffId: string
-    allServices: ServiceWithCategory[]
-    currentAssignments: StaffService[]
+interface StaffServicesFormProps {
+	staffId: string
+	assignments: StaffServiceAssignment[]
 }
 
-const initialState: StaffServicesFormState = {}
+interface RowState {
+	serviceId: string
+	name: string
+	categoryName: string
+	defaultDurationMin: number
+	defaultBufferAfterMin: number
+	defaultPriceGr: number
+	assigned: boolean
+	durationOverride: string
+	bufferOverride: string
+	priceOverride: string
+	expanded: boolean
+}
 
-export function StaffServicesForm({staffId, allServices, currentAssignments}: Props) {
-    const router = useRouter()
-    const allServiceIds = allServices.map((s) => s.id)
-    const boundAction = saveStaffServices.bind(null, staffId, allServiceIds)
-    const [state, formAction, pending] = useActionState(boundAction, initialState)
+function toRowState(a: StaffServiceAssignment): RowState {
+	return {
+		serviceId: a.serviceId,
+		name: a.name,
+		categoryName: a.categoryName,
+		defaultDurationMin: a.defaultDurationMin,
+		defaultBufferAfterMin: a.defaultBufferAfterMin,
+		defaultPriceGr: a.defaultPriceGr,
+		assigned: a.assigned,
+		durationOverride: a.durationOverrideMin !== null ? String(a.durationOverrideMin) : "",
+		bufferOverride: a.bufferOverrideMin !== null ? String(a.bufferOverrideMin) : "",
+		priceOverride: a.priceOverrideGr !== null ? (a.priceOverrideGr / 100).toFixed(2) : "",
+		expanded: false,
+	}
+}
 
-    const byServiceId = new Map(currentAssignments.map((a) => [a.serviceId, a]))
+function dirtyKey(r: RowState): string {
+	return `${r.assigned}|${r.durationOverride}|${r.bufferOverride}|${r.priceOverride}`
+}
 
-    const grouped = new Map<string, {category: Category; services: ServiceWithCategory[]}>()
-    for (const service of allServices) {
-        const existing = grouped.get(service.categoryId)
-        if (existing) {
-            existing.services.push(service)
-        } else {
-            grouped.set(service.categoryId, {category: service.category, services: [service]})
-        }
-    }
+const EASE_OUT_QUINT: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
-    return (
-        <form action={formAction} className="space-y-6">
-            {Array.from(grouped.values()).map(({category, services}) => (
-                <section key={category.id}>
-                    <h2 className="text-lg font-semibold mb-2">{category.name}</h2>
-                    <div className="border rounded">
-                        <table className="w-full">
-                            <thead className="bg-gray-50">
-                            <tr className="text-left text-sm">
-                                <th className="p-2 w-8"></th>
-                                <th className="p-2">Usługa</th>
-                                <th className="p-2">Domyślnie</th>
-                                <th className="p-2">Czas (min)</th>
-                                <th className="p-2">Bufor (min)</th>
-                                <th className="p-2">Cena (gr)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {services.map((service) => {
-                                const assigned = byServiceId.get(service.id)
-                                const isAssigned = !!assigned
-                                const error = state.rowErrors?.[service.id]
+export function StaffServicesForm({staffId, assignments}: StaffServicesFormProps) {
+	const router = useRouter()
+	const toast = useToast()
+	const [, startTransition] = useTransition()
+	const [initial, setInitial] = useState<RowState[]>(() => assignments.map(toRowState))
+	const [rows, setRows] = useState<RowState[]>(initial)
+	const [submitting, setSubmitting] = useState(false)
 
-                                return (
-                                    <tr key={service.id} className="border-t">
-                                        <td className="p-2">
-                                            <input
-                                                type="checkbox"
-                                                name={`${service.id}_assigned`}
-                                                defaultChecked={isAssigned}
-                                                className="w-4 h-4"
-                                            />
-                                        </td>
-                                        <td className="p-2">{service.name}</td>
-                                        <td className="p-2 text-sm text-gray-500">
-                                            {service.defaultDurationMin}min / {service.defaultBufferAfterMin}min / {formatMoney(service.defaultPriceGr)}
-                                        </td>
-                                        <td className="p-2">
-                                            <input
-                                                type="number"
-                                                name={`${service.id}_duration`}
-                                                defaultValue={assigned?.durationOverrideMin ?? ""}
-                                                placeholder={String(service.defaultDurationMin)}
-                                                className="w-20 border p-1 rounded text-sm"
-                                            />
-                                        </td>
-                                        <td className="p-2">
-                                            <input
-                                                type="number"
-                                                name={`${service.id}_buffer`}
-                                                defaultValue={assigned?.bufferOverrideMin ?? ""}
-                                                placeholder={String(service.defaultBufferAfterMin)}
-                                                className="w-20 border p-1 rounded text-sm"
-                                            />
-                                        </td>
-                                        <td className="p-2">
-                                            <input
-                                                type="number"
-                                                name={`${service.id}_price`}
-                                                defaultValue={assigned?.priceOverrideGr ?? ""}
-                                                placeholder={String(service.defaultPriceGr)}
-                                                className="w-24 border p-1 rounded text-sm"
-                                            />
-                                            {error && (
-                                                <p className="text-red-600 text-xs mt-1">{error}</p>
-                                            )}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            ))}
+	const grouped = useMemo(() => {
+		const map = new Map<string, RowState[]>()
+		for (const r of rows) {
+			const list = map.get(r.categoryName) ?? []
+			list.push(r)
+			map.set(r.categoryName, list)
+		}
+		return Array.from(map.entries())
+	}, [rows])
 
-            {state.error && (
-                <p className="text-red-600">{state.error}</p>
-            )}
+	const isDirty = rows.some((r, idx) => dirtyKey(r) !== dirtyKey(initial[idx]))
 
-            <div className="flex gap-2">
-                <button
-                    type="submit"
-                    disabled={pending}
-                    className="px-4 py-2 bg-black text-white rounded disabled:opacity-50"
-                >
-                    {pending ? "Zapisywanie..." : "Zapisz przypisania"}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => router.push("/admin/pracownicy")}
-                    className="px-4 py-2 border rounded"
-                >
-                    Powrót
-                </button>
-            </div>
-        </form>
-    )
+	function updateRow(serviceId: string, patch: Partial<RowState>) {
+		setRows((prev) => prev.map((r) => (r.serviceId === serviceId ? {...r, ...patch} : r)))
+	}
+
+	function discard() {
+		setRows(initial)
+	}
+
+	async function handleSubmit() {
+		setSubmitting(true)
+		try {
+			const payload = rows.map((r) => {
+				const duration = r.durationOverride.trim() === "" ? null : Number(r.durationOverride)
+				const buffer = r.bufferOverride.trim() === "" ? null : Number(r.bufferOverride)
+				const priceZl = r.priceOverride.trim() === "" ? null : Number(r.priceOverride.replace(",", "."))
+				return {
+					serviceId: r.serviceId,
+					assigned: r.assigned,
+					durationOverrideMin: duration,
+					bufferOverrideMin: buffer,
+					priceOverrideGr: priceZl === null ? null : Math.round(priceZl * 100),
+				}
+			})
+			const r = await saveStaffServicesJson(staffId, payload)
+			if (!r.success) {
+				toast.error(r.error)
+				return
+			}
+			toast.success("Zapisano przypisania usług")
+			setInitial(rows)
+			startTransition(() => router.refresh())
+		} finally {
+			setSubmitting(false)
+		}
+	}
+
+	if (rows.length === 0) {
+		return (
+			<EmptyState
+				icon={<Sparkles size={24} />}
+				title="Brak usług"
+				description="Dodaj najpierw usługi w sekcji Oferta, żeby przypisać je do pracownika."
+				action={{label: "Przejdź do Oferty", href: "/admin/oferta"}}
+			/>
+		)
+	}
+
+	return (
+		<>
+			<div className="flex flex-col gap-5 pb-32">
+				<p className="text-sm text-graphite-600">
+					Zaznacz usługi, które wykonuje ten pracownik. Rozwiń wiersz, żeby nadpisać domyślny czas lub cenę.
+				</p>
+
+				{grouped.map(([categoryName, categoryRows]) => (
+					<div key={categoryName} className="flex flex-col gap-2">
+						<h3 className="text-[11px] font-medium uppercase tracking-[0.18em] text-rose-600 px-1">
+							{categoryName}
+						</h3>
+						{categoryRows.map((row) => (
+							<div
+								key={row.serviceId}
+								className={cn(
+									"rounded-2xl border overflow-hidden bg-white",
+									row.assigned ? "border-rose-200/60" : "border-border-soft",
+								)}
+							>
+								<div className="flex items-center gap-3 p-4">
+									<CheckboxField
+										className="flex-1"
+										label={row.name}
+										description={`${row.defaultDurationMin} min · ${formatMoney(row.defaultPriceGr)}`}
+										checked={row.assigned}
+										onChange={(e) => updateRow(row.serviceId, {assigned: e.target.checked})}
+									/>
+									{row.assigned && (
+										<button
+											type="button"
+											className={cn(
+												"inline-flex items-center justify-center w-9 h-9 rounded-full text-graphite-500 shrink-0",
+												"transition-[background-color,color] duration-150 ease-out",
+												"hover-supported:hover:bg-graphite-100 hover-supported:hover:text-graphite-900",
+											)}
+											aria-label={row.expanded ? "Schowaj nadpisania" : "Pokaż nadpisania"}
+											aria-expanded={row.expanded}
+											onClick={() => updateRow(row.serviceId, {expanded: !row.expanded})}
+										>
+											<ChevronDown size={16} className={cn("transition-transform duration-150 ease-out", row.expanded && "rotate-180")} />
+										</button>
+									)}
+								</div>
+								<AnimatePresence>
+									{row.assigned && row.expanded && (
+										<motion.div
+											className="border-t border-border-soft bg-warm/40"
+											initial={{height: 0, opacity: 0}}
+											animate={{height: "auto", opacity: 1, transition: {duration: 0.24, ease: EASE_OUT_QUINT}}}
+											exit={{height: 0, opacity: 0, transition: {duration: 0.18, ease: [0.4, 0, 1, 1]}}}
+										>
+											<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4">
+												<div>
+													<label className="block text-xs font-medium text-graphite-700 mb-1">Czas (min)</label>
+													<input
+														type="number"
+														min={5}
+														max={480}
+														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+														placeholder={`${row.defaultDurationMin} (domyślnie)`}
+														value={row.durationOverride}
+														onChange={(e) => updateRow(row.serviceId, {durationOverride: e.target.value})}
+													/>
+												</div>
+												<div>
+													<label className="block text-xs font-medium text-graphite-700 mb-1">Bufor (min)</label>
+													<input
+														type="number"
+														min={0}
+														max={120}
+														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+														placeholder={`${row.defaultBufferAfterMin} (domyślnie)`}
+														value={row.bufferOverride}
+														onChange={(e) => updateRow(row.serviceId, {bufferOverride: e.target.value})}
+													/>
+												</div>
+												<div>
+													<label className="block text-xs font-medium text-graphite-700 mb-1">Cena (zł)</label>
+													<input
+														type="text"
+														inputMode="decimal"
+														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+														placeholder={`${(row.defaultPriceGr / 100).toFixed(2)} (domyślnie)`}
+														value={row.priceOverride}
+														onChange={(e) => updateRow(row.serviceId, {priceOverride: e.target.value})}
+													/>
+												</div>
+											</div>
+										</motion.div>
+									)}
+								</AnimatePresence>
+							</div>
+						))}
+					</div>
+				))}
+			</div>
+
+			<StickySaveBar open={isDirty} onDiscard={discard} onSave={handleSubmit} saving={submitting} />
+		</>
+	)
 }

@@ -1,129 +1,229 @@
+// src/components/customers/customer-form.tsx
 "use client"
 
-import {useActionState} from "react"
 import {useRouter} from "next/navigation"
+import {useState, useTransition} from "react"
+import {Field} from "@/components/ui/field"
+import {Textarea} from "@/components/ui/textarea"
+import {Button} from "@/components/ui/button"
+import {CheckboxField} from "@/components/ui/checkbox-field"
+import {StickySaveBar} from "@/components/admin-shell/sticky-save-bar"
+import {useToast} from "@/components/ui/toast"
+import {createCustomerJson, updateCustomerJson} from "@/features/customers/actions"
+import {cn} from "@/lib/cn"
 import type {Customer} from "@/generated/prisma/client"
-import type {CustomerFormState} from "@/features/customers/actions"
 
-type Props = {
-    action: (prev: CustomerFormState, formData: FormData) => Promise<CustomerFormState>
-    initialData?: Customer
+interface CustomerFormProps {
+	className?: string
+	mode: "create" | "edit"
+	initialData?: Customer
 }
 
-const initialState: CustomerFormState = {}
+interface FormValues {
+	firstName: string
+	lastName: string
+	phone: string
+	email: string
+	notes: string
+	marketingConsent: boolean
+}
 
-export function CustomerForm({action, initialData}: Props) {
-    const [state, formAction, pending] = useActionState(action, initialState)
-    const router = useRouter()
+function makeInitial(c?: Customer): FormValues {
+	return {
+		firstName: c?.firstName ?? "",
+		lastName: c?.lastName ?? "",
+		phone: c?.phone ?? "",
+		email: c?.email ?? "",
+		notes: c?.notes ?? "",
+		marketingConsent: c?.marketingConsent ?? false,
+	}
+}
 
-    return (
-        <form action={formAction} className="space-y-4 max-w-xl">
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm mb-1">Imię *</label>
-                    <input
-                        name="firstName"
-                        defaultValue={initialData?.firstName ?? ""}
-                        className="w-full border p-2 rounded"
-                        required
-                    />
-                    {state.fieldErrors?.firstName && (
-                        <p className="text-red-600 text-sm mt-1">{state.fieldErrors.firstName[0]}</p>
-                    )}
-                </div>
+function isEqual(a: FormValues, b: FormValues): boolean {
+	return (
+		a.firstName === b.firstName
+		&& a.lastName === b.lastName
+		&& a.phone === b.phone
+		&& a.email === b.email
+		&& a.notes === b.notes
+		&& a.marketingConsent === b.marketingConsent
+	)
+}
 
-                <div>
-                    <label className="block text-sm mb-1">Nazwisko *</label>
-                    <input
-                        name="lastName"
-                        defaultValue={initialData?.lastName ?? ""}
-                        className="w-full border p-2 rounded"
-                        required
-                    />
-                    {state.fieldErrors?.lastName && (
-                        <p className="text-red-600 text-sm mt-1">{state.fieldErrors.lastName[0]}</p>
-                    )}
-                </div>
-            </div>
+export function CustomerForm({className, mode, initialData}: CustomerFormProps) {
+	const router = useRouter()
+	const toast = useToast()
+	const [, startTransition] = useTransition()
+	const [initial, setInitial] = useState<FormValues>(() => makeInitial(initialData))
+	const [values, setValues] = useState<FormValues>(initial)
+	const [errors, setErrors] = useState<Record<string, string | undefined>>({})
+	const [submitting, setSubmitting] = useState(false)
+	const isDirty = !isEqual(initial, values)
 
-            <div>
-                <label className="block text-sm mb-1">Telefon *</label>
-                <input
-                    name="phone"
-                    type="tel"
-                    defaultValue={initialData?.phone ?? ""}
-                    className="w-full border p-2 rounded"
-                    placeholder="+48123456789"
-                    required
-                />
-                {state.fieldErrors?.phone && (
-                    <p className="text-red-600 text-sm mt-1">{state.fieldErrors.phone[0]}</p>
-                )}
-            </div>
+	function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
+		setValues((prev) => ({...prev, [key]: value}))
+		if (errors[key]) setErrors((e) => ({...e, [key]: undefined}))
+	}
 
-            <div>
-                <label className="block text-sm mb-1">Email</label>
-                <input
-                    name="email"
-                    type="email"
-                    defaultValue={initialData?.email ?? ""}
-                    className="w-full border p-2 rounded"
-                />
-                {state.fieldErrors?.email && (
-                    <p className="text-red-600 text-sm mt-1">{state.fieldErrors.email[0]}</p>
-                )}
-            </div>
+	function validate(): boolean {
+		const next: Record<string, string | undefined> = {}
+		if (!values.firstName.trim()) next.firstName = "Imię jest wymagane"
+		if (!values.lastName.trim()) next.lastName = "Nazwisko jest wymagane"
+		if (!values.phone.trim()) next.phone = "Telefon jest wymagany"
+		if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+			next.email = "Nieprawidłowy email"
+		}
+		setErrors(next)
+		return Object.values(next).every((v) => !v)
+	}
 
-            <div>
-                <label className="block text-sm mb-1">Notatki</label>
-                <textarea
-                    name="notes"
-                    defaultValue={initialData?.notes ?? ""}
-                    className="w-full border p-2 rounded"
-                    rows={3}
-                    placeholder="Alergie, preferencje, ważne informacje..."
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                    Widoczne tylko dla pracowników salonu
-                </p>
-                {state.fieldErrors?.notes && (
-                    <p className="text-red-600 text-sm mt-1">{state.fieldErrors.notes[0]}</p>
-                )}
-            </div>
+	async function handleSubmit() {
+		if (!validate()) return
+		setSubmitting(true)
+		try {
+			if (mode === "create") {
+				const result = await createCustomerJson(values)
+				if (!result.success) {
+					toast.error(result.error)
+					return
+				}
+				toast.success("Klient dodany")
+				startTransition(() => router.push(`/admin/klienci/${result.id}`))
+			} else if (initialData) {
+				const result = await updateCustomerJson(initialData.id, values)
+				if (!result.success) {
+					toast.error(result.error)
+					return
+				}
+				toast.success("Zapisano zmiany")
+				setInitial(values)
+				startTransition(() => router.refresh())
+			}
+		} finally {
+			setSubmitting(false)
+		}
+	}
 
-            <div className="flex items-center gap-2">
-                <input
-                    id="marketingConsent"
-                    name="marketingConsent"
-                    type="checkbox"
-                    defaultChecked={initialData?.marketingConsent ?? false}
-                    className="w-4 h-4"
-                />
-                <label htmlFor="marketingConsent" className="text-sm">
-                    Zgoda na otrzymywanie informacji marketingowych
-                </label>
-            </div>
+	function handleDiscard() {
+		setValues(initial)
+		setErrors({})
+	}
 
-            {state.error && (
-                <p className="text-red-600">{state.error}</p>
-            )}
+	return (
+		<>
+			<form
+				className={cn("flex flex-col gap-5 pb-32", className)}
+				onSubmit={(e) => {
+					e.preventDefault()
+					handleSubmit()
+				}}
+			>
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<Field
+						label="Imię"
+						name="firstName"
+						value={values.firstName}
+						onChange={(e) => update("firstName", e.target.value)}
+						error={errors.firstName}
+						required
+						autoComplete="given-name"
+					/>
+					<Field
+						label="Nazwisko"
+						name="lastName"
+						value={values.lastName}
+						onChange={(e) => update("lastName", e.target.value)}
+						error={errors.lastName}
+						required
+						autoComplete="family-name"
+					/>
+				</div>
 
-            <div className="flex gap-2">
-                <button
-                    type="submit"
-                    disabled={pending}
-                    className="px-4 py-2 bg-black text-white rounded disabled:opacity-50"
-                >
-                    {pending ? "Zapisywanie..." : "Zapisz"}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => router.push("/admin/klienci")}
-                    className="px-4 py-2 border rounded"
-                >
-                    Anuluj
-                </button>
-            </div>
-        </form>
-    )
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<Field
+						label="Telefon"
+						name="phone"
+						type="tel"
+						value={values.phone}
+						onChange={(e) => update("phone", e.target.value)}
+						error={errors.phone}
+						hint="Format: +48123456789"
+						required
+						autoComplete="tel"
+					/>
+					<Field
+						label="Email"
+						name="email"
+						type="email"
+						value={values.email}
+						onChange={(e) => update("email", e.target.value)}
+						error={errors.email}
+						autoComplete="email"
+					/>
+				</div>
+
+				<Textarea
+					label="Notatka"
+					name="notes"
+					rows={4}
+					value={values.notes}
+					onChange={(e) => update("notes", e.target.value)}
+					hint="Alergie, preferencje, ważne informacje — widoczne tylko dla salonu."
+					error={errors.notes}
+				/>
+
+				<div className="rounded-2xl bg-white border border-border-soft p-4 sm:p-5 flex flex-col gap-4">
+					<CheckboxField
+						name="marketingConsent"
+						label="Zgoda marketingowa"
+						description="Klient zgadza się na otrzymywanie informacji o promocjach i nowościach."
+						checked={values.marketingConsent}
+						onChange={(e) => update("marketingConsent", e.target.checked)}
+					/>
+					{mode === "edit" && initialData && (
+						<div className="flex items-center gap-3 text-sm text-graphite-600 pt-3 border-t border-border-soft/60">
+							<span
+								className={cn(
+									"inline-flex items-center justify-center w-5 h-5 rounded-md border",
+									initialData.hasAccount
+										? "bg-rose-50 border-rose-200 text-rose-600"
+										: "bg-warm border-border-default text-graphite-400",
+								)}
+								aria-hidden="true"
+							>
+								{initialData.hasAccount && (
+									<span className="w-2 h-2 rounded-full bg-rose-500" />
+								)}
+							</span>
+							<span>
+								{initialData.hasAccount
+									? "Posiada konto klienta (może się logować)"
+									: "Nie posiada konta klienta"}
+							</span>
+						</div>
+					)}
+				</div>
+
+				{mode === "create" && (
+					<div className="flex justify-end gap-2 pt-2">
+						<Button variant="secondary" type="button" onClick={() => router.push("/admin/klienci")} disabled={submitting}>
+							Anuluj
+						</Button>
+						<Button type="submit" disabled={submitting}>
+							{submitting ? "Dodawanie..." : "Dodaj klientkę"}
+						</Button>
+					</div>
+				)}
+			</form>
+
+			{mode === "edit" && (
+				<StickySaveBar
+					open={isDirty}
+					onDiscard={handleDiscard}
+					onSave={handleSubmit}
+					saving={submitting}
+				/>
+			)}
+		</>
+	)
 }

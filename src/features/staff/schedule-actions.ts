@@ -146,4 +146,65 @@ export async function deleteTimeOff(id: string, staffId: string) {
     await requireAdmin()
     await prisma.timeOff.delete({where: {id}})
     revalidatePath(`/admin/pracownicy/${staffId}/grafik`)
+    revalidatePath(`/admin/zespol/${staffId}`)
+}
+
+export async function saveWorkingHoursJson(
+    staffId: string,
+    entries: Array<{dayOfWeek: DayOfWeek; active: boolean; startMin: number; endMin: number}>,
+): Promise<{success: true} | {success: false; error: string}> {
+    await requireAdmin()
+    const validEntries: Array<{dayOfWeek: DayOfWeek; startMin: number; endMin: number}> = []
+    const daysToDelete: DayOfWeek[] = []
+
+    for (const entry of entries) {
+        if (!entry.active) {
+            daysToDelete.push(entry.dayOfWeek)
+            continue
+        }
+        const parsed = workingHoursSchema.safeParse(entry)
+        if (!parsed.success) {
+            const dayLabel = entry.dayOfWeek
+            return {success: false, error: `${dayLabel}: ${z.flattenError(parsed.error).fieldErrors.endMin?.[0] ?? "nieprawidłowe godziny"}`}
+        }
+        validEntries.push(parsed.data)
+    }
+
+    await prisma.$transaction([
+        prisma.workingHours.deleteMany({where: {staffId, dayOfWeek: {in: daysToDelete}}}),
+        ...validEntries.map((entry) =>
+            prisma.workingHours.upsert({
+                where: {staffId_dayOfWeek: {staffId, dayOfWeek: entry.dayOfWeek}},
+                create: {staffId, dayOfWeek: entry.dayOfWeek, startMin: entry.startMin, endMin: entry.endMin},
+                update: {startMin: entry.startMin, endMin: entry.endMin},
+            }),
+        ),
+    ])
+
+    revalidatePath(`/admin/zespol/${staffId}`)
+    revalidatePath("/admin/zespol")
+    return {success: true}
+}
+
+export async function addTimeOffJson(
+    staffId: string,
+    input: {startAt: string; endAt: string; reason?: string},
+): Promise<{success: true} | {success: false; error: string}> {
+    await requireAdmin()
+    const parsed = timeOffSchema.safeParse(input)
+    if (!parsed.success) {
+        const fields = z.flattenError(parsed.error).fieldErrors
+        const first = Object.values(fields).flat().find(Boolean)
+        return {success: false, error: first ?? "Nieprawidłowy zakres dat"}
+    }
+    await prisma.timeOff.create({
+        data: {
+            staffId,
+            startAt: parsed.data.startAt,
+            endAt: parsed.data.endAt,
+            reason: parsed.data.reason || null,
+        },
+    })
+    revalidatePath(`/admin/zespol/${staffId}`)
+    return {success: true}
 }

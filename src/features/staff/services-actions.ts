@@ -101,3 +101,55 @@ export async function saveStaffServices(
     revalidatePath("/admin/pracownicy")
     return {}
 }
+
+export async function saveStaffServicesJson(
+    staffId: string,
+    assignments: Array<{
+        serviceId: string
+        assigned: boolean
+        durationOverrideMin: number | null
+        bufferOverrideMin: number | null
+        priceOverrideGr: number | null
+    }>,
+): Promise<{success: true} | {success: false; error: string}> {
+    await requireAdmin()
+
+    const toDelete = assignments.filter((a) => !a.assigned).map((a) => a.serviceId)
+    const toUpsert = assignments.filter((a) => a.assigned)
+
+    for (const a of toUpsert) {
+        const parsed = overrideSchema.safeParse({
+            durationOverrideMin: a.durationOverrideMin,
+            bufferOverrideMin: a.bufferOverrideMin,
+            priceOverrideGr: a.priceOverrideGr,
+        })
+        if (!parsed.success) {
+            return {success: false, error: "Nieprawidłowe nadpisania czasu lub ceny"}
+        }
+    }
+
+    await prisma.$transaction([
+        prisma.staffService.deleteMany({where: {staffId, serviceId: {in: toDelete}}}),
+        ...toUpsert.map((entry) =>
+            prisma.staffService.upsert({
+                where: {staffId_serviceId: {staffId, serviceId: entry.serviceId}},
+                create: {
+                    staffId,
+                    serviceId: entry.serviceId,
+                    durationOverrideMin: entry.durationOverrideMin,
+                    bufferOverrideMin: entry.bufferOverrideMin,
+                    priceOverrideGr: entry.priceOverrideGr,
+                },
+                update: {
+                    durationOverrideMin: entry.durationOverrideMin,
+                    bufferOverrideMin: entry.bufferOverrideMin,
+                    priceOverrideGr: entry.priceOverrideGr,
+                },
+            }),
+        ),
+    ])
+
+    revalidatePath(`/admin/zespol/${staffId}`)
+    revalidatePath("/admin/zespol")
+    return {success: true}
+}

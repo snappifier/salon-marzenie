@@ -1,7 +1,9 @@
+// src/app/admin/layout.tsx
 import {headers} from "next/headers"
 import {redirect} from "next/navigation"
 import {auth} from "@/lib/auth"
-import {Sidebar} from "@/components/admin-sidebar/sidebar"
+import {AdminTopBar} from "@/components/admin-shell/admin-top-bar"
+import {ToastProvider} from "@/components/ui/toast"
 
 export default async function AdminLayout({children}: {children: React.ReactNode}) {
 	const hdrs = await headers()
@@ -17,9 +19,13 @@ export default async function AdminLayout({children}: {children: React.ReactNode
 	}
 
 	return (
-		<div className="min-h-screen flex">
-			<Sidebar userName={session.user?.name ?? "Admin"} />
-			<main className="flex-1 p-8 overflow-auto">{children}</main>
-		</div>
+		<ToastProvider>
+			<div className="min-h-screen flex flex-col bg-cream">
+				<AdminTopBar userName={session.user?.name ?? "Admin"} />
+				<main className="flex-1 px-4 sm:px-6 py-6 sm:py-8">
+					<div className="mx-auto max-w-7xl w-full">{children}</div>
+				</main>
+			</div>
+		</ToastProvider>
 	)
 }

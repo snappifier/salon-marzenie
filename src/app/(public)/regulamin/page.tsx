@@ -10,7 +10,6 @@
 import Link from "next/link"
 import {ArrowLeft} from "lucide-react"
 import {getSettings} from "@/features/settings/queries"
-import {MIN_CONFIRM_HOURS_BEFORE} from "@/features/booking/manage-logic"
 import {buttonStyles} from "@/components/ui/button"
 import {Container} from "@/components/ui/container"
 import {Eyebrow} from "@/components/ui/eyebrow"
@@ -30,7 +29,6 @@ export default async function TermsPage() {
 	const salonEmail = settings.salonEmail
 	const salonPhone = settings.salonPhone
 	const minCancelHours = settings.minCancelHoursBefore
-	const minConfirmDays = Math.round(MIN_CONFIRM_HOURS_BEFORE / 24)
 
 	return (
 		<Container size="prose" className="py-12 md:py-16">
@@ -130,14 +128,14 @@ export default async function TermsPage() {
 						Po pomyślnym złożeniu Rezerwacji Klient otrzymuje link do strony zarządzania wizytą.
 					</P>
 					<P>
-						Rezerwacja po jej złożeniu posiada status <Strong>oczekuje potwierdzenia</Strong>.
-						Klient może potwierdzić wizytę online za pośrednictwem linku do strony zarządzania
-						wizytą, najpóźniej na <Strong>{minConfirmDays} dni</Strong> przed jej rozpoczęciem.
-						Po potwierdzeniu wizyta zyskuje status <Strong>potwierdzona</Strong>.
+						Rezerwacja złożona online jest <Strong>potwierdzona od razu</Strong> w momencie
+						zakończenia procesu rezerwacji w Systemie. Wybrany termin zostaje zablokowany w
+						kalendarzu Salonu.
 					</P>
 					<P>
-						Jeżeli okno potwierdzenia online minęło, a Klient nadal chce zrealizować wizytę, prosimy
-						o kontakt z Salonem &mdash; Wizyta zostanie potwierdzona przez pracownika.
+						W szczególnych przypadkach (np. rezerwacja telefoniczna wymagająca weryfikacji) Salon
+						może oznaczyć Rezerwację jako <Strong>oczekującą na potwierdzenie</Strong> &mdash;
+						w takiej sytuacji pracownik Salonu skontaktuje się z Klientem w celu finalizacji.
 					</P>
 				</Section>
 
@@ -146,10 +144,6 @@ export default async function TermsPage() {
 						<LI>
 							Klient może <Strong>anulować</Strong> Rezerwację samodzielnie poprzez stronę zarządzania
 							wizytą najpóźniej na <Strong>{minCancelHours} godzin</Strong> przed jej rozpoczęciem.
-						</LI>
-						<LI>
-							Po potwierdzeniu Wizyty przez Klienta dalsze anulowanie online nie jest możliwe &mdash;
-							w razie konieczności rezygnacji prosimy o kontakt telefoniczny z Salonem.
 						</LI>
 						<LI>
 							Po upływie terminu anulowania online rezygnacja jest możliwa wyłącznie po kontakcie
