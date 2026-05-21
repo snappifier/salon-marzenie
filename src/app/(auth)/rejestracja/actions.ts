@@ -14,9 +14,12 @@ const schema = z.object({
     password: z.string().min(8),
 })
 
+type RegisterState = { error: string | null }
+
 export async function registerAction(
+    _prevState: RegisterState,
     formData: FormData,
-): Promise<{ error: string } | never> {
+): Promise<RegisterState> {
     const parsed = schema.safeParse(Object.fromEntries(formData))
     if (!parsed.success) return { error: "Nieprawidłowe dane" }
 
@@ -43,4 +46,6 @@ export async function registerAction(
     }
 
     await signIn("customer-credentials", { login: phone, password, redirectTo: "/konto" })
+    // signIn z redirectTo rzuca NEXT_REDIRECT — return nieosiągalny, spełnia kontrakt useActionState.
+    return { error: null }
 }

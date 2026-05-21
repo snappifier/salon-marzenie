@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import {useState} from "react"
+import {useActionState, useState} from "react"
 import {Eye, EyeOff, ArrowRight, ArrowLeft, ShieldCheck} from "lucide-react"
 import {Eyebrow} from "@/components/ui/eyebrow"
 import {buttonStyles} from "@/components/ui/button"
@@ -61,6 +61,7 @@ export default function RejestracjaPage() {
 	const [consentTerms, setConsentTerms] = useState(false)
 	const [consentSms, setConsentSms] = useState(true)
 	const [consentNews, setConsentNews] = useState(false)
+	const [state, formAction, isPending] = useActionState(registerAction, {error: null})
 
 	const score = scorePassword(password)
 	const stage = STRENGTH_STAGES[score]
@@ -148,7 +149,7 @@ export default function RejestracjaPage() {
 						</p>
 					</div>
 
-					<form action={registerAction} className="space-y-4 reveal-in" style={{animationDelay: "160ms"}}>
+					<form action={formAction} className="space-y-4 reveal-in" style={{animationDelay: "160ms"}}>
 
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 							<TextField
@@ -252,11 +253,18 @@ export default function RejestracjaPage() {
 							</ConsentRow>
 						</div>
 
+						{state.error && (
+							<p className="text-sm text-error" role="alert">
+								{state.error}
+							</p>
+						)}
+
 						<button
 							type="submit"
+							disabled={isPending}
 							className={cn(buttonStyles({size: "lg", className: "w-full"}), "shadow-sm")}
 						>
-							Załóż konto
+							{isPending ? "Zakładanie konta..." : "Załóż konto"}
 							<ArrowRight className="size-4" strokeWidth={2} />
 						</button>
 

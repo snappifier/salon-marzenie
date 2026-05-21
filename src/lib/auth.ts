@@ -65,7 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     },
                 })
 
-                if (!customer || !customer.hasAccount) return null
+                if (!customer || !customer.hasAccount || !customer.passwordHash) return null
 
                 const isValid = await compare(parsed.data.password, customer.passwordHash)
                 if (!isValid) return null
