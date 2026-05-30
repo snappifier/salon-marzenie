@@ -11,8 +11,6 @@ import {
 	LayoutDashboard,
 	LogOut,
 	Menu,
-	MoreHorizontal,
-	Settings,
 	User,
 } from "lucide-react"
 import {cn} from "@/lib/cn"
@@ -27,39 +25,42 @@ interface NavItem {
 
 const mainNavItems: NavItem[] = [
 	{label: "Pulpit", href: "/konto", icon: <LayoutDashboard size={18} strokeWidth={1.6} />},
-	{label: "Moje wizyty", href: "#", icon: <Calendar size={18} strokeWidth={1.6} />},
-	{label: "Historia", href: "#", icon: <Activity size={18} strokeWidth={1.6} />},
-	{label: "Ulubione zabiegi", href: "#", icon: <Heart size={18} strokeWidth={1.6} />},
+	{label: "Moje wizyty", href: "/konto/wizyty", icon: <Calendar size={18} strokeWidth={1.6} />},
+	{label: "Historia", href: "/konto/historia", icon: <Activity size={18} strokeWidth={1.6} />},
+	{label: "Ulubione zabiegi", href: "/konto/ulubione", icon: <Heart size={18} strokeWidth={1.6} />},
 ]
 
 const accountNavItems: NavItem[] = [
-	{label: "Dane osobowe", href: "#", icon: <User size={18} strokeWidth={1.6} />},
-	{label: "Powiadomienia", href: "#", icon: <Bell size={18} strokeWidth={1.6} />},
-	{label: "Ustawienia", href: "#", icon: <Settings size={18} strokeWidth={1.6} />},
+	{label: "Dane osobowe", href: "/konto/dane-osobowe", icon: <User size={18} strokeWidth={1.6} />},
+	{label: "Powiadomienia", href: "/konto/powiadomienia", icon: <Bell size={18} strokeWidth={1.6} />},
 ]
 
 interface SidebarProps {
 	firstName: string
 	lastName: string
 	upcomingCount: number
+	favoritesCount?: number
 }
 
-export function Sidebar({firstName, lastName, upcomingCount}: SidebarProps) {
+export function Sidebar({firstName, lastName, upcomingCount, favoritesCount}: SidebarProps) {
 	const pathname = usePathname()
 	const [open, setOpen] = useState(false)
 	const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
 
-	const items = mainNavItems.map((item) =>
-		item.label === "Moje wizyty" && upcomingCount > 0 ? {...item, badge: upcomingCount} : item,
-	)
+	const items = mainNavItems.map((item) => {
+		if (item.label === "Moje wizyty" && upcomingCount > 0) return {...item, badge: upcomingCount}
+		if (item.label === "Ulubione zabiegi" && favoritesCount && favoritesCount > 0)
+			return {...item, badge: favoritesCount}
+		return item
+	})
 
 	return (
 		<aside
 			className={cn(
 				"fixed top-0 left-0 z-20 flex flex-col bg-white",
-				"w-full md:w-[260px]",
+				"w-full md:w-65",
 				"md:h-screen border-b md:border-b-0 md:border-r border-border-soft",
-				"px-[18px] py-4 md:px-5 md:py-7",
+				"px-4.5 py-4 md:px-5 md:py-7",
 				open ? "h-dvh" : "h-auto",
 			)}
 		>
@@ -69,7 +70,7 @@ export function Sidebar({firstName, lastName, upcomingCount}: SidebarProps) {
 					className="font-serif italic font-medium text-[22px] text-graphite-900 tracking-[-0.01em] leading-none"
 				>
 					Marzenie
-					<span className="block font-sans not-italic font-medium text-[8px] uppercase tracking-[0.18em] text-graphite-400 mt-[-2px]">
+					<span className="block font-sans not-italic font-medium text-[8px] uppercase tracking-[0.18em] text-graphite-400 -mt-0.5">
 						studio kosmetyki
 					</span>
 				</Link>
@@ -106,7 +107,7 @@ export function Sidebar({firstName, lastName, upcomingCount}: SidebarProps) {
 					<button
 						type="submit"
 						className={cn(
-							"flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-[var(--radius-md)] text-left",
+							"flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md text-left",
 							"text-graphite-600 [&_svg]:text-graphite-400",
 							"transition-[background-color,color] duration-150 ease-out",
 							"hover-supported:hover:bg-rose-50 hover-supported:hover:text-graphite-900 hover-supported:hover:[&_svg]:text-rose-500",
@@ -121,11 +122,11 @@ export function Sidebar({firstName, lastName, upcomingCount}: SidebarProps) {
 
 			<div
 				className={cn(
-					"mt-4 p-3 bg-warm rounded-[var(--radius-md)] items-center gap-2.5",
+					"mt-4 p-3 bg-warm rounded-md items-center gap-2.5",
 					open ? "flex" : "hidden md:flex",
 				)}
 			>
-				<div className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-rose-300 to-rose-500 text-white flex items-center justify-center font-serif font-medium text-sm">
+				<div className="shrink-0 w-9 h-9 rounded-full bg-linear-to-br from-rose-300 to-rose-500 text-white flex items-center justify-center font-serif font-medium text-sm">
 					{initials}
 				</div>
 				<div className="flex-1 min-w-0">
@@ -133,21 +134,10 @@ export function Sidebar({firstName, lastName, upcomingCount}: SidebarProps) {
 						{firstName} {lastName}
 					</p>
 					<p className="text-[11px] text-rose-600 flex items-center gap-1">
-						<span className="inline-block w-[5px] h-[5px] rounded-full bg-rose-500" />
-						Klientka
+						<span className="inline-block w-1.25 h-1.25 rounded-full bg-rose-500" />
+						Klient
 					</p>
 				</div>
-				<button
-					className={cn(
-						"p-1.5 text-graphite-400 rounded-sm",
-						"transition-[background-color,color] duration-150 ease-out",
-						"hover-supported:hover:text-rose-600 hover-supported:hover:bg-rose-50",
-						"active:scale-[0.97]",
-					)}
-					aria-label="Więcej"
-				>
-					<MoreHorizontal size={16} strokeWidth={2} />
-				</button>
 			</div>
 		</aside>
 	)
@@ -159,12 +149,12 @@ function NavLink({item, active}: {item: NavItem; active: boolean}) {
 			<Link
 				href={item.href}
 				className={cn(
-					"flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-[var(--radius-md)]",
+					"flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md",
 					"relative bg-warm text-graphite-900",
 					"transition-[background-color,color] duration-150 ease-out",
 					"[&_svg]:text-rose-600",
 					"before:content-[''] before:absolute before:-left-5 before:top-1/2",
-					"before:-translate-y-1/2 before:w-[3px] before:h-[18px]",
+					"before:-translate-y-1/2 before:w-0.75 before:h-4.5",
 					"before:bg-rose-500 before:rounded-r-sm",
 				)}
 				aria-current="page"
@@ -184,7 +174,7 @@ function NavLink({item, active}: {item: NavItem; active: boolean}) {
 		<Link
 			href={item.href}
 			className={cn(
-				"flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-[var(--radius-md)]",
+				"flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md",
 				"relative text-graphite-600 [&_svg]:text-graphite-400",
 				"transition-[background-color,color] duration-150 ease-out",
 				"hover-supported:hover:bg-rose-50 hover-supported:hover:text-graphite-900 hover-supported:hover:[&_svg]:text-rose-500",

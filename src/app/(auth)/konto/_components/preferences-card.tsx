@@ -1,5 +1,3 @@
-import Link from "next/link"
-import {cn} from "@/lib/cn"
 import type {DashboardData} from "@/features/dashboard/queries"
 
 interface Props {
@@ -20,16 +18,6 @@ export function PreferencesCard({customer}: Props) {
 				<h3 className="font-serif font-medium text-lg text-graphite-900 tracking-[-0.01em]">
 					Twoje <em className="italic text-rose-600 font-normal">preferencje</em>
 				</h3>
-				<Link
-					href="#"
-					className={cn(
-						"text-xs text-rose-600 font-medium",
-						"transition-[color] duration-150 ease-out",
-						"hover-supported:hover:underline",
-					)}
-				>
-					Edytuj
-				</Link>
 			</div>
 
 			<div className="px-[22px] pb-[22px] pt-1">

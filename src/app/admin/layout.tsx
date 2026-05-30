@@ -1,21 +1,13 @@
 // src/app/admin/layout.tsx
-import {headers} from "next/headers"
 import {redirect} from "next/navigation"
 import {auth} from "@/lib/auth"
 import {AdminTopBar} from "@/components/admin-shell/admin-top-bar"
 import {ToastProvider} from "@/components/ui/toast"
 
 export default async function AdminLayout({children}: {children: React.ReactNode}) {
-	const hdrs = await headers()
-	const pathname = hdrs.get("x-pathname") ?? ""
-
-	if (pathname === "/admin/login") {
-		return <>{children}</>
-	}
-
 	const session = await auth()
 	if (!session || session.user.role !== "admin") {
-		redirect("/admin/login")
+		redirect("/logowanie")
 	}
 
 	return (

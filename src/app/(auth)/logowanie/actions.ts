@@ -22,13 +22,29 @@ export async function customerLoginAction(
 		})
 		return {error: null}
 	} catch (error) {
-		if (error instanceof AuthError) {
-			switch (error.type) {
-				case "CredentialsSignin":
-					return {error: "Nieprawidłowy numer telefonu, email lub hasło."}
-				default:
-					return {error: "Wystąpił nieoczekiwany błąd podczas logowania."}
+		if (error instanceof AuthError && error.type === "CredentialsSignin") {
+			if (login.includes("@")) {
+				try {
+					await signIn("admin-credentials", {
+						email: login,
+						password,
+						redirectTo: "/admin",
+					})
+					return {error: null}
+				} catch (adminError) {
+					if (adminError instanceof AuthError) {
+						if (adminError.type === "CredentialsSignin") {
+							return {error: "Nieprawidłowy numer telefonu, email lub hasło."}
+						}
+						return {error: "Wystąpił nieoczekiwany błąd podczas logowania."}
+					}
+					throw adminError
+				}
 			}
+			return {error: "Nieprawidłowy numer telefonu, email lub hasło."}
+		}
+		if (error instanceof AuthError) {
+			return {error: "Wystąpił nieoczekiwany błąd podczas logowania."}
 		}
 		throw error
 	}

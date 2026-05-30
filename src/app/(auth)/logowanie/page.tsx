@@ -17,7 +17,7 @@ export default function LogowaniePage() {
 	const [state, formAction, isPending] = useActionState(customerLoginAction, initialState)
 
 	return (
-		<div className="grid h-dvh grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
+		<div className="grid min-h-dvh grid-cols-1 lg:h-dvh lg:grid-cols-[1.05fr_1fr]">
 
 			<aside className="relative flex flex-col justify-between overflow-hidden bg-warm px-7 pt-8 pb-10 min-h-[280px] lg:px-14 lg:py-8">
 				<div
@@ -70,7 +70,7 @@ export default function LogowaniePage() {
 				</div>
 			</aside>
 
-			<section className="flex flex-col justify-center bg-cream px-6 py-10 pb-14 lg:px-14 lg:py-14">
+			<section className="flex flex-col bg-cream px-6 py-10 pb-14 lg:justify-center lg:px-14 lg:py-14">
 				<div className="mx-auto w-full max-w-[480px]">
 
 					<div className="reveal-in">

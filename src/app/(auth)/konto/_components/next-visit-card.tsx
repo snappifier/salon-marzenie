@@ -2,7 +2,7 @@ import Link from "next/link"
 import {differenceInCalendarDays, subHours} from "date-fns"
 import {formatInTimeZone} from "date-fns-tz"
 import {pl} from "date-fns/locale"
-import {Calendar, Clock} from "lucide-react"
+import {Clock} from "lucide-react"
 import {SALON_TIMEZONE} from "@/lib/date"
 import {formatMoney} from "@/lib/money"
 import {ButterflyWatermark} from "@/components/public/butterfly-watermark"
@@ -114,16 +114,9 @@ export function NextVisitCard({booking}: Props) {
 						>
 							Szczegóły wizyty
 						</Link>
-						<button
-							type="button"
-							className={buttonStyles({variant: "secondary", size: "sm"})}
-						>
-							<Calendar size={13} strokeWidth={2} />
-							Dodaj do kalendarza
-						</button>
 						<Link
 							href={`/moja-wizyta/${booking.manageToken}`}
-							className={buttonStyles({variant: "ghost", size: "sm"})}
+							className={buttonStyles({variant: "secondary", size: "sm"})}
 						>
 							Przełóż termin
 						</Link>

@@ -18,7 +18,7 @@ export function HistoryCard({bookings}: Props) {
 					Ostatnie <em className="italic text-rose-600 font-normal">wizyty</em>
 				</h3>
 				<Link
-					href="#"
+					href="/konto/historia"
 					className={cn(
 						"text-xs text-rose-600 font-medium",
 						"transition-[color] duration-150 ease-out",

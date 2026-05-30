@@ -67,9 +67,9 @@ export default function RejestracjaPage() {
 	const stage = STRENGTH_STAGES[score]
 
 	return (
-		<div className="grid h-dvh grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
+		<div className="grid min-h-dvh grid-cols-1 lg:h-dvh lg:grid-cols-[1.05fr_1fr]">
 
-			<aside className="relative flex flex-col justify-between overflow-hidden bg-warm px-7 pt-8 pb-10 min-h-[280px] lg:px-14 lg:py-12">
+			<aside className="relative flex flex-col justify-between overflow-hidden bg-warm px-7 pt-8 pb-10 min-h-70 lg:px-14 lg:py-8">
 				<div
 					aria-hidden="true"
 					className="pointer-events-none absolute inset-0"
@@ -78,7 +78,7 @@ export default function RejestracjaPage() {
 							"radial-gradient(ellipse 700px 500px at 80% 80%, var(--color-rose-50) 0%, transparent 65%)",
 					}}
 				/>
-				<ButterflyWatermark className="pointer-events-none absolute -bottom-10 -right-8 w-[280px] opacity-45 lg:-bottom-20 lg:-right-16 lg:w-[460px]" />
+				<ButterflyWatermark className="pointer-events-none absolute -bottom-10 -right-8 w-70 opacity-45 lg:-bottom-20 lg:-right-16 lg:w-115" />
 
 				<div className="relative z-10 reveal-in">
 					<Link href="/" className="inline-block font-serif text-2xl italic font-medium tracking-[-0.01em] text-graphite-900">
@@ -89,15 +89,15 @@ export default function RejestracjaPage() {
 					</Link>
 				</div>
 
-				<div className="relative z-10 max-w-[460px] py-10 reveal-in lg:py-0" style={{animationDelay: "80ms"}}>
+				<div className="relative z-10 max-w-115 py-10 reveal-in lg:py-0" style={{animationDelay: "80ms"}}>
 					<Eyebrow className="mb-4 block">Twoje konto</Eyebrow>
-					<h1 className="mb-4 font-serif font-medium text-graphite-900 text-[clamp(1.875rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.025em] text-balance">
+					<h1 className="mb-4 font-serif font-medium text-graphite-900 text-[clamp(1.875rem,4vw,2.75rem)] leading-[1.1] tracking-tight text-balance">
 						Załóż konto{" "}
 						<em className="font-normal italic text-rose-600">
 							i przyspiesz następną rezerwację.
 						</em>
 					</h1>
-					<p className="max-w-[380px] text-[15px] leading-relaxed text-graphite-600">
+					<p className="max-w-95 text-[15px] leading-relaxed text-graphite-600">
 						Konto trzyma Twoje dane, historię wizyt i ulubione zabiegi. Żaden formularz przy następnej rezerwacji.
 					</p>
 				</div>
@@ -119,8 +119,8 @@ export default function RejestracjaPage() {
 				</div>
 			</aside>
 
-			<section className="flex flex-col justify-center overflow-y-auto bg-cream px-6 py-10 pb-14 lg:px-14 lg:py-14 lg:pt-40">
-				<div className="mx-auto w-full max-w-[480px]">
+			<section className="flex flex-col bg-cream px-6 py-10 pb-14 lg:justify-center lg:overflow-y-auto lg:px-14 lg:py-14 lg:pt-40">
+				<div className="mx-auto w-full max-w-120">
 
 					<div className="reveal-in">
 						<Link

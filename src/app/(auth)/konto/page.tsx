@@ -1,6 +1,6 @@
 import Link from "next/link"
 import {redirect} from "next/navigation"
-import {Bell, Plus} from "lucide-react"
+import {Plus} from "lucide-react"
 import {auth} from "@/lib/auth"
 import {cn} from "@/lib/cn"
 import {buttonStyles} from "@/components/ui/button"
@@ -25,7 +25,6 @@ export default async function DashboardPage() {
 	}
 
 	const upcomingCount = data.nextBooking ? 1 : 0
-	const hasNewNotification = upcomingCount > 0
 
 	return (
 		<div className="min-h-screen relative bg-white">
@@ -37,35 +36,20 @@ export default async function DashboardPage() {
 
 			<main
 				className={cn(
-					"pt-[88px] md:pt-8 md:py-8 lg:py-10 pb-14",
+					"pt-22 md:pt-8 md:py-8 lg:py-10 pb-14",
 					"px-5 md:px-8 lg:px-12",
-					"md:ml-[260px]",
+					"md:ml-65",
 				)}
 			>
 				<header className="flex items-end justify-between flex-wrap gap-4 mb-8">
 					<div>
 						<Eyebrow className="block mb-1.5">Pulpit</Eyebrow>
-						<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-[-0.025em] text-graphite-900">
+						<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-graphite-900">
 							Cześć {data.customer.firstName},{" "}
 							<em className="italic text-rose-600 font-normal">miło Cię widzieć.</em>
 						</h1>
 					</div>
 					<div className="flex gap-2.5 items-center">
-						<button
-							type="button"
-							className={cn(
-								"w-10 h-10 rounded-full bg-white border border-border-soft flex items-center justify-center text-graphite-600 relative",
-								"transition-[border-color,color] duration-150 ease-out",
-								"hover-supported:hover:border-rose-300 hover-supported:hover:text-rose-600",
-								"active:scale-[0.97]",
-							)}
-							aria-label="Powiadomienia"
-						>
-							<Bell size={18} strokeWidth={1.6} />
-							{hasNewNotification && (
-								<span className="absolute top-2 right-[9px] w-[7px] h-[7px] rounded-full bg-rose-500 border-2 border-white" />
-							)}
-						</button>
 						<Link href="/rezerwacja" className={buttonStyles({size: "md"})}>
 							<Plus size={14} strokeWidth={2.2} />
 							Nowa rezerwacja
@@ -83,18 +67,6 @@ export default async function DashboardPage() {
 					<div className="flex flex-col gap-6">
 						<FavoritesCard favorites={data.favorites} />
 						<PreferencesCard customer={data.customer} />
-
-						<p className="text-center text-xs text-graphite-400 pt-3.5 pb-1">
-							Skrót:{" "}
-							<kbd className="font-mono text-[11px] px-[5px] py-px bg-warm border border-border-soft rounded-[3px] text-graphite-600">
-								N
-							</kbd>{" "}
-							nowa rezerwacja ·{" "}
-							<kbd className="font-mono text-[11px] px-[5px] py-px bg-warm border border-border-soft rounded-[3px] text-graphite-600">
-								H
-							</kbd>{" "}
-							historia
-						</p>
 					</div>
 				</div>
 			</main>
