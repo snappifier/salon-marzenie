@@ -5,9 +5,7 @@ import landingJson from "@/content/landing.json"
 const siteSchema = z.object({
     salonName: z.string().min(1),
     tagline: z.string().min(1),
-    socials: z.object({
-        facebook: z.string().url().optional(),
-    }),
+    socials: z.object({}),
 })
 
 const landingSchema = z.object({

@@ -4,13 +4,13 @@ export async function getBookingsInRange(start: Date, end: Date) {
     return prisma.bookingItem.findMany({
         where: {
             startAt: {gte: start, lt: end},
-            booking: {status: {not: "CANCELLED"}},
         },
         include: {
             service: {select: {name: true}},
             staff: {select: {id: true, firstName: true, lastName: true, color: true}},
             booking: {
-                include: {
+                select: {
+                    status: true,
                     customer: {select: {firstName: true, lastName: true, phone: true}},
                 },
             },

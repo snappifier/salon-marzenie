@@ -25,6 +25,14 @@ const settingsSchema = z.object({
     adminNotificationPhone: plPhoneOptionalSchema,
     adminNotificationEmail: z.string().trim().email("Nieprawidłowy email").max(100).optional().or(z.literal("")),
     adminNotifyOnCancel: z.coerce.boolean(),
+
+    requireConfirmation: z.coerce.boolean(),
+    confirmWindowMaxHours: z.coerce.number().int().min(24).max(720),
+    confirmWindowMinHours: z.coerce.number().int().min(1).max(72),
+    companyOwnerName: z.string().trim().max(120).optional().or(z.literal("")),
+    nip: z.string().trim().max(20).optional().or(z.literal("")),
+    regon: z.string().trim().max(20).optional().or(z.literal("")),
+    facebookUrl: z.string().trim().url("Nieprawidłowy URL").max(200).optional().or(z.literal("")),
 })
 
 export type SettingsFormState = {
@@ -71,6 +79,13 @@ export async function updateSettings(
         adminNotificationPhone: formData.get("adminNotificationPhone") ?? "",
         adminNotificationEmail: formData.get("adminNotificationEmail"),
         adminNotifyOnCancel: formData.get("adminNotifyOnCancel") === "on",
+        requireConfirmation: formData.get("requireConfirmation") === "on",
+        confirmWindowMaxHours: formData.get("confirmWindowMaxHours"),
+        confirmWindowMinHours: formData.get("confirmWindowMinHours"),
+        companyOwnerName: formData.get("companyOwnerName"),
+        nip: formData.get("nip"),
+        regon: formData.get("regon"),
+        facebookUrl: formData.get("facebookUrl") ?? "",
     })
 
     if (!parsed.success) {
@@ -85,6 +100,10 @@ export async function updateSettings(
         if (closeMin <= openMin) {
             return {error: "Godzina zamknięcia musi być po godzinie otwarcia"}
         }
+    }
+
+    if (d.requireConfirmation && d.confirmWindowMinHours >= d.confirmWindowMaxHours) {
+        return {error: "Okno potwierdzenia: 'najpóźniej' (godz.) musi być mniejsze niż 'najwcześniej'"}
     }
 
     const salonOpenMin = d.salonOpenHour !== null ? d.salonOpenHour * 60 + (d.salonOpenMinute ?? 0) : null
@@ -106,6 +125,13 @@ export async function updateSettings(
             adminNotificationPhone: d.adminNotificationPhone,
             adminNotificationEmail: d.adminNotificationEmail || null,
             adminNotifyOnCancel: d.adminNotifyOnCancel,
+            requireConfirmation: d.requireConfirmation,
+            confirmWindowMaxHours: d.confirmWindowMaxHours,
+            confirmWindowMinHours: d.confirmWindowMinHours,
+            companyOwnerName: d.companyOwnerName || null,
+            nip: d.nip || null,
+            regon: d.regon || null,
+            facebookUrl: d.facebookUrl || null,
         },
     })
 

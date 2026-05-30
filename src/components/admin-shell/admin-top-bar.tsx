@@ -5,8 +5,7 @@ import Link from "next/link"
 import {usePathname} from "next/navigation"
 import {useState} from "react"
 import {motion} from "motion/react"
-import {Calendar, LayoutDashboard, Menu, Plus, Sparkles, Users, Wrench} from "lucide-react"
-import {buttonStyles} from "@/components/ui/button"
+import {Calendar, LayoutDashboard, Menu, Sparkles, Users, Wrench} from "lucide-react"
 import {cn} from "@/lib/cn"
 import {autoInitials} from "@/lib/initials"
 import {UserMenu} from "./user-menu"
@@ -111,28 +110,6 @@ export function AdminTopBar({userName, userInitials, className}: AdminTopBarProp
 						</div>
 
 						<div className="flex items-center gap-2 sm:gap-3 shrink-0">
-							<Link
-								className={cn(
-									"hidden sm:inline-flex",
-									buttonStyles({size: "sm"}),
-								)}
-								href="/admin/rezerwacje/nowa"
-							>
-								<Plus size={16} strokeWidth={2.25} />
-								<span>Nowa</span>
-							</Link>
-							<Link
-								className={cn(
-									"sm:hidden inline-flex items-center justify-center w-10 h-10 rounded-full bg-rose-600 text-white",
-									"transition-[background-color,transform] duration-150 ease-out",
-									"hover-supported:hover:bg-rose-700",
-									"active:scale-[0.94] shadow-sm",
-								)}
-								href="/admin/rezerwacje/nowa"
-								aria-label="Nowa rezerwacja"
-							>
-								<Plus size={18} strokeWidth={2.25} />
-							</Link>
 							<UserMenu userName={userName} userInitials={initials} />
 						</div>
 					</div>

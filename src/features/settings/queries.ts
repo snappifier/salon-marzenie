@@ -11,3 +11,12 @@ export async function getSettings() {
 
     return settings
 }
+
+export async function getClosedDays() {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return prisma.salonClosedDay.findMany({
+        where: {date: {gte: today}},
+        orderBy: {date: "asc"},
+    })
+}

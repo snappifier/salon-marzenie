@@ -325,5 +325,16 @@ model Settings {
   salonOpenMin  Int?
   salonCloseMin Int?
 
+  // polityka potwierdzania (UI w Phase 4; zachowanie w pod-projekcie B)
+  requireConfirmation   Boolean @default(false)
+  confirmWindowMaxHours Int     @default(168)
+  confirmWindowMinHours Int     @default(24)
+
+  // dane firmy
+  companyOwnerName String?
+  nip              String?
+  regon            String?
+  facebookUrl      String?
+
   updatedAt DateTime @updatedAt
 }

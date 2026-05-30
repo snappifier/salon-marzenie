@@ -31,8 +31,8 @@ export function PublicFooter({salon}: Props) {
                             Profesjonalna pielęgnacja w kameralnej atmosferze. Manicure, pedicure, brwi, kosmetyka twarzy i zabiegi specjalistyczne.
                         </p>
                         <div className="flex gap-2 mt-4">
-                            {site.socials.facebook && (
-                                <SocialLink href={site.socials.facebook} label="Facebook">
+                            {salon.facebookUrl && (
+                                <SocialLink href={salon.facebookUrl} label="Facebook">
                                     <FacebookIcon />
                                 </SocialLink>
                             )}

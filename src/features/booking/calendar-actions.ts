@@ -1,6 +1,7 @@
 "use server"
 
 import {auth} from "@/lib/auth"
+import type {BookingStatus} from "@/generated/prisma/client"
 import {getBookingsInRange} from "./calendar-queries"
 
 async function requireAdmin() {
@@ -18,12 +19,17 @@ export interface CalendarEvent {
     backgroundColor: string
     borderColor: string
     extendedProps: {
+        status: BookingStatus
         serviceName: string
         staffName: string
+        staffId: string
         customerName: string
         customerPhone: string
         bookingId: string
         bufferAfterMin: number
+        durationMin: number
+        startAt: string
+        endAt: string
     }
 }
 
@@ -42,12 +48,17 @@ export async function fetchCalendarEvents(startIso: string, endIso: string): Pro
         backgroundColor: item.staff.color,
         borderColor: item.staff.color,
         extendedProps: {
+            status: item.booking.status,
             serviceName: item.service.name,
             staffName: `${item.staff.firstName} ${item.staff.lastName}`,
+            staffId: item.staffId,
             customerName: `${item.booking.customer.firstName} ${item.booking.customer.lastName}`,
             customerPhone: item.booking.customer.phone,
             bookingId: item.bookingId,
             bufferAfterMin: item.bufferAfterMin,
+            durationMin: item.durationMin,
+            startAt: item.startAt.toISOString(),
+            endAt: item.endAt.toISOString(),
         },
     }))
 }
