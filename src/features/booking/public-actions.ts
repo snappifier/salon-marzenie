@@ -107,6 +107,9 @@ export async function createBooking(input: CreateBookingInput): Promise<CreateBo
     const {requests, dateIso, startIso, customer} = parsed.data
     const desiredStart = new Date(startIso)
 
+    const settings = await prisma.settings.findUnique({where: {id: "settings"}})
+    if (!settings) throw new Error("Settings not found")
+
     const day = isoDayToDate(dateIso)
     const slots = await findSlotsForServices(requests, day)
     const matchingSlot = slots.find((s) => s.startAt.getTime() === desiredStart.getTime())
@@ -168,10 +171,9 @@ export async function createBooking(input: CreateBookingInput): Promise<CreateBo
             const booking = await tx.booking.create({
                 data: {
                     customerId: customerRecord.id,
-                    // Online bookings są od razu potwierdzone — nie ma osobnego confirm flow
-                    // dla klientów. PENDING zostaje w enum dla bookingów tworzonych z admina
-                    // (np. wymagających review lub zaliczki).
-                    status: "CONFIRMED",
+                    // Status zależny od Settings.requireConfirmation — PENDING gdy klient
+                    // potwierdza przez magic link, CONFIRMED gdy salon nie wymaga (default).
+                    status: settings.requireConfirmation ? "PENDING" : "CONFIRMED",
                     customerNote: customer.customerNote || null,
                     createdByAdmin: false,
                     items: {

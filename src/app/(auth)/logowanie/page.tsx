@@ -129,7 +129,7 @@ export default function LogowaniePage() {
 									"w-full rounded-md border border-border-default bg-white px-3.5 py-3.5 text-[15px] text-graphite-900",
 									"placeholder:text-graphite-400",
 									"transition-[border-color,box-shadow] duration-150 ease-out",
-									"focus:outline-none focus:border-rose-500 focus:ring-3 focus:ring-rose-500/15",
+									"focus:outline-none focus-visible:border-rose-500 focus-visible:ring-3 focus-visible:ring-rose-500/15",
 								)}
 							/>
 						</div>
@@ -155,7 +155,7 @@ export default function LogowaniePage() {
 										"w-full rounded-md border border-border-default bg-white py-3.5 pl-3.5 pr-11 text-[15px] text-graphite-900",
 										"placeholder:text-graphite-400",
 										"transition-[border-color,box-shadow] duration-150 ease-out",
-										"focus:outline-none focus:border-rose-500 focus:ring-3 focus:ring-rose-500/15",
+										"focus:outline-none focus-visible:border-rose-500 focus-visible:ring-3 focus-visible:ring-rose-500/15",
 									)}
 								/>
 								<button

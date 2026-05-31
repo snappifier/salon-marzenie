@@ -56,11 +56,13 @@ export function ConfirmDialog({
 		<Modal
 			open={open}
 			onClose={isBusy ? () => {} : onClose}
+			title={title}
 			size="sm"
 			closeOnBackdrop={!isBusy}
 			closeOnEscape={!isBusy}
+			showClose={!isBusy}
 		>
-			<div className="flex flex-col items-center text-center pt-2">
+			<div className="flex flex-col items-start text-left pt-2">
 				<div
 					className={cn(
 						"inline-flex items-center justify-center w-11 h-11 rounded-full mb-4",
@@ -70,10 +72,7 @@ export function ConfirmDialog({
 				>
 					<Icon size={20} strokeWidth={2} />
 				</div>
-				<h3 className="font-serif text-[20px] leading-tight text-graphite-900 text-balance mb-2">
-					{title}
-				</h3>
-				<p className="text-sm text-graphite-600 text-balance max-w-xs">
+				<p className="text-sm text-graphite-600 leading-relaxed">
 					{description}
 				</p>
 				<div className="flex w-full gap-2 mt-6">

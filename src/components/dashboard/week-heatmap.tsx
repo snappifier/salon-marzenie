@@ -57,7 +57,7 @@ export function WeekHeatmap({className, heatmap, hours, dayLabels, weekDates}: W
 									className={cn(
 										"relative rounded-md group",
 										"transition-[opacity,transform] duration-150 ease-out",
-										"hover-supported:hover:scale-105",
+										"hover-supported:hover:scale-105 active:scale-[0.97]",
 										count === 0 ? "bg-warm" : "bg-rose-500",
 									)}
 									style={count > 0 ? {opacity} : undefined}

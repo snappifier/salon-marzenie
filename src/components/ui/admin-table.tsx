@@ -69,7 +69,7 @@ export function AdminTable<T>({
 								className={cn(
 									idx > 0 && "border-t border-border-soft",
 									"transition-[background-color] duration-150 ease-out",
-									onRowClick && "cursor-pointer hover-supported:hover:bg-rose-50/30",
+									onRowClick && "cursor-pointer hover-supported:hover:bg-rose-50/30 active:bg-rose-50/60",
 								)}
 								onClick={onRowClick ? () => onRowClick(row) : undefined}
 								onKeyDown={

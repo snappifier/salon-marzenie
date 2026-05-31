@@ -35,6 +35,7 @@ const sizeClasses: Record<Size, string> = {
 const baseClasses = cn(
     "inline-flex items-center justify-center gap-2 font-medium rounded-full whitespace-nowrap",
     "transition-[background-color,color,border-color,opacity,transform] duration-150 ease-out",
+    "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-cream",
     "disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
 )
 

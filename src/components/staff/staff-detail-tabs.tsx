@@ -158,12 +158,12 @@ export function StaffDetailTabs({
 			<div className="relative">
 				<AnimatePresence mode="wait">
 					{activeTab === "dane" && (
-						<motion.div key="dane" {...transition}>
+						<motion.div key="dane" id="panel-dane" role="tabpanel" aria-labelledby="tab-dane" {...transition}>
 							<StaffForm mode="edit" initialData={staff} />
 						</motion.div>
 					)}
 					{activeTab === "grafik" && (
-						<motion.div key="grafik" {...transition}>
+						<motion.div key="grafik" id="panel-grafik" role="tabpanel" aria-labelledby="tab-grafik" {...transition}>
 							<StaffScheduleForm
 								staffId={staff.id}
 								workingHours={workingHours}
@@ -173,12 +173,12 @@ export function StaffDetailTabs({
 						</motion.div>
 					)}
 					{activeTab === "uslugi" && (
-						<motion.div key="uslugi" {...transition}>
+						<motion.div key="uslugi" id="panel-uslugi" role="tabpanel" aria-labelledby="tab-uslugi" {...transition}>
 							<StaffServicesForm staffId={staff.id} assignments={serviceAssignments} />
 						</motion.div>
 					)}
 					{activeTab === "timeoff" && (
-						<motion.div key="timeoff" {...transition}>
+						<motion.div key="timeoff" id="panel-timeoff" role="tabpanel" aria-labelledby="tab-timeoff" {...transition}>
 							<StaffTimeOff staffId={staff.id} timeOffs={timeOffs} />
 						</motion.div>
 					)}

@@ -176,35 +176,38 @@ export function StaffServicesForm({staffId, assignments}: StaffServicesFormProps
 										>
 											<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4">
 												<div>
-													<label className="block text-xs font-medium text-graphite-700 mb-1">Czas (min)</label>
+													<label htmlFor={`duration-${row.serviceId}`} className="block text-xs font-medium text-graphite-700 mb-1">Czas (min)</label>
 													<input
+														id={`duration-${row.serviceId}`}
 														type="number"
 														min={5}
 														max={480}
-														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 														placeholder={`${row.defaultDurationMin} (domyślnie)`}
 														value={row.durationOverride}
 														onChange={(e) => updateRow(row.serviceId, {durationOverride: e.target.value})}
 													/>
 												</div>
 												<div>
-													<label className="block text-xs font-medium text-graphite-700 mb-1">Bufor (min)</label>
+													<label htmlFor={`buffer-${row.serviceId}`} className="block text-xs font-medium text-graphite-700 mb-1">Bufor (min)</label>
 													<input
+														id={`buffer-${row.serviceId}`}
 														type="number"
 														min={0}
 														max={120}
-														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 														placeholder={`${row.defaultBufferAfterMin} (domyślnie)`}
 														value={row.bufferOverride}
 														onChange={(e) => updateRow(row.serviceId, {bufferOverride: e.target.value})}
 													/>
 												</div>
 												<div>
-													<label className="block text-xs font-medium text-graphite-700 mb-1">Cena (zł)</label>
+													<label htmlFor={`price-${row.serviceId}`} className="block text-xs font-medium text-graphite-700 mb-1">Cena (zł)</label>
 													<input
+														id={`price-${row.serviceId}`}
 														type="text"
 														inputMode="decimal"
-														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+														className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 														placeholder={`${(row.defaultPriceGr / 100).toFixed(2)} (domyślnie)`}
 														value={row.priceOverride}
 														onChange={(e) => updateRow(row.serviceId, {priceOverride: e.target.value})}

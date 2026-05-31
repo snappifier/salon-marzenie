@@ -1,11 +1,11 @@
 import Link from "next/link"
 import {notFound} from "next/navigation"
-import {AlertCircle, ArrowLeft, Calendar, CheckCircle, MapPin, Phone, User, XCircle} from "lucide-react"
+import {AlertCircle, ArrowLeft, Calendar, Check, CheckCircle, MapPin, Phone, User, XCircle} from "lucide-react"
 import {formatInTimeZone} from "date-fns-tz"
 import {pl} from "date-fns/locale"
 import type {BookingStatus} from "@/generated/prisma/client"
 import {getBookingByToken} from "@/features/booking/manage-queries"
-import {canCancelByPolicy, canCancelByStatus} from "@/features/booking/manage-logic"
+import {canCancelByPolicy, canCancelByStatus, canConfirmByPolicy, canConfirmByStatus} from "@/features/booking/manage-logic"
 import {prisma} from "@/lib/prisma"
 import {formatDate, formatTime, SALON_TIMEZONE} from "@/lib/date"
 import {formatMoney} from "@/lib/money"
@@ -14,6 +14,7 @@ import {Container} from "@/components/ui/container"
 import {Eyebrow} from "@/components/ui/eyebrow"
 import {Heading} from "@/components/ui/heading"
 import {CancelBookingButton} from "@/components/manage/cancel-booking-button"
+import {ConfirmBookingButton} from "@/components/manage/confirm-booking-button"
 import {cn} from "@/lib/cn"
 
 type Props = {
@@ -145,8 +146,14 @@ export default async function ManageBookingPage({params}: Props) {
     const dateLabelCapitalized = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1)
 
     const info = statusInfo(booking.status, firstItem.startAt, isPast)
-    const isCancellable = canCancelByStatus(booking.status) && !isPast
+    const isCancellable = canCancelByStatus(booking.status, settings.requireConfirmation) && !isPast
     const policyOk = isCancellable && canCancelByPolicy(firstItem.startAt, settings.minCancelHoursBefore, now)
+
+    const confirmStatusOk = canConfirmByStatus(booking.status)
+    const confirmPolicy = confirmStatusOk && !isPast
+        ? canConfirmByPolicy(firstItem.startAt, settings.confirmWindowMinHours, settings.confirmWindowMaxHours, now)
+        : null
+    const confirmAvail = confirmPolicy === "ok"
 
     return (
         <Container size="narrow" className="py-12 md:py-16">
@@ -266,6 +273,56 @@ export default async function ManageBookingPage({params}: Props) {
                 </div>
             </section>
 
+            {confirmStatusOk && !isPast && (
+                <section className="rounded-2xl border border-border-soft bg-white p-5 md:p-6 mb-8">
+                    <div className="flex items-start gap-3 mb-4">
+                        <div className="shrink-0 w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
+                            <Check size={18} strokeWidth={1.8} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="font-medium text-graphite-900 text-sm mb-1">Potwierdzenie wizyty</div>
+                            {confirmPolicy === "ok" && (
+                                <p className="text-xs text-graphite-600 leading-relaxed">
+                                    Potwierdź swoją obecność — pomaga nam zaplanować dzień.
+                                </p>
+                            )}
+                            {confirmPolicy === "too_early" && (
+                                <p className="text-xs text-graphite-600 leading-relaxed">
+                                    Możesz potwierdzić wizytę najwcześniej{" "}
+                                    <strong className="font-medium text-graphite-900">
+                                        {settings.confirmWindowMaxHours}h
+                                    </strong>{" "}
+                                    przed jej rozpoczęciem.
+                                </p>
+                            )}
+                            {confirmPolicy === "too_late" && (
+                                <p className="text-xs text-error leading-relaxed">
+                                    Okno potwierdzenia minęło. Skontaktuj się z salonem telefonicznie.
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {confirmAvail && (
+                        <div className="pl-13">
+                            <ConfirmBookingButton token={token} />
+                        </div>
+                    )}
+
+                    {confirmPolicy === "too_late" && settings.salonPhone && (
+                        <div className="pl-13">
+                            <a
+                                className={buttonStyles({size: "sm", variant: "secondary"})}
+                                href={`tel:${settings.salonPhone}`}
+                            >
+                                <Phone size={14} />
+                                Zadzwoń
+                            </a>
+                        </div>
+                    )}
+                </section>
+            )}
+
             {isCancellable && (
                 <section className="rounded-2xl border border-border-soft bg-white p-5 md:p-6 mb-8">
                     <div className="flex items-start gap-3 mb-4">
@@ -308,6 +365,31 @@ export default async function ManageBookingPage({params}: Props) {
                             </a>
                         </div>
                     )}
+                </section>
+            )}
+
+            {booking.status === "CONFIRMED" && settings.requireConfirmation && !isPast && settings.salonPhone && (
+                <section className="rounded-2xl border border-border-soft bg-white p-5 md:p-6 mb-8">
+                    <div className="flex items-start gap-3 mb-4">
+                        <div className="shrink-0 w-10 h-10 rounded-full bg-warm text-graphite-600 flex items-center justify-center">
+                            <Phone size={18} strokeWidth={1.8} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="font-medium text-graphite-900 text-sm mb-1">Zmiana wizyty</div>
+                            <p className="text-xs text-graphite-600 leading-relaxed">
+                                Wizyta jest potwierdzona. Aby zmienić plany lub odwołać, skontaktuj się z salonem telefonicznie.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="pl-13">
+                        <a
+                            className={buttonStyles({size: "sm", variant: "secondary"})}
+                            href={`tel:${settings.salonPhone}`}
+                        >
+                            <Phone size={14} />
+                            Zadzwoń
+                        </a>
+                    </div>
                 </section>
             )}
 

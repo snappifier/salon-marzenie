@@ -34,10 +34,10 @@ export function Field({label, hint, error, className, id, ref, ...props}: Props)
                     "w-full h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
                     "transition-[border-color,box-shadow] duration-150 ease-out",
                     "placeholder:text-graphite-400",
-                    "focus:outline-none focus:ring-3 focus:ring-rose-500/15",
+                    "focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
                     error
-                        ? "border-error focus:border-error focus:ring-error/15"
-                        : "border-border-default focus:border-rose-500",
+                        ? "border-error focus-visible:border-error focus-visible:ring-error/15"
+                        : "border-border-default focus-visible:border-rose-500",
                     className,
                 )}
                 {...props}

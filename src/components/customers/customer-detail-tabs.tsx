@@ -130,6 +130,9 @@ export function CustomerDetailTabs({customer, bookings, defaultTab}: CustomerDet
 					{activeTab === "dane" && (
 						<motion.div
 							key="dane"
+							id="panel-dane"
+							role="tabpanel"
+							aria-labelledby="tab-dane"
 							initial={{opacity: 0, y: 8}}
 							animate={{opacity: 1, y: 0, transition: {duration: 0.22, ease: EASE_OUT_QUINT}}}
 							exit={{opacity: 0, y: -4, transition: {duration: 0.15, ease: EASE_IN_CUBIC}}}
@@ -140,6 +143,9 @@ export function CustomerDetailTabs({customer, bookings, defaultTab}: CustomerDet
 					{activeTab === "historia" && (
 						<motion.div
 							key="historia"
+							id="panel-historia"
+							role="tabpanel"
+							aria-labelledby="tab-historia"
 							initial={{opacity: 0, y: 8}}
 							animate={{opacity: 1, y: 0, transition: {duration: 0.22, ease: EASE_OUT_QUINT}}}
 							exit={{opacity: 0, y: -4, transition: {duration: 0.15, ease: EASE_IN_CUBIC}}}

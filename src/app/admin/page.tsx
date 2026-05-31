@@ -39,7 +39,14 @@ function timeAgoPl(date: Date): string {
 	return `${diffD} ${diffD === 1 ? "dzień" : "dni"} temu`
 }
 
-export default async function AdminDashboardPage() {
+interface Props {
+    searchParams: Promise<{test?: string}>
+}
+
+export default async function AdminDashboardPage({searchParams}: Props) {
+    const sp = await searchParams
+    if (sp.test === "error") throw new Error("Test error boundary — admin/page.tsx ?test=error")
+
 	const session = await auth()
 	const firstName = firstNameFromSession(session?.user?.name)
 	const data = await getAdminDashboardData()
@@ -141,11 +148,14 @@ export default async function AdminDashboardPage() {
 										className={cn(
 											"flex items-start gap-3 px-3 py-2.5 rounded-xl",
 											"transition-[background-color] duration-150 ease-out",
-											"hover-supported:hover:bg-rose-50/40",
+											"hover-supported:hover:bg-rose-50/40 active:bg-rose-50/60",
 										)}
 										href={`/admin/klienci/${b.customerId}`}
 									>
-										<time className="font-serif text-[18px] leading-none text-graphite-900 tabular-nums pt-0.5 shrink-0 w-14">
+										<time
+											className="font-serif text-[18px] leading-none text-graphite-900 tabular-nums pt-0.5 shrink-0 w-14"
+											dateTime={formatTime(b.startAt)}
+										>
 											{formatTime(b.startAt)}
 										</time>
 										<div className="min-w-0 flex-1">
@@ -213,7 +223,7 @@ export default async function AdminDashboardPage() {
 										className={cn(
 											"flex items-start gap-3 px-3 py-2.5 rounded-xl",
 											"transition-[background-color] duration-150 ease-out",
-											"hover-supported:hover:bg-rose-50/40",
+											"hover-supported:hover:bg-rose-50/40 active:bg-rose-50/60",
 										)}
 										href={`/admin/klienci/${b.customerId}`}
 									>

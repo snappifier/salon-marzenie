@@ -155,7 +155,7 @@ export function StaffScheduleForm({staffId, workingHours, salonOpenMin, salonClo
 								{d.active ? (
 									<div className="flex items-center gap-2 flex-1">
 										<input
-											className="h-10 px-3 text-sm bg-white border border-border-default rounded-md tabular-nums focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+											className="h-10 px-3 text-sm bg-white border border-border-default rounded-md tabular-nums focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 											type="time"
 											value={d.start}
 											min={minToTime(salonOpenMin)}
@@ -166,7 +166,7 @@ export function StaffScheduleForm({staffId, workingHours, salonOpenMin, salonClo
 										/>
 										<span className="text-graphite-400">–</span>
 										<input
-											className="h-10 px-3 text-sm bg-white border border-border-default rounded-md tabular-nums focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+											className="h-10 px-3 text-sm bg-white border border-border-default rounded-md tabular-nums focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 											type="time"
 											value={d.end}
 											min={minToTime(salonOpenMin)}

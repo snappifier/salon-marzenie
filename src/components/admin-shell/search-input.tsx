@@ -62,7 +62,7 @@ export function SearchInput({className, placeholder = "Szukaj...", paramName = "
 					"w-full h-11 pl-10 pr-10 text-sm bg-white border border-border-default rounded-full text-graphite-900",
 					"transition-[border-color,box-shadow] duration-150 ease-out",
 					"placeholder:text-graphite-400",
-					"focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500",
+					"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500",
 				)}
 				type="search"
 				value={value}

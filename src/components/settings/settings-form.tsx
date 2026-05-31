@@ -43,6 +43,11 @@ export function SettingsForm({settings, closedDays}: Props) {
 	const closeTime = settings.salonCloseMin !== null ? minutesToTimeString(settings.salonCloseMin) : ""
 
 	const requireConfirmationId = useId()
+	const requireConfirmationPanelId = useId()
+	const slotIntervalId = useId()
+	const slotIntervalErrorId = useId()
+	const salonOpenId = useId()
+	const salonCloseId = useId()
 
 	useEffect(() => {
 		if (state.success) {
@@ -188,19 +193,22 @@ export function SettingsForm({settings, closedDays}: Props) {
 							/>
 
 							<div className="space-y-1.5">
-								<label className="block text-[13px] font-medium text-graphite-900">
+								<label htmlFor={slotIntervalId} className="block text-[13px] font-medium text-graphite-900">
 									Krok slotów (min)
 								</label>
 								<select
+									id={slotIntervalId}
 									name="slotIntervalMin"
 									defaultValue={settings.slotIntervalMin}
+									aria-describedby={state.fieldErrors?.slotIntervalMin ? slotIntervalErrorId : undefined}
+									aria-invalid={state.fieldErrors?.slotIntervalMin ? true : undefined}
 									className={cn(
 										"w-full h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
 										"transition-[border-color,box-shadow] duration-150 ease-out",
-										"focus:outline-none focus:ring-3 focus:ring-rose-500/15",
+										"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
 										state.fieldErrors?.slotIntervalMin
-											? "border-error focus:border-error"
-											: "border-border-default focus:border-rose-500",
+											? "border-error focus-visible:border-error"
+											: "border-border-default focus-visible:border-rose-500",
 									)}
 								>
 									<option value={15}>15 minut</option>
@@ -208,7 +216,7 @@ export function SettingsForm({settings, closedDays}: Props) {
 									<option value={60}>60 minut</option>
 								</select>
 								{state.fieldErrors?.slotIntervalMin && (
-									<p className="text-xs text-error">{state.fieldErrors.slotIntervalMin[0]}</p>
+									<p id={slotIntervalErrorId} role="alert" className="text-xs text-error">{state.fieldErrors.slotIntervalMin[0]}</p>
 								)}
 							</div>
 						</div>
@@ -223,6 +231,8 @@ export function SettingsForm({settings, closedDays}: Props) {
 									type="checkbox"
 									defaultChecked={settings.requireConfirmation}
 									onChange={(e) => setRequireConfirmation(e.target.checked)}
+									aria-controls={requireConfirmationPanelId}
+									aria-expanded={requireConfirmation}
 									className="mt-0.5 w-4 h-4 rounded border-border-default accent-rose-600 cursor-pointer"
 								/>
 								<label
@@ -233,7 +243,7 @@ export function SettingsForm({settings, closedDays}: Props) {
 								</label>
 							</div>
 
-							<div hidden={!requireConfirmation} className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-7">
+							<div id={requireConfirmationPanelId} hidden={!requireConfirmation} className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-7">
 								<Field
 									name="confirmWindowMaxHours"
 									type="number"
@@ -266,37 +276,39 @@ export function SettingsForm({settings, closedDays}: Props) {
 						<div className="space-y-3">
 							<div className="flex flex-wrap items-end gap-4">
 								<div className="space-y-1.5">
-									<label className="block text-[13px] font-medium text-graphite-900">
+									<label htmlFor={salonOpenId} className="block text-[13px] font-medium text-graphite-900">
 										Otwarcie
 									</label>
 									<input
+										id={salonOpenId}
 										name="salonOpen"
 										type="time"
 										defaultValue={openTime}
 										className={cn(
 											"h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
 											"transition-[border-color,box-shadow] duration-150 ease-out",
-											"focus:outline-none focus:ring-3 focus:ring-rose-500/15",
-											"border-border-default focus:border-rose-500",
+											"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
+											"border-border-default focus-visible:border-rose-500",
 										)}
 									/>
 								</div>
 
-								<span className="text-graphite-400 pb-2.5">—</span>
+								<span className="text-graphite-400 pb-2.5" aria-hidden="true">—</span>
 
 								<div className="space-y-1.5">
-									<label className="block text-[13px] font-medium text-graphite-900">
+									<label htmlFor={salonCloseId} className="block text-[13px] font-medium text-graphite-900">
 										Zamknięcie
 									</label>
 									<input
+										id={salonCloseId}
 										name="salonClose"
 										type="time"
 										defaultValue={closeTime}
 										className={cn(
 											"h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
 											"transition-[border-color,box-shadow] duration-150 ease-out",
-											"focus:outline-none focus:ring-3 focus:ring-rose-500/15",
-											"border-border-default focus:border-rose-500",
+											"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
+											"border-border-default focus-visible:border-rose-500",
 										)}
 									/>
 								</div>
@@ -364,6 +376,8 @@ export function SettingsForm({settings, closedDays}: Props) {
 				{/* Sticky save bar */}
 				{(dirty || isPending) && (
 					<div
+						role="region"
+						aria-label="Niezapisane zmiany"
 						className={cn(
 							"sticky bottom-0 z-10 -mx-4 px-4 sm:-mx-6 sm:px-6",
 							"border-t border-border-soft bg-cream/95 backdrop-blur",
@@ -397,6 +411,8 @@ function ClosedDaysSection({closedDays}: {closedDays: SalonClosedDay[]}) {
 	const toast = useToast()
 	const [pendingRemoveId, setPendingRemoveId] = useState<string | null>(null)
 	const [, startTransition] = useTransition()
+	const dateId = useId()
+	const reasonId = useId()
 
 	useEffect(() => {
 		if (addState.success) {
@@ -464,34 +480,36 @@ function ClosedDaysSection({closedDays}: {closedDays: SalonClosedDay[]}) {
 			>
 				<div className="flex flex-wrap gap-3 items-end">
 					<div className="space-y-1.5">
-						<label className="block text-[13px] font-medium text-graphite-900">
+						<label htmlFor={dateId} className="block text-[13px] font-medium text-graphite-900">
 							Data
 						</label>
 						<input
+							id={dateId}
 							name="date"
 							type="date"
 							required
 							className={cn(
 								"h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
 								"transition-[border-color,box-shadow] duration-150 ease-out",
-								"focus:outline-none focus:ring-3 focus:ring-rose-500/15",
-								"border-border-default focus:border-rose-500",
+								"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
+								"border-border-default focus-visible:border-rose-500",
 							)}
 						/>
 					</div>
 					<div className="flex-1 min-w-[160px] space-y-1.5">
-						<label className="block text-[13px] font-medium text-graphite-900">
+						<label htmlFor={reasonId} className="block text-[13px] font-medium text-graphite-900">
 							Powód (opcjonalnie)
 						</label>
 						<input
+							id={reasonId}
 							name="reason"
 							type="text"
 							placeholder="np. święto, remont"
 							className={cn(
 								"w-full h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
 								"transition-[border-color,box-shadow] duration-150 ease-out",
-								"focus:outline-none focus:ring-3 focus:ring-rose-500/15",
-								"border-border-default focus:border-rose-500",
+								"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
+								"border-border-default focus-visible:border-rose-500",
 							)}
 						/>
 					</div>

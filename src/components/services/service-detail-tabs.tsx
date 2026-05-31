@@ -133,6 +133,9 @@ export function ServiceDetailTabs({service, categories, staffAssignments, defaul
 					{activeTab === "dane" && (
 						<motion.div
 							key="dane"
+							id="panel-dane"
+							role="tabpanel"
+							aria-labelledby="tab-dane"
 							initial={{opacity: 0, y: 8}}
 							animate={{opacity: 1, y: 0, transition: {duration: 0.22, ease: EASE_OUT_QUINT}}}
 							exit={{opacity: 0, y: -4, transition: {duration: 0.15, ease: EASE_IN_CUBIC}}}
@@ -143,6 +146,9 @@ export function ServiceDetailTabs({service, categories, staffAssignments, defaul
 					{activeTab === "pracownicy" && (
 						<motion.div
 							key="pracownicy"
+							id="panel-pracownicy"
+							role="tabpanel"
+							aria-labelledby="tab-pracownicy"
 							initial={{opacity: 0, y: 8}}
 							animate={{opacity: 1, y: 0, transition: {duration: 0.22, ease: EASE_OUT_QUINT}}}
 							exit={{opacity: 0, y: -4, transition: {duration: 0.15, ease: EASE_IN_CUBIC}}}

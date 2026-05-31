@@ -38,7 +38,7 @@ interface SelectedService {
 const selectClass = cn(
 	"h-10 rounded-md border border-border-default bg-white px-3 text-sm text-graphite-900",
 	"transition-[border-color,box-shadow] duration-150 ease-out",
-	"focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500",
+	"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500",
 )
 
 export function AddBookingDialog({
@@ -193,6 +193,7 @@ export function AddBookingDialog({
 									value={customerSearch}
 									onChange={(e) => setCustomerSearch(e.target.value)}
 									placeholder="Szukaj po imieniu, nazwisku, telefonie..."
+									aria-label="Wyszukaj klienta"
 								/>
 								{customerResults.length > 0 && (
 									<ul className="max-h-44 overflow-y-auto rounded-lg border border-border-soft">
@@ -275,6 +276,7 @@ export function AddBookingDialog({
 										<select
 											value={sel.staffId}
 											onChange={(e) => setServiceStaff(idx, e.target.value)}
+											aria-label={`Pracownik dla ${svc.name}`}
 											className={selectClass}
 										>
 											{candidates.map((s) => (
@@ -303,6 +305,7 @@ export function AddBookingDialog({
 							if (e.target.value) addService(e.target.value)
 							e.target.value = ""
 						}}
+						aria-label="Dodaj usługę do wizyty"
 						className={cn(selectClass, "w-full")}
 					>
 						<option value="">+ Dodaj usługę...</option>

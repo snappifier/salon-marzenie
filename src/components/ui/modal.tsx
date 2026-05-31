@@ -27,6 +27,10 @@ interface ModalProps {
 	size?: Size
 	closeOnBackdrop?: boolean
 	closeOnEscape?: boolean
+	// Gdy false, X close button w headerze jest ukryty. Użyteczne dla
+	// dialogów które blokują dismissal podczas async confirm (vide
+	// ConfirmDialog z `closeOnBackdrop={!isBusy}`).
+	showClose?: boolean
 	className?: string
 }
 
@@ -39,6 +43,7 @@ export function Modal({
 	size = "md",
 	closeOnBackdrop = true,
 	closeOnEscape = true,
+	showClose = true,
 	className,
 }: ModalProps) {
 	const titleId = useId()
@@ -151,19 +156,21 @@ export function Modal({
 								>
 									{title}
 								</h3>
-								<button
-									className={cn(
-										"shrink-0 -mr-2 inline-flex items-center justify-center w-9 h-9 rounded-full text-graphite-600",
-										"transition-[background-color,color] duration-150 ease-out",
-										"hover-supported:hover:bg-graphite-100 hover-supported:hover:text-graphite-900",
-										"active:scale-[0.94]",
-									)}
-									type="button"
-									aria-label="Zamknij okno"
-									onClick={onClose}
-								>
-									<X size={18} />
-								</button>
+								{showClose && (
+									<button
+										className={cn(
+											"shrink-0 -mr-2 inline-flex items-center justify-center w-9 h-9 rounded-full text-graphite-600",
+											"transition-[background-color,color] duration-150 ease-out",
+											"hover-supported:hover:bg-graphite-100 hover-supported:hover:text-graphite-900",
+											"active:scale-[0.94]",
+										)}
+										type="button"
+										aria-label="Zamknij okno"
+										onClick={onClose}
+									>
+										<X size={18} />
+									</button>
+								)}
 							</div>
 						)}
 						<div

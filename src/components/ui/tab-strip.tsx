@@ -21,6 +21,26 @@ interface TabStripProps {
 
 const EASE_OUT_QUINT: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
+// Per WAI-ARIA APG (Tabs Pattern). Wrap ArrowLeft/Right, Home/End → first/last.
+// Inne klawisze → bez zmiany. Pure function żeby vitest mógł testować bez DOM.
+export function nextTabIndex(currentIndex: number, total: number, key: string): number {
+	if (total === 0) return currentIndex
+	switch (key) {
+		case "ArrowRight":
+			return (currentIndex + 1) % total
+		case "ArrowLeft":
+			return (currentIndex - 1 + total) % total
+		case "Home":
+			return 0
+		case "End":
+			return total - 1
+		default:
+			return currentIndex
+	}
+}
+
+const NAV_KEYS = new Set(["ArrowLeft", "ArrowRight", "Home", "End"])
+
 export function TabStrip({
 	className,
 	tabs,
@@ -29,6 +49,19 @@ export function TabStrip({
 	layoutId = "tab-strip-underline",
 	"aria-label": ariaLabel,
 }: TabStripProps) {
+	function handleKeyDown(e: React.KeyboardEvent<HTMLButtonElement>, index: number) {
+		if (!NAV_KEYS.has(e.key)) return
+		e.preventDefault()
+		const next = nextTabIndex(index, tabs.length, e.key)
+		if (next === index) return
+		const nextId = tabs[next].id
+		onChange(nextId)
+		// Focus po flush state — nowy button zyska tabIndex=0 i może otrzymać focus.
+		setTimeout(() => {
+			document.getElementById(`tab-${nextId}`)?.focus()
+		}, 0)
+	}
+
 	return (
 		<div
 			className={cn(
@@ -40,7 +73,7 @@ export function TabStrip({
 			aria-label={ariaLabel}
 		>
 			<div className="inline-flex items-stretch gap-6 px-1 min-w-full">
-				{tabs.map((tab) => {
+				{tabs.map((tab, idx) => {
 					const isActive = tab.id === active
 					return (
 						<button
@@ -52,6 +85,7 @@ export function TabStrip({
 							id={`tab-${tab.id}`}
 							tabIndex={isActive ? 0 : -1}
 							onClick={() => onChange(tab.id)}
+							onKeyDown={(e) => handleKeyDown(e, idx)}
 							className={cn(
 								"relative shrink-0 inline-flex items-center gap-2 pb-3 pt-2 text-sm font-medium whitespace-nowrap",
 								"transition-[color] duration-150 ease-out",

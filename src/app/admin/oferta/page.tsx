@@ -70,9 +70,13 @@ export default async function OfertaPage({searchParams}: Props) {
 			/>
 
 			{sub === "uslugi" ? (
-				<ServicesContent searchParams={sp} categories={categoryNav.map((c) => ({id: c.id, name: c.name, count: c._count.services}))} />
+				<div id="panel-uslugi" role="tabpanel" aria-labelledby="tab-uslugi">
+					<ServicesContent searchParams={sp} categories={categoryNav.map((c) => ({id: c.id, name: c.name, count: c._count.services}))} />
+				</div>
 			) : (
-				<CategoriesContent />
+				<div id="panel-kategorie" role="tabpanel" aria-labelledby="tab-kategorie">
+					<CategoriesContent />
+				</div>
 			)}
 		</div>
 	)

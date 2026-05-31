@@ -159,13 +159,15 @@ export function ServiceForm({className, mode, categories, initialData}: ServiceF
 						className={cn(
 							"w-full h-11 px-3.5 text-base bg-white border rounded-md text-graphite-900",
 							"transition-[border-color,box-shadow] duration-150 ease-out",
-							"focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500",
+							"focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500",
 							errors.categoryId ? "border-error" : "border-border-default",
 						)}
 						id="categoryId"
 						name="categoryId"
 						value={values.categoryId}
 						onChange={(e) => update("categoryId", e.target.value)}
+						aria-describedby={errors.categoryId ? "categoryId-error" : undefined}
+						aria-invalid={errors.categoryId ? true : undefined}
 						required
 					>
 						<option value="">Wybierz kategorię...</option>
@@ -174,7 +176,7 @@ export function ServiceForm({className, mode, categories, initialData}: ServiceF
 						))}
 					</select>
 					{errors.categoryId && (
-						<p className="text-xs text-error mt-1.5">{errors.categoryId}</p>
+						<p id="categoryId-error" role="alert" className="text-xs text-error mt-1.5">{errors.categoryId}</p>
 					)}
 				</div>
 

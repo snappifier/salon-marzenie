@@ -184,7 +184,7 @@ export function ServiceStaffForm({
 													type="number"
 													min={5}
 													max={480}
-													className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+													className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 													placeholder={`${defaultDurationMin} (domyślnie)`}
 													value={row.durationOverride}
 													onChange={(e) => updateRow(row.staffId, {durationOverride: e.target.value})}
@@ -198,7 +198,7 @@ export function ServiceStaffForm({
 													type="number"
 													min={0}
 													max={120}
-													className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+													className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 													placeholder={`${defaultBufferAfterMin} (domyślnie)`}
 													value={row.bufferOverride}
 													onChange={(e) => updateRow(row.staffId, {bufferOverride: e.target.value})}
@@ -211,7 +211,7 @@ export function ServiceStaffForm({
 												<input
 													type="text"
 													inputMode="decimal"
-													className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus:ring-3 focus:ring-rose-500/15 focus:border-rose-500"
+													className="w-full h-10 px-3 text-sm bg-white border border-border-default rounded-md focus:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15 focus-visible:border-rose-500"
 													placeholder={`${(defaultPriceGr / 100).toFixed(2)} (domyślnie)`}
 													value={row.priceOverride}
 													onChange={(e) => updateRow(row.staffId, {priceOverride: e.target.value})}
