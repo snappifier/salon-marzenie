@@ -1,5 +1,5 @@
 import {prisma} from "@/lib/prisma"
-import {auth} from "@/lib/auth"
+import {getSessionSafe} from "@/lib/auth"
 import {getActiveServicesGrouped, getAllStaffByService} from "@/features/booking/public-queries"
 import {Wizard} from "@/components/booking-wizard/wizard"
 import {Container} from "@/components/ui/container"
@@ -17,7 +17,7 @@ type Props = {
 
 export default async function ReservationPage({searchParams}: Props) {
 	const sp = await searchParams
-	const session = await auth()
+	const session = await getSessionSafe()
 	const isLoggedIn = session?.user?.role === "customer"
 
 	const [groupedServices, staffNames, allStaffByService, loggedInCustomer] = await Promise.all([

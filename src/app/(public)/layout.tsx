@@ -1,4 +1,4 @@
-import {auth} from "@/lib/auth"
+import {getSessionSafe} from "@/lib/auth"
 import {prisma} from "@/lib/prisma"
 import {getSettings} from "@/features/settings/queries"
 import {toPublicSalonInfo} from "@/lib/dto"
@@ -10,7 +10,7 @@ import {SmoothHeight} from "@/components/public/smooth-height"
 import {CookieBanner} from "@/components/public/cookie-banner"
 
 export default async function PublicLayout({children}: {children: React.ReactNode}) {
-    const [settings, session] = await Promise.all([getSettings(), auth()])
+    const [settings, session] = await Promise.all([getSettings(), getSessionSafe()])
     const salon = toPublicSalonInfo(settings)
 
     let customer: HeaderCustomer | null = null
