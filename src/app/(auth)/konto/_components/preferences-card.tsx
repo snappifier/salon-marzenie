@@ -13,10 +13,10 @@ export function PreferencesCard({customer}: Props) {
 	]
 
 	return (
-		<div className="bg-white border border-border-soft rounded-[var(--radius-lg)] overflow-hidden">
+		<div className="bg-surface border border-border-subtle rounded-[var(--radius-lg)] overflow-hidden">
 			<div className="px-[22px] pt-[18px] pb-3.5 flex items-center justify-between">
-				<h3 className="font-serif font-medium text-lg text-graphite-900 tracking-[-0.01em]">
-					Twoje <em className="italic text-rose-600 font-normal">preferencje</em>
+				<h3 className="font-display font-medium text-lg text-primary tracking-[-0.01em]">
+					Twoje <em className="italic text-interactive font-normal">preferencje</em>
 				</h3>
 			</div>
 
@@ -24,12 +24,12 @@ export function PreferencesCard({customer}: Props) {
 				{rows.map((pref) => (
 					<div
 						key={pref.label}
-						className="flex justify-between items-baseline py-[11px] border-b border-border-soft last:border-b-0 gap-3"
+						className="flex justify-between items-baseline py-[11px] border-b border-border-subtle last:border-b-0 gap-3"
 					>
-						<p className="text-xs uppercase tracking-[0.12em] text-graphite-400 font-medium shrink-0">
+						<p className="text-xs uppercase tracking-[0.18em] text-secondary font-medium shrink-0">
 							{pref.label}
 						</p>
-						<p className={pref.empty ? "text-sm text-right italic text-graphite-400" : "text-sm text-right text-graphite-900"}>
+						<p className={pref.empty ? "text-sm text-right italic text-secondary" : "text-sm text-right text-primary"}>
 							{pref.value}
 						</p>
 					</div>

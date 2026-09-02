@@ -46,7 +46,7 @@ export function StatsRow({stats}: Props) {
 					stats.topServiceName ? (
 						<span className="text-[22px]">{stats.topServiceName}</span>
 					) : (
-						<span className="text-[18px] text-graphite-400 italic">jeszcze brak</span>
+						<span className="text-[18px] text-secondary italic">jeszcze brak</span>
 					)
 				}
 			/>
@@ -55,7 +55,7 @@ export function StatsRow({stats}: Props) {
 				valueNode={
 					<>
 						{sinceYear}
-						<em className="font-serif italic text-rose-500 font-normal text-[18px] ml-0.5">r.</em>
+						<em className="font-display italic text-interactive font-normal text-[18px] ml-0.5">r.</em>
 					</>
 				}
 				foot={membershipLabel(stats.createdAt)}
@@ -74,15 +74,15 @@ interface StatTileProps {
 
 function StatTile({label, value, valueNode, foot, footPositive}: StatTileProps) {
 	return (
-		<div className="bg-white border border-border-soft rounded-[var(--radius-lg)] px-5 py-[18px]">
-			<p className="text-[11px] uppercase tracking-[0.14em] text-graphite-400 font-medium mb-2.5">
+		<div className="bg-surface border border-border-subtle rounded-[var(--radius-lg)] px-5 py-[18px]">
+			<p className="text-[11px] uppercase tracking-[0.18em] text-secondary font-medium mb-2.5">
 				{label}
 			</p>
-			<p className="font-serif font-medium text-[28px] leading-[1.05] text-graphite-900 tracking-[-0.02em]">
+			<p className="font-display font-medium text-[28px] leading-[1.05] text-primary tracking-[-0.02em]">
 				{valueNode ?? value}
 			</p>
 			{foot && (
-				<p className={footPositive ? "text-xs mt-1.5 text-success" : "text-xs mt-1.5 text-graphite-600"}>
+				<p className={footPositive ? "text-xs mt-1.5 text-success" : "text-xs mt-1.5 text-secondary"}>
 					{foot}
 				</p>
 			)}

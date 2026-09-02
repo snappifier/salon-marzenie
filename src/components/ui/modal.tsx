@@ -118,7 +118,7 @@ export function Modal({
 					aria-labelledby={title ? titleId : undefined}
 				>
 					<motion.div
-						className="absolute inset-0 bg-graphite-900/40"
+						className="absolute inset-0 bg-ink-900/40"
 						initial={{opacity: 0}}
 						animate={{opacity: 1}}
 						exit={{opacity: 0}}
@@ -129,7 +129,7 @@ export function Modal({
 					<motion.div
 						ref={panelRef}
 						className={cn(
-							"relative w-full bg-white rounded-2xl shadow-xl border border-border-soft",
+							"relative w-full bg-surface rounded-lg shadow-xl border border-border-subtle",
 							"flex flex-col max-h-[calc(100dvh-2rem)]",
 							sizeClasses[size],
 							className,
@@ -152,16 +152,16 @@ export function Modal({
 							<div className="flex items-start justify-between gap-4 px-6 pt-5 pb-3">
 								<h3
 									id={titleId}
-									className="font-serif text-[20px] leading-tight text-graphite-900 text-balance"
+									className="font-display text-[20px] leading-tight text-primary text-balance"
 								>
 									{title}
 								</h3>
 								{showClose && (
 									<button
 										className={cn(
-											"shrink-0 -mr-2 inline-flex items-center justify-center w-9 h-9 rounded-full text-graphite-600",
+											"shrink-0 -mr-2 inline-flex items-center justify-center w-9 h-9 rounded-full text-secondary",
 											"transition-[background-color,color] duration-150 ease-out",
-											"hover-supported:hover:bg-graphite-100 hover-supported:hover:text-graphite-900",
+											"hover-supported:hover:bg-surface-muted hover-supported:hover:text-primary",
 											"active:scale-[0.94]",
 										)}
 										type="button"
@@ -182,7 +182,7 @@ export function Modal({
 							{children}
 						</div>
 						{footer && (
-							<div className="px-6 py-4 border-t border-border-soft bg-warm/50 rounded-b-2xl">
+							<div className="px-6 py-4 border-t border-border-subtle bg-paper-300/50 rounded-b-2xl">
 								{footer}
 							</div>
 						)}

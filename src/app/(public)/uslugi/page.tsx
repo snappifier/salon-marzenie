@@ -1,3 +1,4 @@
+// src/app/(public)/uslugi/page.tsx
 import {getSettings} from "@/features/settings/queries"
 import {toPublicSalonInfo} from "@/lib/dto"
 import {getCategoriesWithServices} from "@/features/landing/queries"
@@ -15,7 +16,7 @@ export const metadata = {
 
 const servicesCtaHeading = (
     <>
-        Wybrałaś <span className="italic font-normal text-rose-600">swoją usługę</span>?
+        Wybrałaś <span className="italic font-normal text-interactive">swoją usługę</span>?
     </>
 )
 
@@ -34,8 +35,8 @@ export default async function ServicesPage() {
                 <HintBanner />
             </Container>
             <div>
-                {categories.map((cat, i) => (
-                    <CategorySection key={cat.id} category={cat} index={i} />
+                {categories.map((cat) => (
+                    <CategorySection key={cat.id} category={cat} />
                 ))}
             </div>
             <FinalCta

@@ -1,49 +1,37 @@
+// src/components/public/services/category-section.tsx
 import {Container} from "@/components/ui/container"
-import {Reveal} from "@/components/ui/reveal"
 import {ServiceRow} from "./service-row"
 import {landing} from "@/lib/content"
 import type {CategoryWithServices} from "@/features/landing/queries"
 
 interface Props {
-    category: CategoryWithServices
-    index: number
+	category: CategoryWithServices
 }
 
-export function CategorySection({category, index}: Props) {
-    const description = landing.categoryDescriptions[category.slug]
+export function CategorySection({category}: Props) {
+	const description =
+		landing.categoryDescriptions[category.slug] ??
+		category.services.find((s) => s.description)?.description
 
-    return (
-        <section
-            id={category.slug}
-            className="scroll-mt-28 py-12 md:py-14 border-b border-border-soft last:border-b-0"
-        >
-            <Container>
-                <Reveal className="mb-8 md:mb-10">
-                    <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 md:gap-12">
-                        <div className="flex items-baseline gap-4 flex-wrap">
-                            <span className="font-serif italic font-normal text-lg text-rose-500 opacity-70">
-                                {String(index + 1).padStart(2, "0")}
-                            </span>
-                            <h2 className="font-serif font-medium text-[clamp(28px,4vw,38px)] leading-tight tracking-tight text-graphite-900">
-                                {category.name}
-                            </h2>
-                        </div>
-                        {description && (
-                            <p className="text-sm text-graphite-600 leading-relaxed max-w-[360px]">
-                                {description}
-                            </p>
-                        )}
-                    </div>
-                </Reveal>
+	return (
+		<section
+			id={category.slug}
+			className="scroll-mt-[152px] py-[clamp(40px,6vw,64px)] border-b border-border-subtle last:border-b-0"
+		>
+			<Container>
+				<div className="max-w-xl mx-auto mb-[clamp(24px,4vw,40px)] text-center">
+					<h2 className="font-display font-normal text-[clamp(28px,5vw,40px)] leading-[1.1] mb-4">
+						{category.name}
+					</h2>
+					{description && <p className="text-secondary leading-[25px]">{description}</p>}
+				</div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                    {category.services.map((service, i) => (
-                        <Reveal key={service.id} delay={0.1 + i * 0.04} className="h-full">
-                            <ServiceRow service={service} />
-                        </Reveal>
-                    ))}
-                </div>
-            </Container>
-        </section>
-    )
+				<div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+					{category.services.map((service) => (
+						<ServiceRow key={service.id} service={service} />
+					))}
+				</div>
+			</Container>
+		</section>
+	)
 }

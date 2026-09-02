@@ -88,12 +88,12 @@ export function HistoryTimeline({rows, years, services}: Props) {
 
 	return (
 		<>
-			<div className="flex flex-wrap gap-2.5 items-center mb-4.5 p-3.5 bg-white border border-border-soft rounded-lg">
+			<div className="flex flex-wrap gap-2.5 items-center mb-4.5 p-3.5 bg-surface border border-border-subtle rounded-lg">
 				<div className="relative flex-1 min-w-55">
 					<Search
 						size={16}
 						strokeWidth={2}
-						className="absolute left-3.5 top-1/2 -translate-y-1/2 text-graphite-400 pointer-events-none"
+						className="absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary pointer-events-none"
 					/>
 					<input
 						type="text"
@@ -101,9 +101,9 @@ export function HistoryTimeline({rows, years, services}: Props) {
 						onChange={(e) => setQuery(e.target.value)}
 						placeholder="Szukaj po zabiegu, fryzjerce, dacie…"
 						className={cn(
-							"w-full pl-10 pr-3.5 py-2.5 text-sm bg-cream border border-border-soft rounded-full text-graphite-900 outline-none placeholder:text-graphite-400",
+							"w-full pl-10 pr-3.5 py-2.5 text-sm bg-surface border border-border-subtle rounded-full text-primary outline-none placeholder:text-secondary",
 							"transition-[border-color,background-color] duration-150 ease-out",
-							"focus:border-rose-400 focus:bg-white",
+							"focus:border-interactive focus:bg-surface",
 						)}
 					/>
 				</div>
@@ -112,14 +112,14 @@ export function HistoryTimeline({rows, years, services}: Props) {
 			</div>
 
 			{groups.length === 0 ? (
-				<div className="text-center px-6 py-12 bg-white border border-dashed border-border-default rounded-lg">
-					<p className="text-sm text-graphite-600 mb-3">Brak wizyt dla wybranych filtrów.</p>
+				<div className="text-center px-6 py-12 bg-surface border border-dashed border-border-subtle rounded-lg">
+					<p className="text-sm text-secondary mb-3">Brak wizyt dla wybranych filtrów.</p>
 					{hasFilters && (
 						<button
 							type="button"
 							onClick={reset}
 							className={cn(
-								"text-xs font-medium text-rose-600",
+								"text-xs font-medium text-interactive",
 								"transition-[color] duration-150 ease-out hover-supported:hover:underline",
 							)}
 						>
@@ -130,11 +130,11 @@ export function HistoryTimeline({rows, years, services}: Props) {
 			) : (
 				groups.map((g) => (
 					<section key={g.monthKey} className="mb-9">
-						<div className="flex items-baseline gap-3.5 mb-3.5 pb-2.5 border-b border-border-soft">
-							<h2 className="font-serif font-medium text-[22px] text-graphite-900 tracking-tight">
-								{g.monthTitle} <em className="italic text-rose-600 font-normal">{g.year}</em>
+						<div className="flex items-baseline gap-3.5 mb-3.5 pb-2.5 border-b border-border-subtle">
+							<h2 className="font-display font-medium text-[22px] text-primary tracking-tight">
+								{g.monthTitle} <em className="italic text-interactive font-normal">{g.year}</em>
 							</h2>
-							<span className="text-xs text-graphite-400">
+							<span className="text-xs text-secondary">
 								{g.count} {wizytaNoun(g.count)} · {formatMoney(g.sumGr)}
 							</span>
 						</div>
@@ -153,47 +153,47 @@ function Row({row}: {row: HistoryRow}) {
 	const actionClass = cn(
 		"inline-flex items-center gap-1.5 px-2.5 py-1.25 text-xs font-medium rounded-full bg-transparent",
 		"transition-[color,background-color] duration-150 ease-out",
-		"text-graphite-600 hover-supported:hover:text-rose-600 hover-supported:hover:bg-rose-50",
-		"[&_svg]:text-graphite-400 hover-supported:hover:[&_svg]:text-rose-500",
+		"text-secondary hover-supported:hover:text-interactive hover-supported:hover:bg-surface-muted",
+		"[&_svg]:text-secondary hover-supported:hover:[&_svg]:text-interactive",
 	)
 
 	return (
-		<div className="grid grid-cols-[56px_1fr] gap-4.5 py-3.5 border-b border-border-soft last:border-b-0 items-start">
-			<div className="text-center px-1 py-2.25 bg-white border border-border-soft rounded-md">
-				<div className="font-serif font-medium text-lg text-graphite-900 leading-none tracking-[-0.01em]">
+		<div className="grid grid-cols-[56px_1fr] gap-4.5 py-3.5 border-b border-border-subtle last:border-b-0 items-start">
+			<div className="text-center px-1 py-2.25 bg-surface border border-border-subtle rounded-md">
+				<div className="font-display font-medium text-lg text-primary leading-none tracking-[-0.01em]">
 					{row.day}
 				</div>
-				<div className="text-[9px] uppercase text-graphite-400 tracking-[0.12em] mt-1 font-medium">
+				<div className="text-[9px] uppercase text-secondary tracking-[0.18em] mt-1 font-medium">
 					{row.dow}
 				</div>
 			</div>
 
 			<div
 				className={cn(
-					"bg-white border border-border-soft rounded-lg px-5 py-4",
+					"bg-surface border border-border-subtle rounded-lg px-5 py-4",
 					"transition-[border-color,box-shadow] duration-150 ease-out",
-					"hover-supported:hover:border-rose-200 hover-supported:hover:shadow-sm",
+					"hover-supported:hover:border-accent-100 hover-supported:hover:shadow-sm",
 				)}
 			>
 				<div className="flex justify-between items-baseline gap-3 mb-1.5 flex-wrap">
-					<div className="font-serif font-medium text-base text-graphite-900 tracking-[-0.01em] leading-[1.3]">
+					<div className="font-display font-medium text-base text-primary tracking-[-0.01em] leading-[1.3]">
 						{row.title}
 					</div>
-					<div className="font-serif font-medium text-[15px] text-graphite-900 shrink-0">
+					<div className="font-display font-medium text-[15px] text-primary shrink-0">
 						{row.priceLabel}
 					</div>
 				</div>
 
-				<div className="text-xs text-graphite-400 flex items-center gap-2 flex-wrap">
+				<div className="text-xs text-secondary flex items-center gap-2 flex-wrap">
 					{metaItems.map((m, i) => (
 						<span key={i} className="flex items-center gap-2">
-							{i > 0 && <span className="text-border-default">·</span>}
+							{i > 0 && <span className="text-secondary/50">·</span>}
 							{m}
 						</span>
 					))}
 				</div>
 
-				<div className="flex gap-2 mt-3 pt-3 border-t border-border-soft flex-wrap">
+				<div className="flex gap-2 mt-3 pt-3 border-t border-border-subtle flex-wrap">
 					<Link href="/rezerwacja" className={actionClass}>
 						<RotateCcw size={13} strokeWidth={1.8} />
 						Powtórz
@@ -252,18 +252,18 @@ function FilterSelect({label, value, options, onChange}: FilterSelectProps) {
 				aria-expanded={open}
 				onClick={() => setOpen((o) => !o)}
 				className={cn(
-					"inline-flex items-center gap-2 px-3.5 py-2.5 text-[13px] bg-cream border rounded-full text-graphite-900 cursor-pointer",
-					"transition-[border-color] duration-150 ease-out hover-supported:hover:border-rose-300",
-					open ? "border-rose-300" : "border-border-soft",
+					"inline-flex items-center gap-2 px-3.5 py-2.5 text-[13px] bg-surface border rounded-full text-primary cursor-pointer",
+					"transition-[border-color] duration-150 ease-out hover-supported:hover:border-accent-100",
+					open ? "border-accent-100" : "border-border-subtle",
 				)}
 			>
-				<span className="text-graphite-400 font-normal">{label}</span>
-				<span className="text-graphite-900 font-medium">{value}</span>
+				<span className="text-secondary font-normal">{label}</span>
+				<span className="text-primary font-medium">{value}</span>
 				<ChevronDown
 					size={12}
 					strokeWidth={2}
 					className={cn(
-						"text-graphite-400 transition-transform duration-150 ease-out",
+						"text-secondary transition-transform duration-150 ease-out",
 						open && "rotate-180",
 					)}
 				/>
@@ -278,7 +278,7 @@ function FilterSelect({label, value, options, onChange}: FilterSelectProps) {
 						exit={variants.exit}
 						transition={{duration: 0.15, ease: [0.23, 1, 0.32, 1]}}
 						style={{transformOrigin: "top right"}}
-						className="absolute right-0 top-full mt-1.5 z-30 min-w-44 max-h-72 overflow-auto bg-white border border-border-soft rounded-lg shadow-md py-1.5"
+						className="absolute right-0 top-full mt-1.5 z-30 min-w-44 max-h-72 overflow-auto bg-surface border border-border-subtle rounded-lg shadow-md py-1.5"
 					>
 						{options.map((opt) => (
 							<button
@@ -293,8 +293,8 @@ function FilterSelect({label, value, options, onChange}: FilterSelectProps) {
 								className={cn(
 									"w-full text-left px-3.5 py-2 text-[13px]",
 									"transition-[background-color,color] duration-150 ease-out",
-									"hover-supported:hover:bg-rose-50 hover-supported:hover:text-graphite-900",
-									opt === value ? "text-rose-600 font-medium bg-rose-50" : "text-graphite-700",
+									"hover-supported:hover:bg-surface-muted hover-supported:hover:text-primary",
+									opt === value ? "text-interactive font-medium bg-surface-muted" : "text-primary",
 								)}
 							>
 								{opt}

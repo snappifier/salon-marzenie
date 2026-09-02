@@ -1,97 +1,61 @@
+// src/components/public/landing/hero.tsx
+import Image from "next/image"
 import Link from "next/link"
-import {ArrowRight} from "lucide-react"
-import {landing} from "@/lib/content"
-import {buttonStyles} from "@/components/ui/button"
-import {Container} from "@/components/ui/container"
-import {Eyebrow} from "@/components/ui/eyebrow"
-import {Heading} from "@/components/ui/heading"
-import {Reveal} from "@/components/ui/reveal"
-import {ButterflyWatermark} from "@/components/public/butterfly-watermark"
-import {getNextAvailableSlot} from "@/features/booking/next-slot"
-import {formatRelativeSlot} from "@/lib/date"
+import {landing, site} from "@/lib/content"
 
-function StarIcon({size = 11}: {size?: number}) {
-    return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" />
-        </svg>
-    )
-}
+export function Hero() {
+	return (
+		<section id="top" className="w-full px-[7%] pt-[50px] pb-[clamp(48px,7vw,80px)]">
+			<div className="mx-auto text-center animate-mz-fade">
+				<div className="w-full flex justify-center items-center pb-4 gap-6 mb-10">
+					<Image
+						src="/logo.png"
+						alt=""
+						width={240}
+						height={240}
+						priority
+						className="h-[clamp(64px,15vw,120px)] w-auto"
+					/>
+					<div className="flex flex-col font-display text-left tracking-tight leading-[1.01]">
+						<p className="text-[clamp(13px,3.6vw,18px)]">{landing.hero.eyebrow}</p>
+						<p className="text-[clamp(30px,9vw,70px)] font-medium text-interactive">{site.salonName}</p>
+					</div>
+				</div>
 
-export async function Hero() {
-    const nextSlot = await getNextAvailableSlot()
-    const heroStat = landing.stats[0]
-    const heroQuote = landing.heroQuote
+				<h1 className="font-display font-normal text-[clamp(40px,7vw,60px)] leading-[1.2] mb-12 tracking-[-0.01em] text-balance max-w-[760px] mx-auto">
+					{landing.hero.headline}{" "}
+					<em className="italic text-interactive">{landing.hero.headlineHighlight}</em>
+				</h1>
 
-    return (
-        <section className="relative overflow-hidden py-16 md:py-24">
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none hero-bloom" />
+				<p className="text-lg leading-10 text-secondary mx-auto mb-8 max-w-3xl text-balance">
+					{landing.hero.subtitle}
+				</p>
 
-            <Container className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] items-center gap-14 lg:gap-16">
-                <Reveal>
-                    <Eyebrow className="mb-5">{landing.hero.eyebrow}</Eyebrow>
-                    <Heading level="display" className="mb-6">
-                        {landing.hero.headline}{" "}
-                        <span className="italic font-normal text-rose-600">
-							{landing.hero.headlineHighlight}
-						</span>
-                    </Heading>
-                    <p className="text-[clamp(15px,1.6vw,18px)] leading-relaxed text-graphite-600 max-w-[480px] mb-8">
-                        {landing.hero.subtitle}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <Link href="/rezerwacja" className={buttonStyles({size: "lg"})}>
-                            Zarezerwuj online
-                            <ArrowRight size={16} />
-                        </Link>
-                        <Link href="/uslugi" className={buttonStyles({size: "lg", variant: "secondary"})}>
-                            Zobacz cennik
-                        </Link>
-                    </div>
+				<div className="flex flex-wrap gap-8 justify-center items-center">
+					<Link
+						href="/rezerwacja"
+						className="bg-interactive text-white rounded-full px-8 py-1 text-base font-medium leading-12 transition-[color,background-color,border-color] duration-[240ms] ease-out hover-supported:hover:bg-interactive-hover hover-supported:hover:shadow-md"
+					>
+						Zarezerwuj wizytę
+					</Link>
+					<Link
+						href="#cennik"
+						className="text-base leading-6 text-secondary border-b border-border-subtle pb-1 transition-[color,border-color] duration-200 ease-out hover-supported:hover:text-interactive hover-supported:hover:border-interactive"
+					>
+						Zobacz cennik
+					</Link>
+				</div>
+			</div>
 
-                    {nextSlot && (
-                        <div className="mt-8 flex items-center gap-3 text-[13px] text-graphite-500">
-							<span className="relative flex w-1.5 h-1.5" aria-hidden="true">
-								<span className="absolute inline-flex w-full h-full rounded-full bg-success opacity-60 animate-ping" />
-								<span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-success" />
-							</span>
-                            <span>
-								Najbliższa wolna wizyta:{" "}
-                                <strong className="font-medium text-graphite-900">
-									{formatRelativeSlot(nextSlot)}
-								</strong>
-							</span>
-                        </div>
-                    )}
-                </Reveal>
-
-                <Reveal delay={0.15} className="hidden lg:block relative min-h-[360px]">
-                    <ButterflyWatermark className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[480px] opacity-60" />
-
-                    <div className="absolute top-[8%] right-0 -rotate-2 bg-white border border-border-soft rounded-2xl p-5 shadow-md min-w-[180px]">
-                        <div className="font-serif font-medium text-[44px] leading-none tracking-[-0.02em] text-graphite-900">
-                            {heroStat.num}<em className="italic text-[22px] text-rose-500 ml-0.5">{heroStat.suffix}</em>
-                        </div>
-                        <div className="text-[13px] text-graphite-600 mt-1.5 leading-tight whitespace-pre-line">
-                            {heroStat.label}
-                        </div>
-                    </div>
-
-                    <div className="absolute bottom-[8%] left-0 rotate-2 bg-white border border-border-soft rounded-2xl p-5 shadow-md max-w-[280px]">
-                        <p className="text-sm leading-snug text-graphite-900 italic mb-2.5">
-                            &bdquo;{heroQuote.text}&rdquo;
-                        </p>
-                        <div className="flex items-center gap-2 pt-2.5 border-t border-border-soft">
-                            <div className="flex gap-px text-rose-500" aria-label="5 z 5 gwiazdek">
-                                {Array.from({length: 5}).map((_, i) => (
-                                    <StarIcon key={i} />
-                                ))}
-                            </div>
-                            <div className="text-[11px] font-medium text-graphite-600">{heroQuote.author}, {heroQuote.source}</div>
-                        </div>
-                    </div>
-                </Reveal>
-            </Container>
-        </section>
-    )
+			<div className="mt-[clamp(40px,6vw,64px)] animate-mz-fade-only relative w-full aspect-[21/9] min-h-[280px] rounded-lg border border-border-subtle overflow-hidden">
+				<Image
+					src="/srodek_salon.jpg"
+					alt="Wnętrze salonu Marzenie"
+					fill
+					sizes="86vw"
+					className="object-cover brightness-65"
+				/>
+			</div>
+		</section>
+	)
 }

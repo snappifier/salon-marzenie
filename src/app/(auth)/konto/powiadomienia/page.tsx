@@ -31,7 +31,7 @@ export default async function NotificationsPage() {
 	}
 
 	return (
-		<div className="min-h-screen relative bg-white">
+		<div className="min-h-screen relative bg-surface">
 			<Sidebar
 				firstName={customer.firstName}
 				lastName={customer.lastName}
@@ -47,10 +47,10 @@ export default async function NotificationsPage() {
 			>
 				<header className="mb-7">
 					<Eyebrow className="block mb-1.5">Konto</Eyebrow>
-					<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-graphite-900">
+					<h1 className="font-display font-normal text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-primary">
 						Powiadomienia
 					</h1>
-					<p className="text-sm text-graphite-600 mt-2 max-w-[560px]">
+					<p className="text-sm text-secondary mt-2 max-w-[560px]">
 						Zdecyduj, o czym i w jaki sposób chcesz być informowana. Powiadomienia o wizytach
 						pomagają nie przegapić terminu.
 					</p>

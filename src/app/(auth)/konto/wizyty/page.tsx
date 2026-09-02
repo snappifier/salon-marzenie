@@ -108,14 +108,14 @@ function cancelledToCard(v: CustomerVisitSummary): VisitCardData {
 
 function EmptyState({title, hint}: {title: string; hint: string}) {
 	return (
-		<div className="text-center px-6 py-14 bg-white border border-dashed border-border-default rounded-lg">
-			<span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-warm text-rose-500 mb-3.5">
+		<div className="text-center px-6 py-14 bg-surface border border-dashed border-border-subtle rounded-lg">
+			<span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-paper-300 text-interactive mb-3.5">
 				<CalendarX size={24} strokeWidth={1.6} />
 			</span>
-			<h3 className="font-serif font-medium text-xl text-graphite-900 tracking-[-0.01em] mb-1.5">
+			<h3 className="font-display font-medium text-xl text-primary tracking-[-0.01em] mb-1.5">
 				{title}
 			</h3>
-			<p className="text-sm text-graphite-600 max-w-95 mx-auto mb-4.5">{hint}</p>
+			<p className="text-sm text-secondary max-w-95 mx-auto mb-4.5">{hint}</p>
 			<Link href="/rezerwacja" className={buttonStyles({size: "md"})}>
 				Zarezerwuj wizytę
 			</Link>
@@ -125,11 +125,11 @@ function EmptyState({title, hint}: {title: string; hint: string}) {
 
 function SectionLabel({title, em, count}: {title: string; em: string; count: React.ReactNode}) {
 	return (
-		<div className="flex items-baseline gap-3 mt-8 mb-4 pb-2.5 border-b border-border-soft first:mt-0">
-			<h2 className="font-serif font-medium text-lg text-graphite-900 tracking-[-0.01em]">
-				{title} <em className="italic text-rose-600 font-normal">{em}</em>
+		<div className="flex items-baseline gap-3 mt-8 mb-4 pb-2.5 border-b border-border-subtle first:mt-0">
+			<h2 className="font-display font-medium text-lg text-primary tracking-[-0.01em]">
+				{title} <em className="italic text-interactive font-normal">{em}</em>
 			</h2>
-			<span className="text-xs text-graphite-400">{count}</span>
+			<span className="text-xs text-secondary">{count}</span>
 		</div>
 	)
 }
@@ -224,7 +224,7 @@ export default async function MyVisitsPage() {
 							count={
 								<>
 									{pastVisibleLabel} ·{" "}
-									<Link href="/konto/historia" className="text-rose-600 font-medium">
+									<Link href="/konto/historia" className="text-interactive font-medium">
 										zobacz pełną historię →
 									</Link>
 								</>
@@ -262,7 +262,7 @@ export default async function MyVisitsPage() {
 	}
 
 	return (
-		<div className="min-h-screen relative bg-white">
+		<div className="min-h-screen relative bg-surface">
 			<Sidebar
 				firstName={customer.firstName}
 				lastName={customer.lastName}
@@ -279,8 +279,8 @@ export default async function MyVisitsPage() {
 				<header className="flex items-end justify-between flex-wrap gap-4 mb-7">
 					<div>
 						<Eyebrow className="block mb-1.5">Twoje konto</Eyebrow>
-						<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-graphite-900">
-							Moje <em className="italic text-rose-600 font-normal">wizyty</em>
+						<h1 className="font-display font-normal text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-primary">
+							Moje <em className="italic text-interactive font-normal">wizyty</em>
 						</h1>
 					</div>
 					<div className="flex gap-2.5 items-center">

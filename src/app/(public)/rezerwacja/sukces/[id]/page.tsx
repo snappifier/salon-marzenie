@@ -110,57 +110,57 @@ export default async function BookingSuccessPage({params, searchParams}: Props) 
             <section className="text-center mb-10 md:mb-14">
                 <div className="relative inline-flex">
                     <span
-                        className="absolute inset-0 rounded-full bg-rose-200 motion-safe:animate-ping opacity-40"
+                        className="absolute inset-0 rounded-full bg-accent-100 motion-safe:animate-ping opacity-40"
                         aria-hidden="true"
                     />
-                    <div className="relative w-20 h-20 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center">
+                    <div className="relative w-20 h-20 rounded-full bg-surface-muted text-interactive flex items-center justify-center">
                         <Check size={40} strokeWidth={2} />
                     </div>
                 </div>
                 <Heading level="h1" className="mt-7 mb-3">
-                    Wizyta <span className="italic font-normal text-rose-600">zarezerwowana</span>
+                    Wizyta <span className="italic font-normal text-interactive">zarezerwowana</span>
                 </Heading>
-                <p className="text-base text-graphite-600 leading-relaxed max-w-[460px] mx-auto">
+                <p className="text-base text-secondary leading-relaxed max-w-[460px] mx-auto">
                     Czekamy na Ciebie {shortDateRelative} o {startTimeLabel}. Wszystkie szczegóły poniżej.
                 </p>
             </section>
 
-            <section className="bg-white border border-border-soft rounded-2xl overflow-hidden mb-10 shadow-sm">
-                <div className="px-5 md:px-6 py-5 bg-rose-50 border-b border-border-soft">
-                    <div className="text-[10px] uppercase tracking-[0.14em] font-medium text-rose-600 mb-1.5">
+            <section className="bg-surface border border-border-subtle rounded-lg overflow-hidden mb-10 shadow-sm">
+                <div className="px-5 md:px-6 py-5 bg-surface-muted border-b border-border-subtle">
+                    <div className="text-[10px] uppercase tracking-[0.18em] font-medium text-interactive mb-1.5">
                         Termin
                     </div>
-                    <div className="font-serif font-medium text-[clamp(22px,3.5vw,28px)] leading-tight text-graphite-900 mb-1.5">
+                    <div className="font-display font-medium text-[clamp(22px,3.5vw,28px)] leading-tight text-primary mb-1.5">
                         {dateLabelCapitalized}
                     </div>
-                    <div className="text-sm text-rose-700 font-medium tabular-nums">
+                    <div className="text-sm text-interactive-hover font-medium tabular-nums">
                         {formatTime(firstItem.startAt)} – {formatTime(lastItem.endAt)} · {totalDurationMin} min
                     </div>
                 </div>
 
-                <div className="px-5 md:px-6 py-4 flex items-baseline justify-between gap-3 border-b border-border-soft">
-                    <span className="text-[10px] uppercase tracking-[0.14em] font-medium text-graphite-400">
+                <div className="px-5 md:px-6 py-4 flex items-baseline justify-between gap-3 border-b border-border-subtle">
+                    <span className="text-[10px] uppercase tracking-[0.18em] font-medium text-secondary">
                         {uniqueStaff.length === 1 ? "Pracownik" : "Pracownicy"}
                     </span>
-                    <span className="font-medium text-graphite-900 text-sm text-right">
+                    <span className="font-medium text-primary text-sm text-right">
                         {staffLabel}
                     </span>
                 </div>
 
-                <div className="px-5 md:px-6 py-4 border-b border-border-soft">
-                    <div className="text-[10px] uppercase tracking-[0.14em] font-medium text-graphite-400 mb-3">
+                <div className="px-5 md:px-6 py-4 border-b border-border-subtle">
+                    <div className="text-[10px] uppercase tracking-[0.18em] font-medium text-secondary mb-3">
                         Usługi
                     </div>
                     <ul className="space-y-2.5">
                         {booking.items.map((item) => (
                             <li key={item.id} className="flex items-baseline justify-between gap-3 text-sm">
                                 <div className="min-w-0">
-                                    <div className="font-medium text-graphite-900">{item.service.name}</div>
-                                    <div className="text-xs text-graphite-400 mt-0.5">
+                                    <div className="font-medium text-primary">{item.service.name}</div>
+                                    <div className="text-xs text-secondary mt-0.5">
                                         {formatTime(item.startAt)} • {item.staff.firstName} {item.staff.lastName}
                                     </div>
                                 </div>
-                                <div className="font-serif font-medium text-graphite-900 tabular-nums whitespace-nowrap">
+                                <div className="font-display font-medium text-primary tabular-nums whitespace-nowrap">
                                     {formatMoney(item.priceGr)}
                                 </div>
                             </li>
@@ -170,12 +170,12 @@ export default async function BookingSuccessPage({params, searchParams}: Props) 
 
                 <div className="px-5 md:px-6 py-4 flex items-baseline justify-between gap-3">
                     <div>
-                        <div className="text-xs text-graphite-600">Razem</div>
-                        <div className="text-[11px] text-graphite-400 mt-0.5">
+                        <div className="text-xs text-secondary">Razem</div>
+                        <div className="text-[11px] text-secondary mt-0.5">
                             Płatne na miejscu
                         </div>
                     </div>
-                    <div className="font-serif font-medium text-[24px] text-graphite-900 tabular-nums">
+                    <div className="font-display font-medium text-[24px] text-primary tabular-nums">
                         {formatMoney(totalPrice)}
                     </div>
                 </div>
@@ -187,7 +187,7 @@ export default async function BookingSuccessPage({params, searchParams}: Props) 
                 <div className="space-y-3">
                     <NextStepRow icon={<MessageSquare size={18} strokeWidth={1.8} />} title="Potwierdzenie SMS-em">
                         Wyślemy je za chwilę na numer{" "}
-                        <strong className="font-medium text-graphite-900 tabular-nums">
+                        <strong className="font-medium text-primary tabular-nums">
                             {formatPhone(booking.customer.phone)}
                         </strong>
                         . Przypomnienie przyjdzie 24h przed wizytą.
@@ -202,22 +202,22 @@ export default async function BookingSuccessPage({params, searchParams}: Props) 
                     </NextStepRow>
 
                     <a
-                        className="group flex gap-4 p-4 md:p-5 rounded-2xl bg-white border border-border-soft transition-[border-color,box-shadow] duration-150 ease-out hover-supported:hover:border-rose-300 hover-supported:hover:shadow-sm"
+                        className="group flex gap-4 p-4 md:p-5 rounded-lg bg-surface border border-border-subtle transition-[border-color,box-shadow] duration-150 ease-out hover-supported:hover:border-accent-100 hover-supported:hover:shadow-sm"
                         href={calendarUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <div className="shrink-0 w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
+                        <div className="shrink-0 w-10 h-10 rounded-full bg-surface-muted text-interactive flex items-center justify-center">
                             <Calendar size={18} strokeWidth={1.8} />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <div className="font-medium text-graphite-900 text-sm mb-1">Dodaj do kalendarza</div>
-                            <p className="text-xs text-graphite-600 leading-relaxed">
+                            <div className="font-medium text-primary text-sm mb-1">Dodaj do kalendarza</div>
+                            <p className="text-xs text-secondary leading-relaxed">
                                 Żeby nie zapomnieć — otwórz w Google Calendar i zapisz.
                             </p>
                         </div>
                         <ArrowUpRight
-                            className="shrink-0 mt-1 text-graphite-400 transition-[color] duration-150 ease-out group-hover:text-rose-500"
+                            className="shrink-0 mt-1 text-secondary transition-[color] duration-150 ease-out group-hover:text-interactive"
                             size={16}
                         />
                     </a>
@@ -245,13 +245,13 @@ interface NextStepRowProps {
 
 function NextStepRow({icon, title, children}: NextStepRowProps) {
     return (
-        <div className="flex gap-4 p-4 md:p-5 rounded-2xl bg-white border border-border-soft">
-            <div className="shrink-0 w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
+        <div className="flex gap-4 p-4 md:p-5 rounded-lg bg-surface border border-border-subtle">
+            <div className="shrink-0 w-10 h-10 rounded-full bg-surface-muted text-interactive flex items-center justify-center">
                 {icon}
             </div>
             <div className="flex-1 min-w-0">
-                <div className="font-medium text-graphite-900 text-sm mb-1">{title}</div>
-                <div className="text-xs text-graphite-600 leading-relaxed">{children}</div>
+                <div className="font-medium text-primary text-sm mb-1">{title}</div>
+                <div className="text-xs text-secondary leading-relaxed">{children}</div>
             </div>
         </div>
     )

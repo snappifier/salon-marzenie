@@ -42,8 +42,8 @@ export function ProfileToc() {
 	}
 
 	return (
-		<aside className="bg-white border border-border-soft rounded-lg p-3.5 lg:sticky lg:top-6">
-			<p className="text-[10px] uppercase tracking-[0.16em] text-graphite-400 font-medium px-2.5 pt-1.5 pb-2.5">
+		<aside className="bg-surface border border-border-subtle rounded-lg p-3.5 lg:sticky lg:top-6">
+			<p className="text-[10px] uppercase tracking-[0.18em] text-secondary font-medium px-2.5 pt-1.5 pb-2.5">
 				W tej sekcji
 			</p>
 			<nav className="flex flex-col gap-0.5">
@@ -59,8 +59,8 @@ export function ProfileToc() {
 								"flex items-center gap-2.5 px-2.5 py-2.25 text-[13px] font-medium rounded-md",
 								"transition-[background-color,color] duration-150 ease-out",
 								isActive
-									? "bg-warm text-graphite-900 [&_svg]:text-rose-600"
-									: "text-graphite-600 [&_svg]:text-graphite-400 hover-supported:hover:bg-rose-50 hover-supported:hover:text-graphite-900",
+									? "bg-paper-300 text-primary [&_svg]:text-interactive"
+									: "text-secondary [&_svg]:text-secondary hover-supported:hover:bg-surface-muted hover-supported:hover:text-primary",
 							)}
 							aria-current={isActive ? "true" : undefined}
 						>

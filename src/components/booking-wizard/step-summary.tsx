@@ -97,9 +97,9 @@ export function StepSummary({serviceNames, staffNames, allStaffByService}: Props
             <div className="space-y-7" aria-busy="true">
                 <div>
                     <Heading level="h3" className="mb-1">Podsumowanie</Heading>
-                    <p className="text-sm text-graphite-600">Sprawdzamy dostępność wybranego terminu...</p>
+                    <p className="text-sm text-secondary">Sprawdzamy dostępność wybranego terminu...</p>
                 </div>
-                <div className="h-[280px] bg-graphite-50 border border-border-soft rounded-2xl animate-pulse" aria-hidden="true" />
+                <div className="h-[280px] bg-surface-muted border border-border-subtle rounded-lg animate-pulse" aria-hidden="true" />
                 <span className="sr-only">Ładowanie podsumowania</span>
             </div>
         )
@@ -128,23 +128,23 @@ export function StepSummary({serviceNames, staffNames, allStaffByService}: Props
         <motion.div className="space-y-7" variants={groupVariants}>
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Podsumowanie</Heading>
-                <p className="text-sm text-graphite-600 leading-relaxed">
+                <p className="text-sm text-secondary leading-relaxed">
                     Sprawdź dane i potwierdź rezerwację.
                 </p>
             </motion.div>
 
             <motion.div
-                className="bg-white border border-border-soft rounded-2xl overflow-hidden"
+                className="bg-surface border border-border-subtle rounded-lg overflow-hidden"
                 variants={itemVariants}
             >
-                <div className="px-5 py-4 bg-rose-50 border-b border-border-soft">
-                    <div className="text-[10px] uppercase tracking-[0.14em] font-medium text-rose-600 mb-1">
+                <div className="px-5 py-4 bg-surface-muted border-b border-border-subtle">
+                    <div className="text-[10px] uppercase tracking-[0.18em] font-medium text-interactive mb-1">
                         Termin
                     </div>
-                    <div className="font-serif font-medium text-[22px] leading-tight text-graphite-900 capitalize mb-1">
+                    <div className="font-display font-medium text-[22px] leading-tight text-primary capitalize mb-1">
                         {dateLabel}
                     </div>
-                    <div className="text-sm text-rose-700 font-medium tabular-nums">
+                    <div className="text-sm text-interactive-hover font-medium tabular-nums">
                         {formatTime(slot.startAt)} – {formatTime(slot.endAt)} ({totalDuration} min)
                     </div>
                 </div>
@@ -157,20 +157,20 @@ export function StepSummary({serviceNames, staffNames, allStaffByService}: Props
                         {slot.assignments.map((a) => (
                             <li key={`${a.serviceId}-${a.staffId}-${a.startAt.toISOString()}`} className="flex items-baseline justify-between gap-3 text-sm">
                                 <div className="min-w-0">
-                                    <span className="font-medium text-graphite-900">{getServiceName(a.serviceId)}</span>
-                                    <span className="text-graphite-400 text-xs ml-2 whitespace-nowrap">
+                                    <span className="font-medium text-primary">{getServiceName(a.serviceId)}</span>
+                                    <span className="text-secondary text-xs ml-2 whitespace-nowrap">
                                         {formatTime(a.startAt)} • {getStaffName(a.staffId)}
                                     </span>
                                 </div>
-                                <div className="font-serif font-medium text-graphite-900 tabular-nums whitespace-nowrap">
+                                <div className="font-display font-medium text-primary tabular-nums whitespace-nowrap">
                                     {formatMoney(a.priceGr)}
                                 </div>
                             </li>
                         ))}
                     </ul>
-                    <div className="flex items-baseline justify-between pt-3 mt-3 border-t border-border-soft">
-                        <div className="text-xs text-graphite-600">Razem</div>
-                        <div className="font-serif font-medium text-[20px] text-graphite-900 tabular-nums">
+                    <div className="flex items-baseline justify-between pt-3 mt-3 border-t border-border-subtle">
+                        <div className="text-xs text-secondary">Razem</div>
+                        <div className="font-display font-medium text-[20px] text-primary tabular-nums">
                             {formatMoney(totalPrice)}
                         </div>
                     </div>
@@ -180,17 +180,17 @@ export function StepSummary({serviceNames, staffNames, allStaffByService}: Props
                     title="Klient"
                     onEdit={() => setStep(5)}
                 >
-                    <div className="text-sm text-graphite-900 space-y-0.5">
+                    <div className="text-sm text-primary space-y-0.5">
                         <div className="font-medium">{customer.firstName} {customer.lastName}</div>
-                        <div className="text-graphite-600">{customer.phone}</div>
-                        {customer.email && <div className="text-graphite-600">{customer.email}</div>}
+                        <div className="text-secondary">{customer.phone}</div>
+                        {customer.email && <div className="text-secondary">{customer.email}</div>}
                         {customer.customerNote && (
-                            <div className="text-xs text-graphite-600 leading-relaxed mt-2 pt-2 border-t border-border-soft">
-                                <span className="text-graphite-400">Notatka:</span> {customer.customerNote}
+                            <div className="text-xs text-secondary leading-relaxed mt-2 pt-2 border-t border-border-subtle">
+                                <span className="text-secondary">Notatka:</span> {customer.customerNote}
                             </div>
                         )}
                         {customer.createAccount && (
-                            <div className="text-xs text-graphite-600 mt-2 pt-2 border-t border-border-soft">
+                            <div className="text-xs text-secondary mt-2 pt-2 border-t border-border-subtle">
                                 Konto zostanie założone na ten email
                             </div>
                         )}
@@ -209,7 +209,7 @@ export function StepSummary({serviceNames, staffNames, allStaffByService}: Props
             )}
 
             <motion.div
-                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-surface/95 backdrop-blur-sm border-t border-border-subtle"
                 variants={itemVariants}
             >
                 <div className="flex items-center justify-between gap-3">
@@ -240,16 +240,16 @@ interface SummarySectionProps {
 
 function SummarySection({title, onEdit, children}: SummarySectionProps) {
     return (
-        <div className="px-5 py-4 border-b border-border-soft last:border-0">
+        <div className="px-5 py-4 border-b border-border-subtle last:border-0">
             <div className="flex items-center justify-between mb-3">
-                <div className="text-[10px] uppercase tracking-[0.14em] font-medium text-graphite-400">
+                <div className="text-[10px] uppercase tracking-[0.18em] font-medium text-secondary">
                     {title}
                 </div>
                 <button
                     className={cn(
-                        "inline-flex items-center gap-1 text-xs font-medium text-rose-600",
+                        "inline-flex items-center gap-1 text-xs font-medium text-interactive",
                         "transition-[color] duration-150 ease-out",
-                        "hover-supported:hover:text-rose-700",
+                        "hover-supported:hover:text-interactive-hover",
                     )}
                     type="button"
                     onClick={onEdit}

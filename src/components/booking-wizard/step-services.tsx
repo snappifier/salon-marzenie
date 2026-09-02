@@ -65,7 +65,7 @@ export function StepServices({groupedServices}: Props) {
         <motion.div className="space-y-7" variants={groupVariants}>
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Wybierz usługi</Heading>
-                <p className="text-sm text-graphite-600 leading-relaxed">
+                <p className="text-sm text-secondary leading-relaxed">
                     Możesz wybrać kilka usług — wykonamy je w jednej wizycie.
                 </p>
             </motion.div>
@@ -73,7 +73,7 @@ export function StepServices({groupedServices}: Props) {
             <motion.div className="space-y-6" variants={groupVariants}>
                 {groupedServices.map((group) => (
                     <motion.section key={group.categoryName} variants={itemVariants}>
-                        <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-rose-600 mb-3">
+                        <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-interactive mb-3">
                             {group.categoryName}
                         </div>
                         <ul className="space-y-2">
@@ -83,12 +83,12 @@ export function StepServices({groupedServices}: Props) {
                                     <li key={service.id}>
                                         <button
                                             className={cn(
-                                                "w-full flex items-center gap-3 p-3.5 border rounded-lg text-left bg-white",
+                                                "w-full flex items-center gap-3 p-3.5 border rounded-lg text-left bg-surface",
                                                 "transition-[border-color,background-color,box-shadow] duration-150 ease-out",
                                                 "active:scale-[0.995]",
                                                 selected
-                                                    ? "border-rose-500 bg-rose-50 shadow-[0_0_0_1px_var(--color-rose-500)]"
-                                                    : "border-border-default hover-supported:hover:border-rose-300",
+                                                    ? "border-interactive bg-surface-muted shadow-[0_0_0_1px_var(--color-interactive)]"
+                                                    : "border-border-subtle hover-supported:hover:border-accent-100",
                                             )}
                                             type="button"
                                             aria-pressed={selected}
@@ -98,8 +98,8 @@ export function StepServices({groupedServices}: Props) {
                                                 "shrink-0 w-[22px] h-[22px] rounded-md border-[1.5px] flex items-center justify-center",
                                                 "transition-[background-color,border-color] duration-150 ease-out",
                                                 selected
-                                                    ? "bg-rose-500 border-rose-500 text-white"
-                                                    : "bg-white border-graphite-200",
+                                                    ? "bg-interactive border-interactive text-white"
+                                                    : "bg-surface border-border-subtle",
                                             )}>
                                                 <Check
                                                     className={cn(
@@ -111,12 +111,12 @@ export function StepServices({groupedServices}: Props) {
                                                 />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <div className="font-medium text-graphite-900 text-[14px] leading-tight mb-0.5">{service.name}</div>
-                                                <div className="text-xs text-graphite-400">
+                                                <div className="font-medium text-primary text-[14px] leading-tight mb-0.5">{service.name}</div>
+                                                <div className="text-xs text-secondary">
                                                     {formatDuration(service.defaultDurationMin)}
                                                 </div>
                                             </div>
-                                            <div className="font-serif font-medium text-base text-graphite-900 ml-3 shrink-0 tabular-nums">
+                                            <div className="font-display font-medium text-base text-primary ml-3 shrink-0 tabular-nums">
                                                 {formatMoney(service.defaultPriceGr)}
                                             </div>
                                         </button>
@@ -129,20 +129,20 @@ export function StepServices({groupedServices}: Props) {
             </motion.div>
 
             <motion.div
-                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-surface/95 backdrop-blur-sm border-t border-border-subtle"
                 variants={itemVariants}
             >
                 <div className="flex items-center justify-between gap-4">
                     <div className="text-sm">
                         {count > 0 ? (
                             <>
-                                <div className="text-graphite-600">{count} {pluralUsluga(count)}</div>
-                                <div className="font-serif font-medium text-graphite-900 tabular-nums">
+                                <div className="text-secondary">{count} {pluralUsluga(count)}</div>
+                                <div className="font-display font-medium text-primary tabular-nums">
                                     {formatDuration(totalDuration)} • {formatMoney(totalPrice)}
                                 </div>
                             </>
                         ) : (
-                            <div className="text-graphite-400">Wybierz przynajmniej jedną usługę</div>
+                            <div className="text-secondary">Wybierz przynajmniej jedną usługę</div>
                         )}
                     </div>
                     <Button type="button" onClick={nextStep} disabled={count === 0}>

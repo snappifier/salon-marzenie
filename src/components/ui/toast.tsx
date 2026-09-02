@@ -47,9 +47,9 @@ const variantStyles: Record<ToastVariant, {wrapper: string; icon: string; iconBg
 		Icon: X,
 	},
 	info: {
-		wrapper: "border-l-rose-500",
-		icon: "text-rose-600",
-		iconBg: "bg-rose-50",
+		wrapper: "border-l-interactive",
+		icon: "text-interactive",
+		iconBg: "bg-surface-muted",
 		Icon: Info,
 	},
 	warning: {
@@ -147,7 +147,7 @@ function ToastItemView({item, onDismiss}: {item: ToastItem; onDismiss: () => voi
 	return (
 		<motion.div
 			className={cn(
-				"pointer-events-auto rounded-2xl bg-white border border-border-soft shadow-lg overflow-hidden",
+				"pointer-events-auto rounded-lg bg-surface border border-border-subtle shadow-lg overflow-hidden",
 				"border-l-4",
 				styles.wrapper,
 			)}
@@ -168,14 +168,14 @@ function ToastItemView({item, onDismiss}: {item: ToastItem; onDismiss: () => voi
 				>
 					<Icon size={16} strokeWidth={2.25} />
 				</div>
-				<p className="flex-1 min-w-0 text-sm text-graphite-900 leading-snug pt-1.5 pb-1.5 break-words">
+				<p className="flex-1 min-w-0 text-sm text-primary leading-snug pt-1.5 pb-1.5 break-words">
 					{item.message}
 				</p>
 				<button
 					className={cn(
-						"shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full text-graphite-400",
+						"shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full text-secondary",
 						"transition-[background-color,color] duration-150 ease-out",
-						"hover-supported:hover:bg-graphite-100 hover-supported:hover:text-graphite-700",
+						"hover-supported:hover:bg-surface-muted hover-supported:hover:text-primary",
 						"active:scale-[0.94]",
 					)}
 					type="button"

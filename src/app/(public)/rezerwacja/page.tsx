@@ -1,10 +1,10 @@
+// src/app/(public)/rezerwacja/page.tsx
 import {prisma} from "@/lib/prisma"
 import {getSessionSafe} from "@/lib/auth"
 import {getActiveServicesGrouped, getAllStaffByService} from "@/features/booking/public-queries"
 import {Wizard} from "@/components/booking-wizard/wizard"
 import {Container} from "@/components/ui/container"
-import {Eyebrow} from "@/components/ui/eyebrow"
-import {Heading} from "@/components/ui/heading"
+import {PageHeading} from "@/components/public/page-heading"
 
 export const metadata = {
 	title: "Rezerwacja wizyty",
@@ -50,18 +50,16 @@ export default async function ReservationPage({searchParams}: Props) {
 		: undefined
 
 	return (
-		<Container size="narrow" className="py-12 md:py-16">
-			<div className="mb-8 md:mb-10">
-				<Eyebrow className="mb-3">Rezerwacja</Eyebrow>
-				<Heading level="h1" className="mb-3">
-					Umów <span className="italic font-normal text-rose-600">swoją wizytę</span>
-				</Heading>
-				<p className="text-base text-graphite-600 leading-relaxed max-w-[520px]">
-					{isLoggedIn
+		<Container size="narrow" className="pt-[50px] pb-[clamp(48px,7vw,80px)]">
+			<PageHeading
+				eyebrow="Rezerwacja"
+				title={<>Umów <em className="italic text-interactive">swoją wizytę</em></>}
+				description={
+					isLoggedIn
 						? `Witaj z powrotem${loggedInCustomer ? ", " + loggedInCustomer.firstName : ""}. Twoje dane są już uzupełnione — wybierz zabiegi i termin.`
-						: "Wybierz zabiegi, pasującego pracownika i termin. Potwierdzenie dostaniesz SMS-em."}
-				</p>
-			</div>
+						: "Wybierz zabiegi, pasującego pracownika i termin. Potwierdzenie dostaniesz SMS-em."
+				}
+			/>
 			<Wizard
 				groupedServices={groupedServices}
 				staffNames={staffNames}

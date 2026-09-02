@@ -36,6 +36,10 @@ const landingSchema = z.object({
         desc: z.string(),
     })),
     categoryDescriptions: z.record(z.string(), z.string()),
+    faq: z.array(z.object({
+        q: z.string(),
+        a: z.string(),
+    })).min(1),
 })
 
 export const site = siteSchema.parse(siteJson)

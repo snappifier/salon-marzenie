@@ -36,9 +36,9 @@ export default async function TermsPage() {
 			<Heading level="h1" className="mb-6">
 				Regulamin
 			</Heading>
-			<p className="text-sm text-graphite-600 mb-10">Ostatnia aktualizacja: {LAST_UPDATED}</p>
+			<p className="text-sm text-secondary mb-10">Ostatnia aktualizacja: {LAST_UPDATED}</p>
 
-			<div className="space-y-10 text-graphite-700 leading-relaxed">
+			<div className="space-y-10 text-primary leading-relaxed">
 				<Section title="1. Postanowienia ogólne">
 					<P>
 						Niniejszy regulamin określa zasady korzystania z systemu rezerwacji online prowadzonego
@@ -213,7 +213,7 @@ export default async function TermsPage() {
 						Zasady przetwarzania danych osobowych Klientów określa{" "}
 						<Link
 							href="/polityka-prywatnosci"
-							className="text-rose-700 underline-offset-2 hover-supported:hover:underline"
+							className="text-interactive-hover underline-offset-2 hover-supported:hover:underline"
 						>
 							Polityka prywatności
 						</Link>
@@ -240,7 +240,7 @@ export default async function TermsPage() {
 				</Section>
 			</div>
 
-			<div className="mt-14 pt-8 border-t border-border-soft">
+			<div className="mt-14 pt-8 border-t border-border-subtle">
 				<Link className={buttonStyles({size: "md", variant: "secondary"})} href="/">
 					<ArrowLeft size={16} />
 					Strona główna
@@ -266,7 +266,7 @@ function P({children}: {children: React.ReactNode}) {
 }
 
 function UL({children}: {children: React.ReactNode}) {
-	return <ul className="list-disc pl-5 space-y-2 marker:text-rose-400">{children}</ul>
+	return <ul className="list-disc pl-5 space-y-2 marker:text-interactive">{children}</ul>
 }
 
 function LI({children}: {children: React.ReactNode}) {
@@ -274,14 +274,14 @@ function LI({children}: {children: React.ReactNode}) {
 }
 
 function Strong({children}: {children: React.ReactNode}) {
-	return <strong className="font-medium text-graphite-900">{children}</strong>
+	return <strong className="font-medium text-primary">{children}</strong>
 }
 
 function A({href, children}: {href: string; children: React.ReactNode}) {
 	return (
 		<a
 			href={href}
-			className="text-rose-700 underline-offset-2 hover-supported:hover:underline"
+			className="text-interactive-hover underline-offset-2 hover-supported:hover:underline"
 		>
 			{children}
 		</a>

@@ -43,16 +43,16 @@ export function AdminTable<T>({
 
 	return (
 		<div className={cn("w-full", className)}>
-			<div className="hidden md:block overflow-hidden rounded-2xl bg-white border border-border-soft">
+			<div className="hidden md:block overflow-hidden rounded-lg bg-surface border border-border-subtle">
 				<table className="w-full text-sm">
-					<thead className="bg-warm">
+					<thead className="bg-paper-300">
 						<tr>
 							{columns.map((col) => (
 								<th
 									key={col.id}
 									scope="col"
 									className={cn(
-										"px-5 py-3 text-[11px] font-medium uppercase tracking-[0.14em] text-graphite-600",
+										"px-5 py-3 text-[11px] font-medium uppercase tracking-[0.18em] text-secondary",
 										alignClass[col.align ?? "left"],
 										col.width,
 									)}
@@ -67,9 +67,9 @@ export function AdminTable<T>({
 							<tr
 								key={rowKey(row)}
 								className={cn(
-									idx > 0 && "border-t border-border-soft",
+									idx > 0 && "border-t border-border-subtle",
 									"transition-[background-color] duration-150 ease-out",
-									onRowClick && "cursor-pointer hover-supported:hover:bg-rose-50/30 active:bg-rose-50/60",
+									onRowClick && "cursor-pointer hover-supported:hover:bg-surface-muted/30 active:bg-surface-muted/60",
 								)}
 								onClick={onRowClick ? () => onRowClick(row) : undefined}
 								onKeyDown={
@@ -89,7 +89,7 @@ export function AdminTable<T>({
 									<td
 										key={col.id}
 										className={cn(
-											"px-5 py-3.5 align-middle text-graphite-900",
+											"px-5 py-3.5 align-middle text-primary",
 											alignClass[col.align ?? "left"],
 										)}
 									>
@@ -119,12 +119,12 @@ export function AdminTable<T>({
 											key={col.id}
 											className="flex items-baseline justify-between gap-3"
 										>
-											<dt className="text-[11px] font-medium uppercase tracking-[0.14em] text-graphite-600 shrink-0">
+											<dt className="text-[11px] font-medium uppercase tracking-[0.18em] text-secondary shrink-0">
 												{col.header}
 											</dt>
 											<dd
 												className={cn(
-													"min-w-0 text-sm text-graphite-900",
+													"min-w-0 text-sm text-primary",
 													alignClass[col.align ?? "right"],
 												)}
 											>
@@ -152,10 +152,10 @@ export function MobileCard({className, children, onClick}: MobileCardProps) {
 	return (
 		<div
 			className={cn(
-				"rounded-2xl bg-white border border-border-soft p-4",
+				"rounded-lg bg-surface border border-border-subtle p-4",
 				"transition-[background-color,border-color] duration-150 ease-out",
 				isInteractive
-					&& "cursor-pointer hover-supported:hover:bg-rose-50/30 hover-supported:hover:border-rose-200/60 active:scale-[0.995]",
+					&& "cursor-pointer hover-supported:hover:bg-surface-muted/30 hover-supported:hover:border-accent-100/60 active:scale-[0.995]",
 				className,
 			)}
 			onClick={onClick}

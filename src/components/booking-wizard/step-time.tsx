@@ -55,7 +55,7 @@ export function StepTime() {
     if (!selectedDate) {
         return (
             <div className="space-y-4">
-                <p className="text-sm text-graphite-600">Najpierw wybierz dzień.</p>
+                <p className="text-sm text-secondary">Najpierw wybierz dzień.</p>
                 <Button variant="secondary" type="button" onClick={prevStep}>
                     <ArrowLeft size={16} />
                     Wstecz
@@ -69,19 +69,19 @@ export function StepTime() {
             <div className="space-y-7" aria-busy="true">
                 <div>
                     <Heading level="h3" className="mb-1">Wybierz godzinę</Heading>
-                    <p className="text-sm text-graphite-600 leading-relaxed capitalize">
+                    <p className="text-sm text-secondary leading-relaxed capitalize">
                         {formatInTimeZone(isoDayToDate(selectedDate), SALON_TIMEZONE, "EEEE, d MMMM", {locale: pl})}
                     </p>
                 </div>
                 <div className="space-y-6">
                     {Array.from({length: 2}).map((_, i) => (
                         <section key={i}>
-                            <div className="h-3 w-20 bg-graphite-100 rounded animate-pulse mb-3" aria-hidden="true" />
+                            <div className="h-3 w-20 bg-surface-muted rounded animate-pulse mb-3" aria-hidden="true" />
                             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                                 {Array.from({length: 8}).map((__, j) => (
                                     <div
                                         key={j}
-                                        className="h-[52px] bg-graphite-50 border border-border-soft rounded-lg animate-pulse"
+                                        className="h-[52px] bg-surface-muted border border-border-subtle rounded-lg animate-pulse"
                                         aria-hidden="true"
                                     />
                                 ))}
@@ -99,11 +99,11 @@ export function StepTime() {
             <div className="space-y-7">
                 <div>
                     <Heading level="h3" className="mb-1">Wybierz godzinę</Heading>
-                    <p className="text-sm text-graphite-600 leading-relaxed capitalize">
+                    <p className="text-sm text-secondary leading-relaxed capitalize">
                         {formatInTimeZone(isoDayToDate(selectedDate), SALON_TIMEZONE, "EEEE, d MMMM", {locale: pl})}
                     </p>
                 </div>
-                <p className="text-sm text-graphite-600 px-4 py-3 rounded-lg bg-warm border border-border-soft">
+                <p className="text-sm text-secondary px-4 py-3 rounded-lg bg-paper-300 border border-border-subtle">
                     Brak wolnych terminów na ten dzień. Wybierz inny.
                 </p>
                 <Button variant="secondary" type="button" onClick={prevStep}>
@@ -118,7 +118,7 @@ export function StepTime() {
         <motion.div className="space-y-7" variants={groupVariants}>
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Wybierz godzinę</Heading>
-                <p className="text-sm text-graphite-600 leading-relaxed capitalize">
+                <p className="text-sm text-secondary leading-relaxed capitalize">
                     {formatInTimeZone(isoDayToDate(selectedDate), SALON_TIMEZONE, "EEEE, d MMMM", {locale: pl})}
                 </p>
             </motion.div>
@@ -130,7 +130,7 @@ export function StepTime() {
 
                     return (
                         <motion.section key={period} variants={itemVariants}>
-                            <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-rose-600 mb-3">
+                            <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-interactive mb-3">
                                 {PERIOD_LABELS[period]}
                             </div>
                             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
@@ -143,12 +143,12 @@ export function StepTime() {
                                             type="button"
                                             onClick={() => setSelectedSlot(iso)}
                                             className={cn(
-                                                "px-2 py-2.5 border rounded-lg text-center bg-white",
+                                                "px-2 py-2.5 border rounded-lg text-center bg-surface",
                                                 "transition-[border-color,background-color,color,box-shadow] duration-150 ease-out",
                                                 "active:scale-[0.97]",
                                                 isSelected
-                                                    ? "border-rose-500 bg-rose-500 text-white shadow-sm"
-                                                    : "border-border-default text-graphite-900 hover-supported:hover:border-rose-300 hover-supported:hover:bg-rose-50",
+                                                    ? "border-interactive bg-interactive text-white shadow-sm"
+                                                    : "border-border-subtle text-primary hover-supported:hover:border-accent-100 hover-supported:hover:bg-surface-muted",
                                             )}
                                         >
                                             <div className="font-medium text-sm tabular-nums">{formatTime(slot.startAt)}</div>
@@ -162,7 +162,7 @@ export function StepTime() {
             </motion.div>
 
             <motion.div
-                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-surface/95 backdrop-blur-sm border-t border-border-subtle"
                 variants={itemVariants}
             >
                 <div className="flex items-center justify-between gap-3">

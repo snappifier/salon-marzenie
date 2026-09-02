@@ -37,9 +37,9 @@ const variants: Record<StatusVariant, VariantStyle> = {
 		label: "Anulowana",
 	},
 	completed: {
-		bg: "bg-graphite-100",
-		text: "text-graphite-700",
-		dot: "bg-graphite-500",
+		bg: "bg-surface-muted",
+		text: "text-primary",
+		dot: "bg-secondary",
 		label: "Zakończona",
 	},
 	no_show: {
@@ -49,15 +49,15 @@ const variants: Record<StatusVariant, VariantStyle> = {
 		label: "Nieobecność",
 	},
 	active: {
-		bg: "bg-rose-50",
-		text: "text-rose-700",
-		dot: "bg-rose-500",
+		bg: "bg-surface-muted",
+		text: "text-interactive-hover",
+		dot: "bg-interactive",
 		label: "Aktywny",
 	},
 	inactive: {
-		bg: "bg-graphite-100",
-		text: "text-graphite-600",
-		dot: "bg-graphite-400",
+		bg: "bg-surface-muted",
+		text: "text-secondary",
+		dot: "bg-secondary",
 		label: "Nieaktywny",
 	},
 }
@@ -73,7 +73,7 @@ export function StatusBadge({className, variant, children}: StatusBadgeProps) {
 	return (
 		<span
 			className={cn(
-				"inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-[0.14em] whitespace-nowrap",
+				"inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-[0.18em] whitespace-nowrap",
 				style.bg,
 				style.text,
 				className,

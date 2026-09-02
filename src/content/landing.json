@@ -1,9 +1,9 @@
 {
   "hero": {
     "eyebrow": "Studio kosmetyki estetycznej",
-    "headline": "Manicure, brwi, kosmetyka.",
-    "headlineHighlight": "W salonie, do którego się wraca.",
-    "subtitle": "Profesjonalna pielęgnacja w kameralnej atmosferze. Zarezerwuj online lub zadzwoń kiedy chcesz."
+    "headline": "Miejsce, w którym Twoja skóra odzyskuje",
+    "headlineHighlight": "spokój",
+    "subtitle": "Kosmetologia, stylizacja i masaż w kameralnym salonie w Krośnie. Prowadzimy jedną klientkę naraz, bez pośpiechu i bez poczekalni."
   },
   "heroQuote": {
     "text": "Zawsze profesjonalnie i z dbałością o szczegóły. Polecam!",
@@ -11,11 +11,29 @@
     "source": "FB"
   },
   "stats": [
-    {"num": "12", "suffix": "+", "label": "lat doświadczenia\nw pielęgnacji"},
-    {"num": "1500", "suffix": "+", "label": "zadowolonych\nklientek"},
-    {"num": "4.9", "suffix": "/5", "label": "średnia ocen\nna Facebooku"}
+    {
+      "num": "12",
+      "suffix": "+",
+      "label": "lat doświadczenia\nw pielęgnacji"
+    },
+    {
+      "num": "1500",
+      "suffix": "+",
+      "label": "zadowolonych\nklientek"
+    },
+    {
+      "num": "4.9",
+      "suffix": "/5",
+      "label": "średnia ocen\nna Facebooku"
+    }
   ],
-  "brands": ["ARKANA", "IBX System", "GERWOL", "PRP", "Estetyka"],
+  "brands": [
+    "ARKANA",
+    "IBX System",
+    "GERWOL",
+    "PRP",
+    "Estetyka"
+  ],
   "reviews": [
     {
       "text": "PLACEHOLDER: Chodzę do Marzeny od kilku lat i nigdy mnie nie zawiodła. Zawsze profesjonalnie, miło i z dbałością o szczegóły.",
@@ -34,9 +52,18 @@
     }
   ],
   "certs": [
-    {"name": "ARKANA Eye Complex Care", "desc": "Specjalistyczna pielęgnacja okolic oczu"},
-    {"name": "IBX System Repair", "desc": "Regeneracja i wzmocnienie płytki paznokcia"},
-    {"name": "PRP Therapy", "desc": "Zabiegi z osoczem bogatopłytkowym"}
+    {
+      "name": "ARKANA Eye Complex Care",
+      "desc": "Specjalistyczna pielęgnacja okolic oczu"
+    },
+    {
+      "name": "IBX System Repair",
+      "desc": "Regeneracja i wzmocnienie płytki paznokcia"
+    },
+    {
+      "name": "PRP Therapy",
+      "desc": "Zabiegi z osoczem bogatopłytkowym"
+    }
   ],
   "categoryDescriptions": {
     "manicure": "Klasyczny, hybrydowy, japoński. Pielęgnacja skórek i wzmocnienie płytki.",
@@ -44,5 +71,27 @@
     "brwi-rzesy": "Henna, stylizacja, laminacja, lifting. Naturalne podkreślenie spojrzenia.",
     "twarz": "Oczyszczanie, peelingi, zabiegi przeciwzmarszczkowe.",
     "depilacja": "Profesjonalna depilacja woskiem - precyzyjnie i delikatnie."
-  }
+  },
+  "faq": [
+    {
+      "q": "Jak odwołać albo przełożyć wizytę?",
+      "a": "Wystarczy telefon lub SMS do 24 godzin przed terminem — wtedy zmiana jest bezpłatna. Później prosimy o pokrycie 30% ceny zabiegu, bo termin zwykle przepada."
+    },
+    {
+      "q": "Czy przed pierwszym zabiegiem potrzebna jest konsultacja?",
+      "a": "Przy kosmetologii twarzy, laserze i makijażu permanentnym tak — konsultacja trwa 30 minut i jest bezpłatna. Manicure, rzęsy i masaż można umówić od razu."
+    },
+    {
+      "q": "Jakie formy płatności przyjmujecie?",
+      "a": "Gotówka, karta, BLIK oraz bony podarunkowe salonu. Zabiegi seryjne można rozłożyć na raty po każdej wizycie."
+    },
+    {
+      "q": "Czy mogę przyjść z dzieckiem?",
+      "a": "Salon jest kameralny i prowadzimy jedną klientkę naraz, więc nie mamy opieki dla dzieci. Przy krótszych zabiegach da się to zorganizować — napisz wcześniej."
+    },
+    {
+      "q": "Czy sprzedajecie bony podarunkowe?",
+      "a": "Tak, na kwotę lub na konkretny zabieg. Bon jest ważny 12 miesięcy i można go odebrać w salonie albo dostać w wersji do wydruku."
+    }
+  ]
 }

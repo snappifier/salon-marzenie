@@ -5,22 +5,22 @@ type Size = "sm" | "md" | "lg"
 
 const variantClasses: Record<Variant, string> = {
     primary: cn(
-        "bg-rose-600 text-white shadow-sm",
-        "hover-supported:hover:bg-rose-700",
+        "bg-interactive text-white shadow-sm",
+        "hover-supported:hover:bg-interactive-hover hover-supported:hover:shadow-md",
         "active:scale-[0.97]",
     ),
     secondary: cn(
-        "bg-transparent text-graphite-900 border border-graphite-200",
-        "hover-supported:hover:border-graphite-900 hover-supported:hover:bg-white",
+        "bg-transparent text-primary border border-border-subtle",
+        "hover-supported:hover:border-primary hover-supported:hover:bg-surface",
         "active:scale-[0.97]",
     ),
     ghost: cn(
-        "bg-transparent text-rose-600",
-        "hover-supported:hover:text-rose-700 hover-supported:hover:bg-rose-50",
+        "bg-transparent text-interactive",
+        "hover-supported:hover:text-interactive-hover hover-supported:hover:bg-surface-muted",
         "active:scale-[0.97]",
     ),
     danger: cn(
-        "bg-error text-white",
+        "bg-danger text-white",
         "hover-supported:hover:opacity-90",
         "active:scale-[0.97]",
     ),
@@ -34,8 +34,8 @@ const sizeClasses: Record<Size, string> = {
 
 const baseClasses = cn(
     "inline-flex items-center justify-center gap-2 font-medium rounded-full whitespace-nowrap",
-    "transition-[background-color,color,border-color,opacity,transform] duration-150 ease-out",
-    "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-cream",
+    "transition-[background-color,color,border-color,opacity,transform,box-shadow] duration-[240ms] ease-out",
+    "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-interactive/30 focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
     "disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed",
 )
 

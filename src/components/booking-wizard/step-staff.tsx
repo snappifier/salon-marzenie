@@ -94,7 +94,7 @@ export function StepStaff({groupedServices, allStaffByService}: Props) {
         <motion.div className="space-y-7" variants={groupVariants}>
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Preferowany pracownik</Heading>
-                <p className="text-sm text-graphite-600 leading-relaxed">
+                <p className="text-sm text-secondary leading-relaxed">
                     Wybierz osobę, którą lubisz najbardziej. Jeśli któraś z wybranych usług nie jest przez nią wykonywana — dobierzemy innego pracownika.
                 </p>
             </motion.div>
@@ -121,12 +121,12 @@ export function StepStaff({groupedServices, allStaffByService}: Props) {
                         onSelect={() => setPreferredStaffId("any")}
                     >
                         <div className="flex items-start gap-3 flex-1 min-w-0">
-                            <div className="shrink-0 w-9 h-9 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mt-0.5">
+                            <div className="shrink-0 w-9 h-9 rounded-full bg-surface-muted text-interactive flex items-center justify-center mt-0.5">
                                 <Sparkles size={16} strokeWidth={1.8} />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-medium text-graphite-900 text-[14px] leading-tight">Obojętnie kto</div>
-                                <div className="text-xs text-graphite-500 mt-1">
+                                <div className="font-medium text-primary text-[14px] leading-tight">Obojętnie kto</div>
+                                <div className="text-xs text-secondary mt-1">
                                     Dobierzemy najszybciej dostępnych pracowników do każdego zabiegu.
                                 </div>
                             </div>
@@ -145,7 +145,7 @@ export function StepStaff({groupedServices, allStaffByService}: Props) {
                                 <Avatar firstName={staff.firstName} lastName={staff.lastName} />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <div className="font-medium text-graphite-900 text-[14px] leading-tight">
+                                        <div className="font-medium text-primary text-[14px] leading-tight">
                                             {staff.firstName} {staff.lastName}
                                         </div>
                                         {fullCoverage && (
@@ -156,20 +156,20 @@ export function StepStaff({groupedServices, allStaffByService}: Props) {
                                         )}
                                     </div>
                                     {fullCoverage ? (
-                                        <div className="text-xs text-graphite-500">
+                                        <div className="text-xs text-secondary">
                                             Wykona wszystkie wybrane zabiegi.
                                         </div>
                                     ) : (
                                         <ul className="space-y-0.5">
                                             {canDoIds.map((id) => (
-                                                <li key={id} className="flex items-center gap-1.5 text-xs text-graphite-700">
-                                                    <Check size={11} strokeWidth={2.5} className="text-rose-500 shrink-0" />
+                                                <li key={id} className="flex items-center gap-1.5 text-xs text-primary">
+                                                    <Check size={11} strokeWidth={2.5} className="text-interactive shrink-0" />
                                                     <span className="truncate">{serviceName(id)}</span>
                                                 </li>
                                             ))}
                                             {cantDoIds.map((id) => (
-                                                <li key={id} className="flex items-center gap-1.5 text-xs text-graphite-400">
-                                                    <Minus size={11} strokeWidth={2.5} className="text-graphite-300 shrink-0" />
+                                                <li key={id} className="flex items-center gap-1.5 text-xs text-secondary">
+                                                    <Minus size={11} strokeWidth={2.5} className="text-secondary shrink-0" />
                                                     <span className="truncate">
                                                         {serviceName(id)}
                                                         <span className="italic"> (inny pracownik)</span>
@@ -186,7 +186,7 @@ export function StepStaff({groupedServices, allStaffByService}: Props) {
             </motion.fieldset>
 
             <motion.div
-                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-surface/95 backdrop-blur-sm border-t border-border-subtle"
                 variants={itemVariants}
             >
                 <div className="flex items-center justify-between gap-3">
@@ -215,11 +215,11 @@ function StaffPickerRow({checked, name, onSelect, children}: StaffPickerRowProps
     return (
         <label
             className={cn(
-                "flex items-center gap-3 p-3.5 border rounded-lg bg-white cursor-pointer",
+                "flex items-center gap-3 p-3.5 border rounded-lg bg-surface cursor-pointer",
                 "transition-[border-color,background-color,box-shadow] duration-150 ease-out",
                 checked
-                    ? "border-rose-500 bg-rose-50 shadow-[0_0_0_1px_var(--color-rose-500)]"
-                    : "border-border-default hover-supported:hover:border-rose-300",
+                    ? "border-interactive bg-surface-muted shadow-[0_0_0_1px_var(--color-interactive)]"
+                    : "border-border-subtle hover-supported:hover:border-accent-100",
             )}
         >
             <input
@@ -231,11 +231,11 @@ function StaffPickerRow({checked, name, onSelect, children}: StaffPickerRowProps
             />
             <div
                 className={cn(
-                    "shrink-0 w-[20px] h-[20px] rounded-full bg-white mt-1",
+                    "shrink-0 w-[20px] h-[20px] rounded-full bg-surface mt-1",
                     "transition-[border-color,border-width] duration-150 ease-out",
                     checked
-                        ? "border-[6px] border-rose-500"
-                        : "border-[1.5px] border-graphite-200",
+                        ? "border-[6px] border-interactive"
+                        : "border-[1.5px] border-border-subtle",
                 )}
                 aria-hidden="true"
             />
@@ -248,7 +248,7 @@ function Avatar({firstName, lastName}: {firstName: string; lastName: string}) {
     const initials = `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase()
     return (
         <div
-            className="shrink-0 w-9 h-9 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-medium text-xs mt-0.5"
+            className="shrink-0 w-9 h-9 rounded-full bg-paper-400 text-interactive-hover flex items-center justify-center font-medium text-xs mt-0.5"
             aria-hidden="true"
         >
             {initials}

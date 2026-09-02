@@ -65,7 +65,7 @@ export function TabStrip({
 	return (
 		<div
 			className={cn(
-				"relative border-b border-border-soft",
+				"relative border-b border-border-subtle",
 				"overflow-x-auto scrollbar-none -mx-1",
 				className,
 			)}
@@ -90,8 +90,8 @@ export function TabStrip({
 								"relative shrink-0 inline-flex items-center gap-2 pb-3 pt-2 text-sm font-medium whitespace-nowrap",
 								"transition-[color] duration-150 ease-out",
 								isActive
-									? "text-rose-600"
-									: "text-graphite-600 hover-supported:hover:text-graphite-900",
+									? "text-interactive"
+									: "text-secondary hover-supported:hover:text-primary",
 							)}
 						>
 							<span>{tab.label}</span>
@@ -101,8 +101,8 @@ export function TabStrip({
 										"inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[11px] tabular-nums font-medium",
 										"transition-[background-color,color] duration-150 ease-out",
 										isActive
-											? "bg-rose-100 text-rose-700"
-											: "bg-graphite-100 text-graphite-600",
+											? "bg-paper-400 text-interactive-hover"
+											: "bg-surface-muted text-secondary",
 									)}
 								>
 									{tab.badge}
@@ -110,7 +110,7 @@ export function TabStrip({
 							)}
 							{isActive && (
 								<motion.span
-									className="absolute left-0 right-0 -bottom-px h-[2px] bg-rose-600 rounded-full"
+									className="absolute left-0 right-0 -bottom-px h-[2px] bg-interactive rounded-full"
 									layoutId={layoutId}
 									transition={{duration: 0.24, ease: EASE_OUT_QUINT}}
 									aria-hidden="true"

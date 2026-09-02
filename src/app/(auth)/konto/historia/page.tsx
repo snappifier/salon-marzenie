@@ -68,7 +68,7 @@ function StatTile({label, value, foot, footUp, featured, valueSmall}: StatTileDa
 		<div
 			className={cn(
 				"border rounded-lg px-5 py-4.5 relative overflow-hidden",
-				featured ? "bg-graphite-900 border-graphite-900" : "bg-white border-border-soft",
+				featured ? "bg-ink-900 border-ink-900" : "bg-surface border-border-subtle",
 			)}
 		>
 			{featured && (
@@ -79,17 +79,17 @@ function StatTile({label, value, foot, footUp, featured, valueSmall}: StatTileDa
 			)}
 			<div
 				className={cn(
-					"text-[11px] uppercase tracking-[0.14em] font-medium mb-2.5 relative",
-					featured ? "text-rose-200" : "text-graphite-400",
+					"text-[11px] uppercase tracking-[0.18em] font-medium mb-2.5 relative",
+					featured ? "text-accent-100" : "text-secondary",
 				)}
 			>
 				{label}
 			</div>
 			<div
 				className={cn(
-					"font-serif font-medium leading-[1.05] tracking-tight relative",
+					"font-display font-medium leading-[1.05] tracking-tight relative",
 					valueSmall ? "text-[22px]" : "text-[30px]",
-					featured ? "text-white" : "text-graphite-900",
+					featured ? "text-white" : "text-primary",
 				)}
 			>
 				{value}
@@ -97,7 +97,7 @@ function StatTile({label, value, foot, footUp, featured, valueSmall}: StatTileDa
 			<div
 				className={cn(
 					"text-xs mt-1.5 relative",
-					footUp ? "text-success" : featured ? "text-graphite-200" : "text-graphite-600",
+					footUp && !featured ? "text-success" : featured ? "text-white/70" : "text-secondary",
 				)}
 			>
 				{foot}
@@ -160,7 +160,7 @@ export default async function HistoryPage() {
 	)
 
 	return (
-		<div className="min-h-screen relative bg-white">
+		<div className="min-h-screen relative bg-surface">
 			<Sidebar
 				firstName={customer.firstName}
 				lastName={customer.lastName}
@@ -177,21 +177,21 @@ export default async function HistoryPage() {
 				<header className="flex items-end justify-between flex-wrap gap-4 mb-7">
 					<div>
 						<Eyebrow className="block mb-1.5">Twoje konto</Eyebrow>
-						<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-graphite-900">
-							Historia <em className="italic text-rose-600 font-normal">wizyt</em>
+						<h1 className="font-display font-normal text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-primary">
+							Historia <em className="italic text-interactive font-normal">wizyt</em>
 						</h1>
 					</div>
 				</header>
 
 				{stats.totalCount === 0 ? (
-					<div className="text-center px-6 py-16 bg-white border border-dashed border-border-default rounded-lg">
-						<span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-warm text-rose-500 mb-3.5">
+					<div className="text-center px-6 py-16 bg-surface border border-dashed border-border-subtle rounded-lg">
+						<span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-paper-300 text-interactive mb-3.5">
 							<CalendarX size={24} strokeWidth={1.6} />
 						</span>
-						<h3 className="font-serif font-medium text-xl text-graphite-900 tracking-[-0.01em] mb-1.5">
+						<h3 className="font-display font-medium text-xl text-primary tracking-[-0.01em] mb-1.5">
 							Brak zakończonych wizyt
 						</h3>
-						<p className="text-sm text-graphite-600 max-w-95 mx-auto mb-4.5">
+						<p className="text-sm text-secondary max-w-95 mx-auto mb-4.5">
 							Tutaj pojawi się historia Twoich wizyt po pierwszej zrealizowanej rezerwacji.
 						</p>
 						<Link href="/rezerwacja" className={buttonStyles({size: "md"})}>

@@ -27,12 +27,12 @@ export function CheckboxField({label, description, className, id, ref, ...props}
 				/>
 				<span
 					className={cn(
-						"absolute inset-0 rounded-md border bg-white",
+						"absolute inset-0 rounded-md border bg-surface",
 						"transition-[background-color,border-color,box-shadow] duration-150 ease-out",
-						"border-border-default",
-						"peer-checked:bg-rose-600 peer-checked:border-rose-600",
-						"peer-focus-visible:ring-3 peer-focus-visible:ring-rose-500/25",
-						"group-hover:border-rose-400",
+						"border-border-subtle",
+						"peer-checked:bg-interactive peer-checked:border-interactive",
+						"peer-focus-visible:ring-3 peer-focus-visible:ring-interactive/25",
+						"group-hover:border-interactive",
 					)}
 					aria-hidden="true"
 				/>
@@ -46,8 +46,8 @@ export function CheckboxField({label, description, className, id, ref, ...props}
 				/>
 			</span>
 			<span className="min-w-0">
-				<span className="block text-sm font-medium text-graphite-900 leading-tight">{label}</span>
-				{description && <span className="block text-xs text-graphite-600 mt-1">{description}</span>}
+				<span className="block text-sm font-medium text-primary leading-tight">{label}</span>
+				{description && <span className="block text-xs text-secondary mt-1">{description}</span>}
 			</span>
 		</label>
 	)

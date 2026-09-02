@@ -1,15 +1,23 @@
+// src/app/(auth)/logowanie/page.tsx
 "use client"
 
 import Link from "next/link"
 import {useActionState, useState} from "react"
-import {AlertCircle, ArrowLeft, ArrowRight, Eye, EyeOff, Phone, ShieldCheck, Star} from "lucide-react"
+import {AlertCircle, ArrowLeft, ArrowRight, Eye, EyeOff, Phone, ShieldCheck} from "lucide-react"
 import {Eyebrow} from "@/components/ui/eyebrow"
 import {buttonStyles} from "@/components/ui/button"
-import {ButterflyWatermark} from "@/components/public/butterfly-watermark"
+import {site} from "@/lib/content"
 import {cn} from "@/lib/cn"
 import {customerLoginAction, type LoginState} from "@/app/(auth)/logowanie/actions"
 
 const initialState: LoginState = {error: null}
+
+const inputStyles = cn(
+	"w-full rounded-md border border-border-subtle bg-surface px-3.5 py-3.5 text-[15px] text-primary",
+	"placeholder:text-secondary/60",
+	"transition-[border-color,box-shadow] duration-200 ease-out",
+	"focus:outline-none focus-visible:border-interactive focus-visible:ring-3 focus-visible:ring-interactive/15",
+)
 
 export default function LogowaniePage() {
 	const [showPassword, setShowPassword] = useState(false)
@@ -19,67 +27,50 @@ export default function LogowaniePage() {
 	return (
 		<div className="grid min-h-dvh grid-cols-1 lg:h-dvh lg:grid-cols-[1.05fr_1fr]">
 
-			<aside className="relative flex flex-col justify-between overflow-hidden bg-warm px-7 pt-8 pb-10 min-h-[280px] lg:px-14 lg:py-8">
-				<div
-					aria-hidden="true"
-					className="pointer-events-none absolute inset-0"
-					style={{
-						background:
-							"radial-gradient(ellipse 700px 500px at 80% 80%, var(--color-rose-50) 0%, transparent 65%)",
-					}}
-				/>
-				<ButterflyWatermark className="pointer-events-none absolute -bottom-10 -right-8 w-[280px] opacity-45 lg:-bottom-20 lg:-right-16 lg:w-[460px]" />
-
-				<div className="relative z-10 reveal-in">
-					<Link href="/" className="inline-block font-serif text-2xl italic font-medium tracking-[-0.01em] text-graphite-900">
-						Marzenie
-						<span className="-mt-0.5 block font-sans text-[9px] not-italic font-medium uppercase tracking-[0.18em] text-graphite-400">
-							studio kosmetyki estetycznej
+			<aside className="relative flex flex-col justify-between overflow-hidden bg-paper-300 px-7 pt-8 pb-10 min-h-[280px] lg:px-14 lg:py-8">
+				<div className="relative z-10 animate-mz-fade">
+					<Link href="/" className="inline-block font-display text-[25px] tracking-tight text-primary">
+						{site.salonName}
+						<span className="-mt-0.5 block font-body text-[9px] font-medium uppercase tracking-caps text-secondary">
+							{site.tagline}
 						</span>
 					</Link>
 				</div>
 
-				<div className="relative z-10 max-w-[460px] py-10 reveal-in lg:py-0" style={{animationDelay: "80ms"}}>
+				<div className="relative z-10 max-w-[460px] py-10 animate-mz-fade lg:py-0" style={{animationDelay: "80ms"}}>
 					<Eyebrow className="mb-4 block">Twoje konto</Eyebrow>
-					<h1 className="mb-4 font-serif font-medium text-graphite-900 text-[clamp(1.875rem,4vw,2.75rem)] leading-[1.1] tracking-[-0.025em] text-balance">
+					<h1 className="mb-6 font-display font-normal text-primary text-[clamp(32px,4vw,48px)] leading-[1.2] tracking-[-0.01em] text-balance">
 						Wracasz do nas?{" "}
-						<em className="font-normal italic text-rose-600">
-							Zaloguj się i zarezerwuj jednym kliknięciem.
-						</em>
+						<em className="italic text-interactive">Zaloguj się i zarezerwuj jednym kliknięciem.</em>
 					</h1>
-					<p className="max-w-[380px] text-[15px] leading-relaxed text-graphite-600">
-						Twoje dane, historia wizyt i ulubione zabiegi - wszystko w jednym miejscu, gotowe na następny termin.
+					<p className="max-w-[380px] text-base leading-7 text-secondary">
+						Twoje dane, historia wizyt i ulubione zabiegi — wszystko w jednym miejscu, gotowe na następny termin.
 					</p>
 				</div>
 
-				<div
-					className="relative z-10 hidden max-w-[420px] rounded-lg border border-border-soft bg-white px-[22px] py-5 shadow-sm reveal-in lg:block"
+				<figure
+					className="relative z-10 m-0 hidden max-w-[420px] flex-col gap-5 rounded-md border border-border-subtle bg-surface p-6 animate-mz-fade lg:flex"
 					style={{animationDelay: "160ms"}}
 				>
-					<p className="mb-3 font-serif italic text-base leading-snug text-graphite-900">
-						&bdquo;Najwygodniej rezerwować online wieczorem - logujesz się, klikasz termin i już.&rdquo;
-					</p>
-					<div className="flex items-center gap-2.5 border-t border-border-soft pt-3">
-						<div className="flex gap-px text-rose-500">
-							{Array.from({length: 5}).map((_, i) => (
-								<Star key={i} className="size-[11px]" fill="currentColor" strokeWidth={0} />
-							))}
-						</div>
-						<span className="text-xs font-medium text-graphite-600">Magdalena S., Google</span>
-					</div>
-				</div>
+					<blockquote className="m-0 font-display text-lg leading-[30px] tracking-tight text-primary">
+						Najwygodniej rezerwować online wieczorem — logujesz się, klikasz termin i już.
+					</blockquote>
+					<figcaption className="border-t border-border-subtle pt-4 text-sm text-secondary">
+						Magdalena S. · Google
+					</figcaption>
+				</figure>
 			</aside>
 
-			<section className="flex flex-col bg-cream px-6 py-10 pb-14 lg:justify-center lg:px-14 lg:py-14">
+			<section className="flex flex-col bg-surface px-6 py-10 pb-14 lg:justify-center lg:px-14 lg:py-14">
 				<div className="mx-auto w-full max-w-[480px]">
 
-					<div className="reveal-in">
+					<div className="animate-mz-fade">
 						<Link
 							href="/"
 							className={cn(
-								"inline-flex items-center gap-1.5 text-[13px] text-graphite-400",
-								"transition-[color] duration-150 ease-out",
-								"hover-supported:hover:text-rose-600",
+								"inline-flex items-center gap-1.5 text-[13px] text-secondary",
+								"transition-[color,background-color,border-color] duration-200 ease-out",
+								"hover-supported:hover:text-interactive",
 							)}
 						>
 							<ArrowLeft className="size-3.5" />
@@ -87,23 +78,20 @@ export default function LogowaniePage() {
 						</Link>
 					</div>
 
-					<div className="mt-8 mb-8 reveal-in" style={{animationDelay: "80ms"}}>
+					<div className="mt-8 mb-8 animate-mz-fade" style={{animationDelay: "80ms"}}>
 						<Eyebrow className="mb-2.5 block">Logowanie</Eyebrow>
-						<h2 className="mb-2 font-serif font-medium text-graphite-900 text-[32px] leading-[1.15] tracking-[-0.02em]">
-							Witaj <em className="font-normal italic text-rose-600">z powrotem</em>
+						<h2 className="mb-3 font-display font-normal text-primary text-[clamp(28px,4vw,40px)] leading-[1.15] tracking-[-0.01em]">
+							Witaj <em className="italic text-interactive">z powrotem</em>
 						</h2>
-						<p className="text-sm text-graphite-600">
+						<p className="text-sm text-secondary">
 							Nie masz jeszcze konta?{" "}
-							<Link
-								href="/rejestracja"
-								className="font-medium text-rose-600 hover-supported:hover:underline"
-							>
+							<Link href="/rejestracja" className="text-interactive hover-supported:hover:underline">
 								Załóż konto
 							</Link>
 						</p>
 					</div>
 
-					<form action={formAction} className="space-y-4 reveal-in" style={{animationDelay: "160ms"}}>
+					<form action={formAction} className="space-y-4 animate-mz-fade" style={{animationDelay: "160ms"}}>
 						{state.error && (
 							<div
 								role="alert"
@@ -115,8 +103,8 @@ export default function LogowaniePage() {
 						)}
 
 						<div>
-							<label htmlFor="login" className="mb-1.5 block text-xs font-medium text-graphite-900">
-								Email lub numer telefonu <span className="text-rose-500">*</span>
+							<label htmlFor="login" className="mb-1.5 block text-xs text-primary">
+								Email lub numer telefonu <span className="text-interactive">*</span>
 							</label>
 							<input
 								id="login"
@@ -125,21 +113,16 @@ export default function LogowaniePage() {
 								required
 								autoComplete="username"
 								placeholder="anna@example.com lub +48 600 100 200"
-								className={cn(
-									"w-full rounded-md border border-border-default bg-white px-3.5 py-3.5 text-[15px] text-graphite-900",
-									"placeholder:text-graphite-400",
-									"transition-[border-color,box-shadow] duration-150 ease-out",
-									"focus:outline-none focus-visible:border-rose-500 focus-visible:ring-3 focus-visible:ring-rose-500/15",
-								)}
+								className={inputStyles}
 							/>
 						</div>
 
 						<div>
-							<div className="mb-1.5 flex items-baseline justify-between">
-								<label htmlFor="password" className="block text-xs font-medium text-graphite-900">
-									Hasło <span className="text-rose-500">*</span>
+							<div className="mb-1.5 flex items-baseline justify-between gap-3">
+								<label htmlFor="password" className="block text-xs text-primary">
+									Hasło <span className="text-interactive">*</span>
 								</label>
-								<Link href="/reset-hasla" className="text-[10px] font-medium text-rose-600 hover-supported:hover:underline">
+								<Link href="/reset-hasla" className="text-xs text-interactive hover-supported:hover:underline">
 									Nie pamiętam hasła
 								</Link>
 							</div>
@@ -151,12 +134,7 @@ export default function LogowaniePage() {
 									required
 									autoComplete="current-password"
 									placeholder="Twoje hasło"
-									className={cn(
-										"w-full rounded-md border border-border-default bg-white py-3.5 pl-3.5 pr-11 text-[15px] text-graphite-900",
-										"placeholder:text-graphite-400",
-										"transition-[border-color,box-shadow] duration-150 ease-out",
-										"focus:outline-none focus-visible:border-rose-500 focus-visible:ring-3 focus-visible:ring-rose-500/15",
-									)}
+									className={cn(inputStyles, "pr-11")}
 								/>
 								<button
 									type="button"
@@ -164,9 +142,9 @@ export default function LogowaniePage() {
 									aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
 									aria-pressed={showPassword}
 									className={cn(
-										"cursor-pointer absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-sm p-2 text-graphite-400",
-										"transition-[color,background-color] duration-150 ease-out",
-										"hover-supported:hover:text-rose-600 hover-supported:hover:bg-rose-50",
+										"cursor-pointer absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-sm p-2 text-secondary",
+										"transition-[color,background-color,border-color] duration-200 ease-out",
+										"hover-supported:hover:text-interactive hover-supported:hover:bg-surface-muted",
 									)}
 								>
 									{showPassword ? <EyeOff className="size-[18px]" strokeWidth={1.6} /> : <Eye className="size-[18px]" strokeWidth={1.6} />}
@@ -176,7 +154,7 @@ export default function LogowaniePage() {
 
 						<label
 							htmlFor="remember"
-							className="mt-5 mb-6 flex select-none items-center gap-2.5 pt-1 text-[13px] text-graphite-600"
+							className="mt-5 mb-6 flex select-none items-center gap-2.5 pt-1 text-[13px] text-secondary"
 						>
 							<span className="relative inline-flex">
 								<input
@@ -185,16 +163,16 @@ export default function LogowaniePage() {
 									checked={remember}
 									onChange={(e) => setRemember(e.target.checked)}
 									className={cn(
-										"peer size-[18px] shrink-0 appearance-none rounded-[4px] border border-border-default bg-white",
-										"transition-[background-color,border-color] duration-150 ease-out",
-										"checked:bg-rose-500 checked:border-rose-500",
-										"focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
+										"peer size-[18px] shrink-0 appearance-none rounded-sm border border-border-subtle bg-surface",
+										"transition-[color,background-color,border-color] duration-200 ease-out",
+										"checked:bg-interactive checked:border-interactive",
+										"focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-interactive/15",
 										"cursor-pointer",
 									)}
 								/>
 								<svg
 									viewBox="0 0 18 18"
-									className="pointer-events-none absolute inset-0 m-auto size-3 text-white opacity-0 transition-opacity duration-150 ease-out peer-checked:opacity-100"
+									className="pointer-events-none absolute inset-0 m-auto size-3 text-white opacity-0 transition-opacity duration-200 ease-out peer-checked:opacity-100"
 									fill="none"
 									stroke="currentColor"
 									strokeWidth="3"
@@ -208,46 +186,39 @@ export default function LogowaniePage() {
 							Pozostań zalogowana na tym urządzeniu
 						</label>
 
-						<button
-							type="submit"
-							disabled={isPending}
-							className={cn(
-								buttonStyles({size: "lg", className: "w-full"}),
-								"shadow-sm",
-							)}
-						>
+						<button type="submit" disabled={isPending} className={buttonStyles({size: "lg", className: "w-full"})}>
 							{isPending ? "Logowanie..." : "Zaloguj się"}
 							{!isPending && <ArrowRight className="size-4" strokeWidth={2} />}
 						</button>
 
-						<div className="flex items-center justify-center gap-1.5 pt-1 text-[11px] text-graphite-400">
+						<div className="flex items-center justify-center gap-1.5 pt-1 text-[11px] text-secondary">
 							<ShieldCheck className="size-3 text-success" strokeWidth={2} />
 							Połączenie szyfrowane. Twoje dane są bezpieczne.
 						</div>
 
-						<div className="my-2 flex items-center gap-3.5 text-[11px] uppercase tracking-[0.14em] text-graphite-400">
-							<span className="h-px flex-1 bg-border-soft" />
+						<div className="my-2 flex items-center gap-3.5 text-[11px] uppercase tracking-caps text-secondary">
+							<span className="h-px flex-1 bg-border-subtle" />
 							albo
-							<span className="h-px flex-1 bg-border-soft" />
+							<span className="h-px flex-1 bg-border-subtle" />
 						</div>
 
 						<Link
 							href="tel:+48600100200"
 							className={cn(
-								"flex items-center justify-center gap-2 rounded-md border border-border-soft bg-warm px-4 py-3.5 text-[13px] text-graphite-600",
-								"transition-[border-color,color] duration-150 ease-out",
-								"hover-supported:hover:border-rose-300 hover-supported:hover:text-graphite-900",
+								"flex items-center justify-center gap-2 rounded-md border border-border-subtle bg-surface-muted px-4 py-3.5 text-[13px] text-secondary",
+								"transition-[color,background-color,border-color] duration-200 ease-out",
+								"hover-supported:hover:border-interactive hover-supported:hover:text-primary",
 							)}
 						>
 							<Phone className="size-3.5" strokeWidth={2} />
 							Zarezerwuj telefonicznie:{" "}
-							<strong className="font-serif font-medium text-graphite-900">+48 600 100 200</strong>
+							<strong className="font-display font-medium text-primary">+48 600 100 200</strong>
 						</Link>
 					</form>
 
-					<p className="mt-7 text-center text-[13px] text-graphite-600 reveal-in" style={{animationDelay: "320ms"}}>
+					<p className="mt-7 text-center text-[13px] text-secondary animate-mz-fade" style={{animationDelay: "320ms"}}>
 						Pierwszy raz u nas?{" "}
-						<Link href="/rejestracja" className="font-medium text-rose-600 hover-supported:hover:underline">
+						<Link href="/rejestracja" className="text-interactive hover-supported:hover:underline">
 							Załóż konto
 						</Link>{" "}
 						i przyspiesz następną rezerwację.

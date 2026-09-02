@@ -7,9 +7,9 @@ import {cn} from "@/lib/cn"
 import {buttonStyles} from "@/components/ui/button"
 
 const selectClass = cn(
-	"px-3.5 py-2.75 text-sm bg-white border border-border-soft rounded-md text-graphite-900 w-full max-w-xs outline-none",
+	"px-3.5 py-2.75 text-sm bg-surface border border-border-subtle rounded-md text-primary w-full max-w-xs outline-none",
 	"transition-[border-color,opacity] duration-150 ease-out",
-	"hover-supported:hover:border-border-default focus:border-rose-400",
+	"hover-supported:hover:border-border-subtle focus:border-interactive",
 	"disabled:opacity-50 disabled:cursor-not-allowed",
 )
 
@@ -55,12 +55,12 @@ function Switch({
 			className={cn(
 				"relative inline-flex h-6 w-11 shrink-0 rounded-full border cursor-pointer",
 				"transition-[background-color,border-color] duration-150 ease-out",
-				checked ? "bg-rose-500 border-rose-500" : "bg-graphite-100 border-graphite-200",
+				checked ? "bg-interactive border-interactive" : "bg-surface-muted border-border-subtle",
 			)}
 		>
 			<span
 				className={cn(
-					"absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm",
+					"absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-surface shadow-sm",
 					"transition-transform duration-150 ease-out",
 					checked && "translate-x-5",
 				)}
@@ -83,12 +83,12 @@ function ToggleRow({
 	onChange: (value: boolean) => void
 }) {
 	return (
-		<div className="flex justify-between items-center gap-4 py-4 border-b border-border-soft last:border-b-0">
+		<div className="flex justify-between items-center gap-4 py-4 border-b border-border-subtle last:border-b-0">
 			<div className="min-w-0">
-				<h4 id={`${id}-label`} className="font-medium text-sm text-graphite-900 mb-0.5">
+				<h4 id={`${id}-label`} className="font-medium text-sm text-primary mb-0.5">
 					{title}
 				</h4>
-				<p className="text-xs text-graphite-400 leading-relaxed max-w-135">{desc}</p>
+				<p className="text-xs text-secondary leading-relaxed max-w-135">{desc}</p>
 			</div>
 			<Switch checked={checked} onChange={onChange} labelId={`${id}-label`} />
 		</div>
@@ -107,12 +107,12 @@ function CardSection({
 	children: React.ReactNode
 }) {
 	return (
-		<section className="bg-white border border-border-soft rounded-lg mb-5">
+		<section className="bg-surface border border-border-subtle rounded-lg mb-5">
 			<div className="px-7 pt-5.5 pb-1">
-				<h3 className="font-serif font-medium text-[19px] text-graphite-900 tracking-[-0.01em] mb-0.5">
-					{title} <em className="italic text-rose-600 font-normal">{em}</em>
+				<h3 className="font-display font-medium text-[19px] text-primary tracking-[-0.01em] mb-0.5">
+					{title} <em className="italic text-interactive font-normal">{em}</em>
 				</h3>
-				<p className="text-[13px] text-graphite-400">{desc}</p>
+				<p className="text-[13px] text-secondary">{desc}</p>
 			</div>
 			<div className="px-7 pb-3 pt-1">{children}</div>
 		</section>
@@ -169,15 +169,15 @@ export function NotificationsSettings() {
 					onChange={(v) => set("reminder", v)}
 				/>
 
-				<div className="flex justify-between items-center gap-4 py-4 border-b border-border-soft">
+				<div className="flex justify-between items-center gap-4 py-4 border-b border-border-subtle">
 					<div className="min-w-0">
 						<label
 							htmlFor="reminderTiming"
-							className="font-medium text-sm text-graphite-900 mb-0.5 block"
+							className="font-medium text-sm text-primary mb-0.5 block"
 						>
 							Czas przypomnienia
 						</label>
-						<p className="text-xs text-graphite-400 leading-relaxed max-w-135">
+						<p className="text-xs text-secondary leading-relaxed max-w-135">
 							Z jakim wyprzedzeniem wysłać przypomnienie.
 						</p>
 					</div>
@@ -222,11 +222,11 @@ export function NotificationsSettings() {
 					checked={s.birthday}
 					onChange={(v) => set("birthday", v)}
 				/>
-				<p className="text-xs text-graphite-400 pt-3">
+				<p className="text-xs text-secondary pt-3">
 					Pełną zgodę marketingową zarządzasz też w sekcji{" "}
 					<Link
 						href="/konto/dane-osobowe#gdpr"
-						className="text-rose-600 font-medium hover-supported:hover:underline"
+						className="text-interactive font-medium hover-supported:hover:underline"
 					>
 						RODO i prywatność
 					</Link>

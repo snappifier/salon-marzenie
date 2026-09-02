@@ -72,7 +72,7 @@ export function ConfirmDialog({
 				>
 					<Icon size={20} strokeWidth={2} />
 				</div>
-				<p className="text-sm text-graphite-600 leading-relaxed">
+				<p className="text-sm text-secondary leading-relaxed">
 					{description}
 				</p>
 				<div className="flex w-full gap-2 mt-6">

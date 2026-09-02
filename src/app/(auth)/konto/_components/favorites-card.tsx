@@ -26,16 +26,16 @@ function pluralPL(n: number, one: string, few: string, many: string): string {
 
 export function FavoritesCard({favorites}: Props) {
 	return (
-		<div className="bg-white border border-border-soft rounded-[var(--radius-lg)] overflow-hidden">
+		<div className="bg-surface border border-border-subtle rounded-[var(--radius-lg)] overflow-hidden">
 			<div className="px-[22px] pt-[18px] pb-3.5 flex items-center justify-between">
-				<h3 className="font-serif font-medium text-lg text-graphite-900 tracking-[-0.01em]">
-					Twoje <em className="italic text-rose-600 font-normal">ulubione</em>
+				<h3 className="font-display font-medium text-lg text-primary tracking-[-0.01em]">
+					Twoje <em className="italic text-interactive font-normal">ulubione</em>
 				</h3>
 			</div>
 
 			<div className="px-[22px] pb-[22px] pt-1 grid gap-2">
 				{favorites.length === 0 ? (
-					<p className="py-6 text-sm text-graphite-400 italic">
+					<p className="py-6 text-sm text-secondary italic">
 						Po pierwszej wizycie pojawią się tu Twoje ulubione zabiegi.
 					</p>
 				) : (
@@ -46,27 +46,27 @@ export function FavoritesCard({favorites}: Props) {
 								key={fav.id}
 								href={`/rezerwacja?service=${fav.id}`}
 								className={cn(
-									"flex items-center gap-3 p-3 px-3.5 border border-border-soft rounded-[var(--radius-md)] bg-white group",
+									"flex items-center gap-3 p-3 px-3.5 border border-border-subtle rounded-[var(--radius-md)] bg-surface group",
 									"transition-[border-color,background-color] duration-150 ease-out",
-									"hover-supported:hover:border-rose-300 hover-supported:hover:bg-rose-50",
+									"hover-supported:hover:border-accent-100 hover-supported:hover:bg-surface-muted",
 								)}
 							>
-								<span className="text-rose-500 shrink-0">
+								<span className="text-interactive shrink-0">
 									<Heart size={16} fill="currentColor" stroke="currentColor" />
 								</span>
 								<div className="min-w-0 flex-1">
-									<p className="font-serif font-medium text-sm text-graphite-900 tracking-[-0.01em]">
+									<p className="font-display font-medium text-sm text-primary tracking-[-0.01em]">
 										{fav.name}
 									</p>
-									<p className="text-[11px] text-graphite-400 mt-0.5">
+									<p className="text-[11px] text-secondary mt-0.5">
 										{formatMoney(fav.priceGr)} · {formatDuration(fav.durationMin)} · {countLabel}
 									</p>
 								</div>
 								<span
 									className={cn(
-										"text-graphite-400 shrink-0",
+										"text-secondary shrink-0",
 										"transition-[color] duration-150 ease-out",
-										"group-hover:text-rose-600",
+										"group-hover:text-interactive",
 									)}
 								>
 									<ChevronRight size={16} strokeWidth={2} />

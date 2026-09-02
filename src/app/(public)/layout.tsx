@@ -26,7 +26,7 @@ export default async function PublicLayout({children}: {children: React.ReactNod
         <MotionProvider>
             <ScrollToTop />
             <PublicHeader customer={customer} />
-            <main className="min-h-screen">
+            <main className="min-h-screen w-full">
                 <SmoothHeight>{children}</SmoothHeight>
             </main>
             <PublicFooter salon={salon} />

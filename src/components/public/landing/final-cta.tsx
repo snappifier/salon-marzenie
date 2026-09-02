@@ -6,7 +6,6 @@ import {Container} from "@/components/ui/container"
 import {Eyebrow} from "@/components/ui/eyebrow"
 import {Heading} from "@/components/ui/heading"
 import {Reveal} from "@/components/ui/reveal"
-import {ButterflyWatermark} from "@/components/public/butterfly-watermark"
 
 interface Props {
     salon: PublicSalonInfo
@@ -22,7 +21,7 @@ function formatPhone(phone: string | null): string | null {
 
 const defaultHeading = (
     <>
-        Gotowa na <span className="italic font-normal text-rose-600">swoją chwilę</span>?
+        Gotowa na <span className="italic font-normal text-interactive">swoją chwilę</span>?
     </>
 )
 
@@ -36,7 +35,6 @@ export function FinalCta({
 
     return (
         <section id="rezerwacja" className="relative overflow-hidden py-16 md:py-24 cta-bloom">
-            <ButterflyWatermark className="hidden md:block absolute -bottom-16 -right-10 w-80 opacity-50" />
 
             <Container>
                 <Reveal className="max-w-[720px] mx-auto text-center">
@@ -44,7 +42,7 @@ export function FinalCta({
                     <Heading level="h2" className="mb-4">
                         {heading}
                     </Heading>
-                    <p className="text-[17px] text-graphite-600 leading-relaxed max-w-[540px] mx-auto mb-8">
+                    <p className="text-[17px] text-secondary leading-relaxed max-w-[540px] mx-auto mb-8">
                         {description}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
@@ -55,12 +53,12 @@ export function FinalCta({
                         {salon.salonPhone && phoneDisplay && (
                             <a
                                 href={`tel:${salon.salonPhone}`}
-                                className="flex items-center gap-1.5 text-sm text-graphite-600 hover-supported:hover:text-rose-600 transition-[color] duration-150 ease-out"
+                                className="flex items-center gap-1.5 text-sm text-secondary hover-supported:hover:text-interactive transition-[color] duration-150 ease-out"
                             >
                                 <Phone size={14} />
                                 <span>
                                     lub zadzwoń:{" "}
-                                    <strong className="font-serif font-medium text-base text-graphite-900">
+                                    <strong className="font-display font-medium text-base text-primary">
                                         {phoneDisplay}
                                     </strong>
                                 </span>

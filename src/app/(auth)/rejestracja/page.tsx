@@ -5,7 +5,6 @@ import {useActionState, useState} from "react"
 import {Eye, EyeOff, ArrowRight, ArrowLeft, ShieldCheck} from "lucide-react"
 import {Eyebrow} from "@/components/ui/eyebrow"
 import {buttonStyles} from "@/components/ui/button"
-import {ButterflyWatermark} from "@/components/public/butterfly-watermark"
 import {cn} from "@/lib/cn"
 import {registerAction} from "@/app/(auth)/rejestracja/actions";
 
@@ -38,7 +37,7 @@ const stageBarClass: Record<number, string> = {
 }
 
 const stageLabelClass: Record<number, string> = {
-	0: "text-graphite-400",
+	0: "text-secondary",
 	1: "text-error",
 	2: "text-warning",
 	3: "text-success",
@@ -69,66 +68,57 @@ export default function RejestracjaPage() {
 	return (
 		<div className="grid min-h-dvh grid-cols-1 lg:h-dvh lg:grid-cols-[1.05fr_1fr]">
 
-			<aside className="relative flex flex-col justify-between overflow-hidden bg-warm px-7 pt-8 pb-10 min-h-70 lg:px-14 lg:py-8">
-				<div
-					aria-hidden="true"
-					className="pointer-events-none absolute inset-0"
-					style={{
-						background:
-							"radial-gradient(ellipse 700px 500px at 80% 80%, var(--color-rose-50) 0%, transparent 65%)",
-					}}
-				/>
-				<ButterflyWatermark className="pointer-events-none absolute -bottom-10 -right-8 w-70 opacity-45 lg:-bottom-20 lg:-right-16 lg:w-115" />
+			<aside className="relative flex flex-col justify-between overflow-hidden bg-paper-300 px-7 pt-8 pb-10 min-h-70 lg:px-14 lg:py-8">
 
-				<div className="relative z-10 reveal-in">
-					<Link href="/" className="inline-block font-serif text-2xl italic font-medium tracking-[-0.01em] text-graphite-900">
+				<div className="relative z-10 animate-mz-fade">
+					<Link href="/" className="inline-block font-display text-[25px] italic font-medium tracking-[-0.01em] text-primary">
 						Marzenie
-						<span className="-mt-0.5 block font-sans text-[9px] not-italic font-medium uppercase tracking-[0.18em] text-graphite-400">
+						<span className="-mt-0.5 block font-body text-[9px] not-italic font-medium uppercase tracking-[0.18em] text-secondary">
 							studio kosmetyki estetycznej
 						</span>
 					</Link>
 				</div>
 
-				<div className="relative z-10 max-w-115 py-10 reveal-in lg:py-0" style={{animationDelay: "80ms"}}>
+				<div className="relative z-10 max-w-115 py-10 animate-mz-fade lg:py-0" style={{animationDelay: "80ms"}}>
 					<Eyebrow className="mb-4 block">Twoje konto</Eyebrow>
-					<h1 className="mb-4 font-serif font-medium text-graphite-900 text-[clamp(1.875rem,4vw,2.75rem)] leading-[1.1] tracking-tight text-balance">
+					<h1 className="mb-4 font-display font-normal text-primary text-[clamp(32px,4vw,48px)] leading-[1.2] tracking-[-0.01em] text-balance">
 						Załóż konto{" "}
-						<em className="font-normal italic text-rose-600">
+						<em className="font-normal italic text-interactive">
 							i przyspiesz następną rezerwację.
 						</em>
 					</h1>
-					<p className="max-w-95 text-[15px] leading-relaxed text-graphite-600">
+					<p className="max-w-95 text-[15px] leading-relaxed text-secondary">
 						Konto trzyma Twoje dane, historię wizyt i ulubione zabiegi. Żaden formularz przy następnej rezerwacji.
 					</p>
 				</div>
 
-				<div className="relative z-10 hidden flex-col gap-4 reveal-in lg:flex" style={{animationDelay: "160ms"}}>
+				<div className="relative z-10 hidden flex-col gap-4 animate-mz-fade lg:flex" style={{animationDelay: "160ms"}}>
 					{benefits.map((b) => (
 						<div key={b.num} className="flex items-start gap-3.5">
-							<div className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border-soft bg-white font-serif italic text-[13px] font-medium text-rose-600">
+							<div className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface font-display italic text-[13px] font-medium text-interactive">
 								{b.num}
 							</div>
 							<div>
-								<strong className="block font-serif text-[15px] font-medium leading-snug tracking-[-0.01em] text-graphite-900">
+								<strong className="block font-display text-[15px] font-medium leading-snug tracking-[-0.01em] text-primary">
 									{b.title}
 								</strong>
-								<span className="text-[13px] leading-snug text-graphite-600">{b.desc}</span>
+								<span className="text-[13px] leading-snug text-secondary">{b.desc}</span>
 							</div>
 						</div>
 					))}
 				</div>
 			</aside>
 
-			<section className="flex flex-col bg-cream px-6 py-10 pb-14 lg:justify-center lg:overflow-y-auto lg:px-14 lg:py-14 lg:pt-40">
+			<section className="flex flex-col bg-surface px-6 py-10 pb-14 lg:justify-center lg:overflow-y-auto lg:px-14 lg:py-14 lg:pt-40">
 				<div className="mx-auto w-full max-w-120">
 
-					<div className="reveal-in">
+					<div className="animate-mz-fade">
 						<Link
 							href="/"
 							className={cn(
-								"inline-flex items-center gap-1.5 text-[13px] text-graphite-400",
+								"inline-flex items-center gap-1.5 text-[13px] text-secondary",
 								"transition-[color] duration-150 ease-out",
-								"hover-supported:hover:text-rose-600",
+								"hover-supported:hover:text-interactive",
 							)}
 						>
 							<ArrowLeft className="size-3.5" />
@@ -136,20 +126,20 @@ export default function RejestracjaPage() {
 						</Link>
 					</div>
 
-					<div className="mt-8 mb-7 reveal-in" style={{animationDelay: "80ms"}}>
+					<div className="mt-8 mb-7 animate-mz-fade" style={{animationDelay: "80ms"}}>
 						<Eyebrow className="mb-2.5 block">Rejestracja</Eyebrow>
-						<h2 className="mb-2 font-serif font-medium text-graphite-900 text-[32px] leading-[1.15] tracking-[-0.02em]">
-							Załóż <em className="font-normal italic text-rose-600">konto klienta</em>
+						<h2 className="mb-2 font-display font-normal text-primary text-[clamp(28px,4vw,40px)] leading-[1.15] tracking-[-0.01em]">
+							Załóż <em className="font-normal italic text-interactive">konto klienta</em>
 						</h2>
-						<p className="text-sm text-graphite-600">
+						<p className="text-sm text-secondary">
 							Masz już konto?{" "}
-							<Link href="/logowanie" className="font-medium text-rose-600 hover-supported:hover:underline">
+							<Link href="/logowanie" className="font-medium text-interactive hover-supported:hover:underline">
 								Zaloguj się
 							</Link>
 						</p>
 					</div>
 
-					<form action={formAction} className="space-y-4 reveal-in" style={{animationDelay: "160ms"}}>
+					<form action={formAction} className="space-y-4 animate-mz-fade" style={{animationDelay: "160ms"}}>
 
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 							<TextField
@@ -193,8 +183,8 @@ export default function RejestracjaPage() {
 						/>
 
 						<div>
-							<label htmlFor="password" className="mb-1.5 block text-xs font-medium text-graphite-900">
-								Hasło <span className="text-rose-500">*</span>
+							<label htmlFor="password" className="mb-1.5 block text-xs font-medium text-primary">
+								Hasło <span className="text-interactive">*</span>
 							</label>
 							<div className="relative">
 								<input
@@ -208,10 +198,10 @@ export default function RejestracjaPage() {
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 									className={cn(
-										"w-full rounded-md border border-border-default bg-white py-3 pl-3.5 pr-11 text-[15px] text-graphite-900",
-										"placeholder:text-graphite-400",
+										"w-full rounded-md border border-border-subtle bg-surface py-3 pl-3.5 pr-11 text-[15px] text-primary",
+										"placeholder:text-secondary",
 										"transition-[border-color,box-shadow] duration-150 ease-out",
-										"focus:outline-none focus-visible:border-rose-500 focus-visible:ring-3 focus-visible:ring-rose-500/15",
+										"focus:outline-none focus-visible:border-interactive focus-visible:ring-3 focus-visible:ring-interactive/15",
 									)}
 								/>
 								<button
@@ -220,9 +210,9 @@ export default function RejestracjaPage() {
 									aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
 									aria-pressed={showPassword}
 									className={cn(
-										"absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex cursor-pointer items-center justify-center rounded-sm p-2 text-graphite-400",
+										"absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex cursor-pointer items-center justify-center rounded-sm p-2 text-secondary",
 										"transition-[color,background-color] duration-150 ease-out",
-										"hover-supported:hover:text-rose-600 hover-supported:hover:bg-rose-50",
+										"hover-supported:hover:text-interactive hover-supported:hover:bg-surface-muted",
 									)}
 								>
 									{showPassword ? <EyeOff className="size-[18px]" strokeWidth={1.6} /> : <Eye className="size-[18px]" strokeWidth={1.6} />}
@@ -231,17 +221,17 @@ export default function RejestracjaPage() {
 							<PasswordStrength score={score} stage={stage} />
 						</div>
 
-						<div className="mt-2 space-y-3 rounded-md border border-border-soft bg-warm px-[18px] py-4">
+						<div className="mt-2 space-y-3 rounded-md border border-border-subtle bg-paper-300 px-[18px] py-4">
 							<ConsentRow id="c-terms" checked={consentTerms} onChange={setConsentTerms} required>
 								Akceptuję{" "}
-								<Link href="/regulamin" className="text-rose-600 underline decoration-rose-200 underline-offset-[2px]">
+								<Link href="/regulamin" className="text-interactive underline decoration-accent-100 underline-offset-[2px]">
 									regulamin
 								</Link>{" "}
 								i{" "}
-								<Link href="/polityka-prywatnosci" className="text-rose-600 underline decoration-rose-200 underline-offset-[2px]">
+								<Link href="/polityka-prywatnosci" className="text-interactive underline decoration-accent-100 underline-offset-[2px]">
 									politykę prywatności
 								</Link>{" "}
-								studia Marzenie. <span className="text-rose-500">*</span>
+								studia Marzenie. <span className="text-interactive">*</span>
 							</ConsentRow>
 
 							<ConsentRow id="c-sms" checked={consentSms} onChange={setConsentSms}>
@@ -268,15 +258,15 @@ export default function RejestracjaPage() {
 							<ArrowRight className="size-4" strokeWidth={2} />
 						</button>
 
-						<div className="flex items-center justify-center gap-1.5 pt-1 text-[11px] text-graphite-400">
+						<div className="flex items-center justify-center gap-1.5 pt-1 text-[11px] text-secondary">
 							<ShieldCheck className="size-3 text-success" strokeWidth={2} />
 							Twoje dane są szyfrowane i nigdy nie udostępniamy ich osobom trzecim.
 						</div>
 					</form>
 
-					<p className="mt-6 text-center text-[13px] text-graphite-600 reveal-in" style={{animationDelay: "320ms"}}>
+					<p className="mt-6 text-center text-[13px] text-secondary animate-mz-fade" style={{animationDelay: "320ms"}}>
 						Nie chcesz zakładać konta?{" "}
-						<Link href="/rezerwacja" className="font-medium text-rose-600 hover-supported:hover:underline">
+						<Link href="/rezerwacja" className="font-medium text-interactive hover-supported:hover:underline">
 							Zarezerwuj jako gość
 						</Link>
 					</p>
@@ -299,11 +289,11 @@ interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement
 function TextField({id, label, required, optionalNote, hint, type = "text", ...props}: TextFieldProps) {
 	return (
 		<div>
-			<label htmlFor={id} className="mb-1.5 block text-xs font-medium text-graphite-900">
+			<label htmlFor={id} className="mb-1.5 block text-xs font-medium text-primary">
 				{label}
-				{required && <span className="text-rose-500"> *</span>}
+				{required && <span className="text-interactive"> *</span>}
 				{optionalNote && (
-					<span className="ml-1 text-[11px] font-normal lowercase text-graphite-400">
+					<span className="ml-1 text-[11px] font-normal lowercase text-secondary">
 						{optionalNote}
 					</span>
 				)}
@@ -313,14 +303,14 @@ function TextField({id, label, required, optionalNote, hint, type = "text", ...p
 				type={type}
 				required={required}
 				className={cn(
-					"w-full rounded-md border border-border-default bg-white px-3.5 py-3 text-[15px] text-graphite-900",
-					"placeholder:text-graphite-400",
+					"w-full rounded-md border border-border-subtle bg-surface px-3.5 py-3 text-[15px] text-primary",
+					"placeholder:text-secondary",
 					"transition-[border-color,box-shadow] duration-150 ease-out",
-					"focus:outline-none focus-visible:border-rose-500 focus-visible:ring-3 focus-visible:ring-rose-500/15",
+					"focus:outline-none focus-visible:border-interactive focus-visible:ring-3 focus-visible:ring-interactive/15",
 				)}
 				{...props}
 			/>
-			{hint && <p className="mt-1.5 text-[11px] leading-snug text-graphite-400">{hint}</p>}
+			{hint && <p className="mt-1.5 text-[11px] leading-snug text-secondary">{hint}</p>}
 		</div>
 	)
 }
@@ -334,13 +324,13 @@ function PasswordStrength({score, stage}: {score: number; stage: number}) {
 						key={i}
 						className={cn(
 							"h-[3px] flex-1 rounded-full transition-[background-color] duration-200 ease-out",
-							i < score && stage > 0 ? stageBarClass[stage] : "bg-graphite-100",
+							i < score && stage > 0 ? stageBarClass[stage] : "bg-surface-muted",
 						)}
 					/>
 				))}
 			</div>
 			<div className="mt-1.5 flex items-baseline justify-between text-[11px]">
-				<span className="text-graphite-400">
+				<span className="text-secondary">
 					Min. 8 znaków, najlepiej z cyfrą i znakiem specjalnym
 				</span>
 				<span className={cn("font-medium", stageLabelClass[stage])}>
@@ -370,10 +360,10 @@ function ConsentRow({id, checked, onChange, required, children}: ConsentRowProps
 					required={required}
 					onChange={(e) => onChange(e.target.checked)}
 					className={cn(
-						"peer size-[18px] shrink-0 cursor-pointer appearance-none rounded-[4px] border border-border-default bg-white",
+						"peer size-[18px] shrink-0 cursor-pointer appearance-none rounded-[4px] border border-border-subtle bg-surface",
 						"transition-[background-color,border-color] duration-150 ease-out",
-						"checked:bg-rose-500 checked:border-rose-500",
-						"focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-rose-500/15",
+						"checked:bg-interactive checked:border-interactive",
+						"focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-interactive/15",
 					)}
 				/>
 				<svg
@@ -389,7 +379,7 @@ function ConsentRow({id, checked, onChange, required, children}: ConsentRowProps
 					<path d="M4 9.5l3.2 3.2L14 6" />
 				</svg>
 			</span>
-			<label htmlFor={id} className="cursor-pointer select-none text-[12.5px] leading-snug text-graphite-600">
+			<label htmlFor={id} className="cursor-pointer select-none text-[12.5px] leading-snug text-secondary">
 				{children}
 			</label>
 		</div>

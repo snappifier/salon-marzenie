@@ -1,10 +1,11 @@
+// src/app/(public)/error.tsx
 "use client"
 
 import {useEffect} from "react"
 import Link from "next/link"
 import {Button, buttonStyles} from "@/components/ui/button"
 import {Container} from "@/components/ui/container"
-import {Heading} from "@/components/ui/heading"
+import {PageHeading} from "@/components/public/page-heading"
 
 interface Props {
     error: Error & {digest?: string}
@@ -18,10 +19,11 @@ export default function Error({error, reset}: Props) {
 
     return (
         <Container className="py-24 text-center">
-            <Heading level="h2" className="mb-4">Coś poszło nie tak</Heading>
-            <p className="text-graphite-600 mb-8 max-w-md mx-auto">
-                Spróbuj odświeżyć stronę. Jeśli problem się powtarza, zadzwoń do salonu.
-            </p>
+            <PageHeading
+                as="h2"
+                title={<>Coś poszło <em className="italic text-interactive">nie tak</em></>}
+                description="Spróbuj odświeżyć stronę. Jeśli problem się powtarza, zadzwoń do salonu."
+            />
             <div className="flex gap-3 justify-center">
                 <Button onClick={reset}>Spróbuj ponownie</Button>
                 <Link href="/" className={buttonStyles({variant: "secondary"})}>

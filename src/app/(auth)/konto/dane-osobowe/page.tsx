@@ -23,10 +23,10 @@ function GdprRow({
 	action: React.ReactNode
 }) {
 	return (
-		<div className="grid grid-cols-[1fr_auto] gap-4 py-4 border-b border-border-soft last:border-b-0 items-center">
+		<div className="grid grid-cols-[1fr_auto] gap-4 py-4 border-b border-border-subtle last:border-b-0 items-center">
 			<div className="min-w-0">
-				<h4 className="font-medium text-sm text-graphite-900 mb-0.5">{title}</h4>
-				<p className="text-xs text-graphite-400 leading-relaxed max-w-[540px]">{desc}</p>
+				<h4 className="font-medium text-sm text-primary mb-0.5">{title}</h4>
+				<p className="text-xs text-secondary leading-relaxed max-w-[540px]">{desc}</p>
 			</div>
 			<div className="shrink-0">{action}</div>
 		</div>
@@ -61,14 +61,14 @@ export default async function PersonalDataPage() {
 	const initials = `${customer.firstName.charAt(0)}${customer.lastName.charAt(0)}`.toUpperCase()
 
 	const dangerOutlineClass = cn(
-		"inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-full border border-border-default text-error bg-transparent",
+		"inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-full border border-border-subtle text-error bg-transparent",
 		"transition-[background-color,color,border-color] duration-150 ease-out",
 		"hover-supported:hover:bg-error hover-supported:hover:text-white hover-supported:hover:border-error",
 		"active:scale-[0.97]",
 	)
 
 	return (
-		<div className="min-h-screen relative bg-white">
+		<div className="min-h-screen relative bg-surface">
 			<Sidebar
 				firstName={customer.firstName}
 				lastName={customer.lastName}
@@ -85,8 +85,8 @@ export default async function PersonalDataPage() {
 				<header className="flex items-end justify-between flex-wrap gap-4 mb-7">
 					<div>
 						<Eyebrow className="block mb-1.5">Konto</Eyebrow>
-						<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-graphite-900">
-							Dane <em className="italic text-rose-600 font-normal">osobowe</em>
+						<h1 className="font-display font-normal text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-primary">
+							Dane <em className="italic text-interactive font-normal">osobowe</em>
 						</h1>
 					</div>
 					<button type="button" className={buttonStyles({variant: "secondary", size: "sm"})}>
@@ -96,31 +96,31 @@ export default async function PersonalDataPage() {
 				</header>
 
 				{/* PROFILE HERO */}
-				<div className="bg-linear-to-b from-rose-50 to-white border border-rose-100 rounded-lg px-8 py-7 grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-7 items-center mb-6">
-					<div className="w-20 h-20 rounded-full bg-linear-to-br from-rose-300 to-rose-500 text-white flex items-center justify-center font-serif font-medium text-[30px] tracking-[-0.01em] shadow-sm">
+				<div className="bg-linear-to-b from-surface-muted to-surface border border-accent-100 rounded-lg px-8 py-7 grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-7 items-center mb-6">
+					<div className="w-20 h-20 rounded-full bg-linear-to-br from-accent-100 to-interactive text-white flex items-center justify-center font-display font-medium text-[30px] tracking-[-0.01em] shadow-sm">
 						{initials}
 					</div>
 					<div className="min-w-0">
-						<div className="font-serif font-medium text-[26px] text-graphite-900 tracking-[-0.02em] mb-1 leading-[1.15]">
-							{customer.firstName} <em className="italic text-rose-600 font-normal">{customer.lastName}</em>
+						<div className="font-display font-medium text-[26px] text-primary tracking-[-0.02em] mb-1 leading-[1.15]">
+							{customer.firstName} <em className="italic text-interactive font-normal">{customer.lastName}</em>
 						</div>
-						<div className="text-[13px] text-graphite-600 flex items-center flex-wrap gap-2">
+						<div className="text-[13px] text-secondary flex items-center flex-wrap gap-2">
 							{customer.email && (
 								<>
 									<span>{customer.email}</span>
-									<span className="text-border-default">·</span>
+									<span className="text-secondary/50">·</span>
 								</>
 							)}
 							<span>{customer.phone}</span>
-							<span className="text-border-default">·</span>
+							<span className="text-secondary/50">·</span>
 							<span>Stała klientka</span>
 						</div>
 					</div>
 					<div className="text-right">
-						<div className="text-[11px] uppercase text-rose-600 tracking-[0.14em] font-medium">
+						<div className="text-[11px] uppercase text-interactive tracking-[0.18em] font-medium">
 							Klientka od
 						</div>
-						<div className="font-serif text-[15px] text-graphite-900 font-medium mt-0.5">
+						<div className="font-display text-[15px] text-primary font-medium mt-0.5">
 							{since}
 						</div>
 					</div>
@@ -176,11 +176,11 @@ export default async function PersonalDataPage() {
 						</Card>
 
 						{/* DANGER */}
-						<section className="bg-white border border-error/25 rounded-lg p-7">
-							<h3 className="font-serif font-medium text-[17px] text-error mb-1 tracking-[-0.01em]">
+						<section className="bg-surface border border-error/25 rounded-lg p-7">
+							<h3 className="font-display font-medium text-[17px] text-error mb-1 tracking-[-0.01em]">
 								Usuń konto
 							</h3>
-							<p className="text-[13px] text-graphite-600 mb-3.5 max-w-[500px]">
+							<p className="text-[13px] text-secondary mb-3.5 max-w-[500px]">
 								Po usunięciu utracisz dostęp do historii wizyt, ulubionych zabiegów i zapisanych
 								preferencji. Operacja jest nieodwracalna. Niektóre dane (faktury) możemy zachować
 								przez 5 lat zgodnie z przepisami podatkowymi.

@@ -22,7 +22,7 @@ export function VisitTabs({tabs, panels}: Props) {
 		<>
 			<div
 				role="tablist"
-				className="flex gap-1 border-b border-border-soft mb-7 overflow-x-auto scrollbar-none"
+				className="flex gap-1 border-b border-border-subtle mb-7 overflow-x-auto scrollbar-none"
 			>
 				{tabs.map((tab) => {
 					const isActive = tab.key === active
@@ -37,15 +37,15 @@ export function VisitTabs({tabs, panels}: Props) {
 								"flex items-center gap-2 px-4 pt-3 pb-3.5 text-sm font-medium whitespace-nowrap border-b-2",
 								"transition-[color,border-color] duration-150 ease-out",
 								isActive
-									? "text-graphite-900 border-rose-500"
-									: "text-graphite-400 border-transparent hover-supported:hover:text-graphite-900",
+									? "text-primary border-interactive"
+									: "text-secondary border-transparent hover-supported:hover:text-primary",
 							)}
 						>
 							{tab.label}
 							<span
 								className={cn(
 									"inline-block min-w-5 px-1.75 py-px text-[11px] font-medium rounded-full text-center",
-									isActive ? "bg-rose-100 text-rose-700" : "bg-graphite-50 text-graphite-600",
+									isActive ? "bg-paper-400 text-interactive-hover" : "bg-surface-muted text-secondary",
 								)}
 							>
 								{tab.count}

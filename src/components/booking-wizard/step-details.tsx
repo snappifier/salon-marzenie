@@ -48,7 +48,7 @@ export function StepDetails({isLoggedIn = false}: StepDetailsProps) {
         <motion.div className="space-y-7" variants={groupVariants}>
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Twoje dane</Heading>
-                <p className="text-sm text-graphite-600 leading-relaxed">
+                <p className="text-sm text-secondary leading-relaxed">
                     {isLoggedIn
                         ? "Dane uzupełnione z Twojego konta. SMS-a z potwierdzeniem wyślemy na zapisany numer."
                         : "Wyślemy SMS-a z potwierdzeniem na podany numer."}
@@ -115,7 +115,7 @@ export function StepDetails({isLoggedIn = false}: StepDetailsProps) {
 
             {!isLoggedIn && (
                 <motion.div
-                    className="pt-5 border-t border-border-soft space-y-4"
+                    className="pt-5 border-t border-border-subtle space-y-4"
                     variants={itemVariants}
                 >
                     <Checkbox
@@ -149,17 +149,17 @@ export function StepDetails({isLoggedIn = false}: StepDetailsProps) {
             )}
 
             <motion.p
-                className="text-[11px] text-graphite-400 leading-relaxed"
+                className="text-[11px] text-secondary leading-relaxed"
                 variants={itemVariants}
             >
                 Zaznaczając „Dalej" potwierdzasz zapoznanie się z{" "}
-                <a href="/polityka-prywatnosci" className="underline hover:text-rose-600 transition-[color] duration-150 ease-out">
+                <a href="/polityka-prywatnosci" className="underline hover:text-interactive transition-[color] duration-150 ease-out">
                     polityką prywatności
                 </a>.
             </motion.p>
 
             <motion.div
-                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-surface/95 backdrop-blur-sm border-t border-border-subtle"
                 variants={itemVariants}
             >
                 <div className="flex items-center justify-between gap-3">
@@ -198,8 +198,8 @@ function Checkbox({checked, onChange, label, hint}: CheckboxProps) {
                     "shrink-0 mt-0.5 w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center",
                     "transition-[background-color,border-color] duration-150 ease-out",
                     checked
-                        ? "bg-rose-500 border-rose-500 text-white"
-                        : "bg-white border-graphite-200 group-hover:border-graphite-400",
+                        ? "bg-interactive border-interactive text-white"
+                        : "bg-surface border-border-subtle group-hover:border-border-strong",
                 )}
                 aria-hidden="true"
             >
@@ -213,8 +213,8 @@ function Checkbox({checked, onChange, label, hint}: CheckboxProps) {
                 />
             </div>
             <div className="flex-1">
-                <div className="text-sm text-graphite-900 font-medium leading-snug">{label}</div>
-                {hint && <div className="text-xs text-graphite-600 leading-relaxed mt-0.5">{hint}</div>}
+                <div className="text-sm text-primary font-medium leading-snug">{label}</div>
+                {hint && <div className="text-xs text-secondary leading-relaxed mt-0.5">{hint}</div>}
             </div>
         </label>
     )

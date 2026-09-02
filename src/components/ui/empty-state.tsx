@@ -21,20 +21,20 @@ export function EmptyState({className, icon, title, description, action}: EmptyS
 	return (
 		<section
 			className={cn(
-				"rounded-2xl bg-white border border-border-soft p-8 md:p-12 text-center",
+				"rounded-lg bg-surface border border-border-subtle p-8 md:p-12 text-center",
 				className,
 			)}
 		>
 			<div
-				className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-rose-50 text-rose-600 mb-5"
+				className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-surface-muted text-interactive mb-5"
 				aria-hidden="true"
 			>
 				{icon}
 			</div>
-			<h3 className="font-serif text-[20px] leading-tight text-graphite-900 mb-2 text-balance">
+			<h3 className="font-display text-[20px] leading-tight text-primary mb-2 text-balance">
 				{title}
 			</h3>
-			<p className="text-sm text-graphite-600 max-w-md mx-auto mb-6 text-balance">
+			<p className="text-sm text-secondary max-w-md mx-auto mb-6 text-balance">
 				{description}
 			</p>
 			{action && (

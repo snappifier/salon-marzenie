@@ -4,7 +4,7 @@ export function Eyebrow({className, ...props}: React.HTMLAttributes<HTMLDivEleme
     return (
         <div
             className={cn(
-                "text-[11px] font-medium uppercase tracking-[0.18em] text-rose-600",
+                "text-[11px] font-medium uppercase tracking-[0.18em] text-interactive",
                 className,
             )}
             {...props}

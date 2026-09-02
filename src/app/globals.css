@@ -1,61 +1,115 @@
 @import "tailwindcss";
 
 @theme {
-  --color-rose-50: #FBF3F6;
-  --color-rose-100: #EFD7DD;
-  --color-rose-200: #E2BCC5;
-  --color-rose-300: #D4A0AC;
-  --color-rose-400: #C68895;
-  --color-rose-500: #B47B85;
-  --color-rose-600: #9A6671;
-  --color-rose-700: #7A5158;
-  --color-rose-800: #5A3D43;
-  --color-rose-900: #4A3338;
+  /* ---- untitled1: paleta ---- */
+  --color-ink-900: #161615;
+  --color-ink-600: #4B5563;
 
-  --color-graphite-50: #F4F1EE;
-  --color-graphite-100: #E6E1DC;
-  --color-graphite-200: #C9C2BC;
-  --color-graphite-300: #B0A8A2;
-  --color-graphite-400: #8C857F;
-  --color-graphite-500: #6E6864;
-  --color-graphite-600: #5A5350;
-  --color-graphite-700: #44403E;
-  --color-graphite-800: #36322F;
-  --color-graphite-900: #2E2A2A;
+  --color-paper-100: #FFFFFF;
+  --color-paper-200: #FDF8F8;
+  --color-paper-300: #FAF1EF;
+  --color-paper-400: #F5E7E3;
 
-  --color-cream: #FAF7F4;
-  --color-warm: #F5EFEA;
+  --color-accent-500: #74313A;
+  --color-accent-100: #EED3CF;
 
-  --color-border-soft: #ECE3DC;
-  --color-border-default: #DCD0C8;
-  --color-border-strong: #B0A8A2;
+  --color-primary: var(--color-ink-900);
+  --color-secondary: var(--color-ink-600);
+  --color-surface: var(--color-paper-100);
+  --color-surface-muted: var(--color-paper-200);
+  --color-surface-accent: var(--color-accent-100);
+  --color-interactive: var(--color-accent-500);
+  --color-interactive-hover: #7E2430;
+  --color-border-subtle: #E5E7EB;
 
-  --color-success: #6F8C6E;
+  /* ---- statusy: ziemiste barwy salon-marzenie ---- */
+  /* Odcienie przyciemnione tak, by tekst przechodzil WCAG AA zarowno na
+     wlasnym tincie, jak i bialy tekst na nich. Ton pozostaje ziemisty. */
+  --color-success: #5B725A;
   --color-success-bg: #EBF0E8;
-  --color-error: #B25C5C;
+  --color-error: #A44E4E;
   --color-error-bg: #F5E5E5;
-  --color-warning: #C49464;
+  --color-danger: #A44E4E;
+  --color-warning: #8D6135;
   --color-warning-bg: #F5EBDF;
 
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, serif;
+  /* ---- warstwa zgodności: stare nazwy, nowe barwy ----
+     Utrzymuje przy życiu admina, kreator rezerwacji i konto klienta,
+     dopóki nie zostaną przerobione. Wtedy do usunięcia. */
+  --color-rose-50: #FDF8F8;
+  --color-rose-100: #F5E7E3;
+  --color-rose-200: #EED3CF;
+  --color-rose-300: #D9AFA9;
+  --color-rose-400: #A9666B;
+  --color-rose-500: #74313A;
+  --color-rose-600: #74313A;
+  --color-rose-700: #7E2430;
+  --color-rose-800: #5C2630;
+  --color-rose-900: #431B22;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  --color-graphite-50: #FDF8F8;
+  --color-graphite-100: #F0EAE8;
+  --color-graphite-200: #E5E7EB;
+  --color-graphite-300: #CBD1D6;
+  --color-graphite-400: #9CA3AF;
+  --color-graphite-500: #6B7280;
+  --color-graphite-600: #4B5563;
+  --color-graphite-700: #374151;
+  --color-graphite-800: #242423;
+  --color-graphite-900: #161615;
+
+  --color-cream: var(--color-paper-100);
+  --color-warm: var(--color-paper-300);
+
+  --color-border-soft: var(--color-border-subtle);
+  --color-border-default: var(--color-border-subtle);
+  --color-border-strong: #CBD1D6;
+
+  /* ---- untitled1: typografia ---- */
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  --font-serif: var(--font-display);
+  --font-sans: var(--font-body);
+
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 20px;
+  --text-lg--line-height: 28px;
+  --text-xl: 28px;
+  --text-xl--line-height: 36px;
+  --text-2xl: 40px;
+  --text-2xl--line-height: 48px;
+  --text-3xl: 64px;
+  --text-3xl--line-height: 1.04;
+
+  --tracking-caps: 0.02em;
+
+  /* ---- untitled1: promienie i cienie ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-2xl: 32px;
 
-  --shadow-xs: 0 1px 2px rgba(46, 42, 42, 0.04);
-  --shadow-sm: 0 2px 6px rgba(46, 42, 42, 0.05), 0 1px 2px rgba(46, 42, 42, 0.04);
-  --shadow-md: 0 4px 16px rgba(46, 42, 42, 0.06), 0 2px 4px rgba(46, 42, 42, 0.04);
-  --shadow-lg: 0 12px 32px rgba(46, 42, 42, 0.08), 0 4px 8px rgba(46, 42, 42, 0.04);
-  --shadow-xl: 0 24px 48px rgba(46, 42, 42, 0.10), 0 8px 16px rgba(46, 42, 42, 0.06);
+  --shadow-xs: 0 1px 2px rgba(116, 49, 58, 0.03);
+  --shadow-sm: 0 2px 4px rgba(116, 49, 58, 0.04);
+  --shadow-md: 0 4px 12px rgba(116, 49, 58, 0.08);
+  --shadow-lg: 0 12px 24px rgba(116, 49, 58, 0.12);
+  --shadow-xl: 0 24px 48px rgba(116, 49, 58, 0.14);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --default-transition-duration: 180ms;
+
+  --animate-mz-fade: mz-fade 900ms ease-out both;
+  --animate-mz-fade-only: mz-fade-only 1000ms ease-out both;
 }
 
 @layer base {
@@ -65,41 +119,50 @@
   }
 
   body {
-    background-color: var(--color-cream);
-    color: var(--color-graphite-900);
-    font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-rose-500);
+    outline: 2px solid var(--color-interactive);
     outline-offset: 2px;
     border-radius: 4px;
   }
 
   ::selection {
-    background-color: var(--color-rose-200);
-    color: var(--color-graphite-900);
+    background-color: var(--color-accent-100);
+    color: var(--color-primary);
   }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
+@keyframes mz-fade {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes mz-fade-only {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes reveal-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@utility reveal-in {
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: reveal-in 500ms var(--ease-out) forwards;
 }
 
 @utility hero-bloom {
   background: radial-gradient(
           ellipse 800px 600px at 80% 30%,
-          var(--color-rose-50) 0%,
+          var(--color-paper-300) 0%,
           transparent 60%
   );
 }
@@ -107,8 +170,8 @@
 @utility cta-bloom {
   background: linear-gradient(
           180deg,
-          var(--color-rose-50) 0%,
-          var(--color-cream) 100%
+          var(--color-paper-300) 0%,
+          var(--color-surface) 100%
   );
 }
 
@@ -120,26 +183,20 @@
   }
 }
 
-@keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@utility reveal-in {
-  opacity: 0;
-  will-change: transform, opacity;
-  animation: reveal-in 500ms var(--ease-out) forwards;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

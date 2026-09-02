@@ -47,17 +47,17 @@ export function CookieBanner() {
 					aria-labelledby="cookie-banner-title"
 					aria-describedby="cookie-banner-desc"
 				>
-					<div className="bg-graphite-900 text-graphite-100 rounded-2xl shadow-xl shadow-graphite-900/15 p-5 md:p-6 flex flex-col gap-4">
+					<div className="bg-ink-900 text-paper-400 rounded-lg shadow-xl shadow-ink-900/15 p-5 md:p-6 flex flex-col gap-4">
 						<div>
 							<div id="cookie-banner-title" className="font-medium text-sm mb-1.5">
 								Pliki cookie
 							</div>
-							<p id="cookie-banner-desc" className="text-xs text-graphite-200 leading-relaxed">
+							<p id="cookie-banner-desc" className="text-xs text-white/70 leading-relaxed">
 								Używamy plików cookie niezbędnych do bezpiecznej obsługi rezerwacji i logowania.
 								Nie zbieramy danych marketingowych ani statystyk od użytkowników bez konta.{" "}
 								<Link
 									href="/polityka-prywatnosci"
-									className="text-rose-200 underline-offset-2 hover-supported:hover:underline"
+									className="text-accent-100 underline-offset-2 hover-supported:hover:underline"
 								>
 									Polityka prywatności
 								</Link>
@@ -69,7 +69,7 @@ export function CookieBanner() {
 								type="button"
 								size="sm"
 								onClick={handleAccept}
-								className="bg-rose-100 text-graphite-900 hover-supported:hover:bg-white"
+								className="bg-paper-400 text-primary hover-supported:hover:bg-surface"
 							>
 								Rozumiem
 							</Button>

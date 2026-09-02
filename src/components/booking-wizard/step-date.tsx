@@ -37,7 +37,7 @@ export function StepDate() {
             <div className="space-y-7" aria-busy="true">
                 <div>
                     <Heading level="h3" className="mb-1">Wybierz dzień</Heading>
-                    <p className="text-sm text-graphite-600 leading-relaxed">
+                    <p className="text-sm text-secondary leading-relaxed">
                         Pokazujemy dostępność na najbliższe 14 dni.
                     </p>
                 </div>
@@ -45,7 +45,7 @@ export function StepDate() {
                     {Array.from({length: 14}).map((_, i) => (
                         <div
                             key={i}
-                            className="h-[92px] bg-graphite-50 border border-border-soft rounded-lg animate-pulse"
+                            className="h-[92px] bg-surface-muted border border-border-subtle rounded-lg animate-pulse"
                             aria-hidden="true"
                         />
                     ))}
@@ -59,7 +59,7 @@ export function StepDate() {
         <motion.div className="space-y-7" variants={groupVariants}>
             <motion.div variants={itemVariants}>
                 <Heading level="h3" className="mb-1">Wybierz dzień</Heading>
-                <p className="text-sm text-graphite-600 leading-relaxed">
+                <p className="text-sm text-secondary leading-relaxed">
                     Pokazujemy dostępność na najbliższe 14 dni.
                 </p>
             </motion.div>
@@ -85,23 +85,23 @@ export function StepDate() {
                             className={cn(
                                 "p-3.5 border rounded-lg text-left",
                                 "transition-[border-color,background-color,box-shadow] duration-150 ease-out",
-                                isSelected && "bg-rose-50 border-rose-500 shadow-[0_0_0_1px_var(--color-rose-500)]",
-                                !isSelected && isAvailable && "bg-white border-border-default hover-supported:hover:border-rose-300 active:scale-[0.99]",
-                                !isAvailable && "bg-graphite-50 border-transparent cursor-not-allowed",
+                                isSelected && "bg-surface-muted border-interactive shadow-[0_0_0_1px_var(--color-interactive)]",
+                                !isSelected && isAvailable && "bg-surface border-border-subtle hover-supported:hover:border-accent-100 active:scale-[0.99]",
+                                !isAvailable && "bg-surface-muted border-transparent cursor-not-allowed",
                             )}
                         >
                             <div
                                 className={cn(
-                                    "text-[10px] uppercase tracking-[0.14em] font-medium mb-1.5",
-                                    isAvailable ? "text-rose-600" : "text-graphite-400",
+                                    "text-[10px] uppercase tracking-[0.18em] font-medium mb-1.5",
+                                    isAvailable ? "text-interactive" : "text-secondary",
                                 )}
                             >
                                 {dayName}
                             </div>
                             <div
                                 className={cn(
-                                    "font-serif font-medium text-[17px] leading-tight mb-1.5 capitalize",
-                                    isAvailable ? "text-graphite-900" : "text-graphite-400",
+                                    "font-display font-medium text-[17px] leading-tight mb-1.5 capitalize",
+                                    isAvailable ? "text-primary" : "text-secondary",
                                 )}
                             >
                                 {dateLabel}
@@ -109,7 +109,7 @@ export function StepDate() {
                             <div
                                 className={cn(
                                     "text-[11px]",
-                                    isAvailable ? "text-graphite-400" : "text-graphite-300 italic",
+                                    isAvailable ? "text-secondary" : "text-secondary italic",
                                 )}
                             >
                                 {isAvailable
@@ -122,7 +122,7 @@ export function StepDate() {
             </motion.div>
 
             <motion.div
-                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-white/95 backdrop-blur-sm border-t border-border-soft"
+                className="sticky bottom-0 -mx-6 md:-mx-8 px-6 md:px-8 pt-4 pb-2 bg-surface/95 backdrop-blur-sm border-t border-border-subtle"
                 variants={itemVariants}
             >
                 <div className="flex items-center gap-3">

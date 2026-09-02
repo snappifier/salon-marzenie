@@ -14,7 +14,7 @@ interface Props {
 
 const initialState: PersonalDataState = {}
 
-const trailingIcon = "absolute right-3.5 top-1/2 -translate-y-1/2 text-graphite-400 pointer-events-none"
+const trailingIcon = "absolute right-3.5 top-1/2 -translate-y-1/2 text-secondary pointer-events-none"
 
 export function PersonalDataForm({initial}: Props) {
 	const [state, formAction, isPending] = useActionState(updatePersonalData, initialState)

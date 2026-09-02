@@ -27,7 +27,7 @@ export default async function DashboardPage() {
 	const upcomingCount = data.nextBooking ? 1 : 0
 
 	return (
-		<div className="min-h-screen relative bg-white">
+		<div className="min-h-screen relative bg-surface">
 			<Sidebar
 				firstName={data.customer.firstName}
 				lastName={data.customer.lastName}
@@ -44,9 +44,9 @@ export default async function DashboardPage() {
 				<header className="flex items-end justify-between flex-wrap gap-4 mb-8">
 					<div>
 						<Eyebrow className="block mb-1.5">Pulpit</Eyebrow>
-						<h1 className="font-serif font-medium text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-graphite-900">
+						<h1 className="font-display font-normal text-[clamp(26px,3.6vw,36px)] leading-[1.15] tracking-tight text-primary">
 							Cześć {data.customer.firstName},{" "}
-							<em className="italic text-rose-600 font-normal">miło Cię widzieć.</em>
+							<em className="italic text-interactive font-normal">miło Cię widzieć.</em>
 						</h1>
 					</div>
 					<div className="flex gap-2.5 items-center">

@@ -1,198 +1,175 @@
+// src/components/public/header.tsx
 "use client"
 
 import {useEffect, useRef, useState} from "react"
 import Link from "next/link"
 import {usePathname} from "next/navigation"
-import {AnimatePresence, motion, useMotionValueEvent, useScroll} from "motion/react"
-import {Menu, X} from "lucide-react"
+import {AnimatePresence, motion} from "motion/react"
 import {site} from "@/lib/content"
-import {buttonStyles} from "@/components/ui/button"
-import {Container} from "@/components/ui/container"
 import {cn} from "@/lib/cn"
 
 export interface HeaderCustomer {
-    firstName: string
-    lastName: string
+	firstName: string
+	lastName: string
 }
 
 interface Props {
-    customer: HeaderCustomer | null
+	customer: HeaderCustomer | null
 }
 
 const NAV_LINKS = [
-    {href: "/uslugi", label: "Usługi"},
-    {href: "/kontakt", label: "Kontakt"},
+	{href: "/#oferta", label: "Oferta"},
+	{href: "/#cennik", label: "Cennik"},
+	{href: "/#opinie", label: "Opinie"},
+	{href: "/#faq", label: "FAQ"},
 ]
 
 function initials(c: HeaderCustomer): string {
-    return `${c.firstName.charAt(0)}${c.lastName.charAt(0)}`.toUpperCase()
+	return `${c.firstName.charAt(0)}${c.lastName.charAt(0)}`.toUpperCase()
 }
 
 export function PublicHeader({customer}: Props) {
-    const [scrolled, setScrolled] = useState(false)
-    const [menuOpen, setMenuOpen] = useState(false)
-    const pathname = usePathname()
-    const triggerRef = useRef<HTMLButtonElement>(null)
-    const headerRef = useRef<HTMLElement>(null)
-    const {scrollY} = useScroll()
+	const [menuOpen, setMenuOpen] = useState(false)
+	const pathname = usePathname()
+	const triggerRef = useRef<HTMLButtonElement>(null)
+	const headerRef = useRef<HTMLElement>(null)
 
-    useMotionValueEvent(scrollY, "change", (latest) => {
-        setScrolled(latest > 8)
-    })
+	useEffect(() => {
+		setMenuOpen(false)
+	}, [pathname])
 
-    useEffect(() => {
-        setMenuOpen(false)
-    }, [pathname])
+	useEffect(() => {
+		if (!menuOpen) return
+		function onKey(e: KeyboardEvent) {
+			if (e.key === "Escape") {
+				setMenuOpen(false)
+				triggerRef.current?.focus()
+			}
+		}
+		window.addEventListener("keydown", onKey)
+		return () => window.removeEventListener("keydown", onKey)
+	}, [menuOpen])
 
-    useEffect(() => {
-        if (!menuOpen) return
-        function onKey(e: KeyboardEvent) {
-            if (e.key === "Escape") {
-                setMenuOpen(false)
-                triggerRef.current?.focus()
-            }
-        }
-        window.addEventListener("keydown", onKey)
-        return () => window.removeEventListener("keydown", onKey)
-    }, [menuOpen])
+	useEffect(() => {
+		if (!menuOpen) return
+		function onPointerDown(e: PointerEvent) {
+			if (!headerRef.current?.contains(e.target as Node)) setMenuOpen(false)
+		}
+		document.addEventListener("pointerdown", onPointerDown)
+		return () => document.removeEventListener("pointerdown", onPointerDown)
+	}, [menuOpen])
 
-    useEffect(() => {
-        if (!menuOpen) return
-        function onPointerDown(e: PointerEvent) {
-            if (!headerRef.current?.contains(e.target as Node)) {
-                setMenuOpen(false)
-            }
-        }
-        document.addEventListener("pointerdown", onPointerDown)
-        return () => document.removeEventListener("pointerdown", onPointerDown)
-    }, [menuOpen])
+	return (
+		<header ref={headerRef} className="sticky top-1 z-50 w-full px-[7%] pt-3">
+			<div className="relative">
+				<div className="w-full flex items-center justify-between px-8 py-2 rounded-[12px] bg-paper-400/60 backdrop-blur-md backdrop-saturate-150 shadow-xs">
+					<Link
+						href="/"
+						className="font-display text-[25px] tracking-tight shrink-0 text-primary"
+						aria-label={`${site.salonName} - strona główna`}
+					>
+						{site.salonName}
+					</Link>
 
-    return (
-        <header
-            ref={headerRef}
-            className={cn(
-                "sticky top-0 z-50 backdrop-blur-md backdrop-saturate-150 bg-cream/85 transition-[border-color] duration-150 ease-out border-b",
-                scrolled ? "border-border-soft" : "border-transparent",
-            )}
-        >
-            <Container>
-                <div className="flex items-center justify-between py-3.5">
-                    <Link href="/" className="group" aria-label={`${site.salonName} - strona główna`}>
-                        <div className="font-serif italic font-medium text-2xl text-graphite-900 leading-none tracking-tight">
-                            {site.salonName}
-                        </div>
-                        <div className="text-[9px] uppercase tracking-[0.18em] text-graphite-400 font-medium mt-0.5">
-                            {site.tagline}
-                        </div>
-                    </Link>
+					<nav className="hidden md:flex gap-10 items-center text-sm tracking-tight" aria-label="Główna nawigacja">
+						{NAV_LINKS.map((l) => (
+							<Link
+								key={l.href}
+								href={l.href}
+								className="py-3 text-primary transition-[color] duration-200 ease-out hover-supported:hover:text-interactive"
+							>
+								{l.label}
+							</Link>
+						))}
+					</nav>
 
-                    <nav className="hidden md:flex items-center gap-8" aria-label="Główna nawigacja">
-                        {NAV_LINKS.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="text-sm font-medium text-graphite-600 hover-supported:hover:text-rose-600 transition-[color] duration-150 ease-out"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-                        <Link href="/rezerwacja" className={buttonStyles({size: "sm"})}>
-                            Zarezerwuj
-                        </Link>
-                        {customer ? (
-                            <Link
-                                href="/konto"
-                                className={cn(
-                                    "inline-flex items-center gap-2 pl-1 pr-3.5 py-1 rounded-full",
-                                    "text-sm font-medium text-graphite-900 border border-border-soft bg-white",
-                                    "transition-[border-color,background-color] duration-150 ease-out",
-                                    "hover-supported:hover:border-rose-300 hover-supported:hover:bg-rose-50",
-                                    "active:scale-[0.97]",
-                                )}
-                                aria-label={`Konto: ${customer.firstName} ${customer.lastName}`}
-                            >
-                                <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-rose-300 to-rose-500 text-white font-serif font-medium text-[11px]">
-                                    {initials(customer)}
-                                </span>
-                                <span>{customer.firstName}</span>
-                            </Link>
-                        ) : (
-                            <Link
-                                href="/logowanie"
-                                className="text-sm font-medium text-graphite-600 hover-supported:hover:text-rose-600 transition-[color] duration-150 ease-out"
-                            >
-                                Zaloguj się
-                            </Link>
-                        )}
-                    </nav>
+					<div className="hidden md:flex items-center gap-6">
+						{customer ? (
+							<Link
+								href="/konto"
+								className={cn(
+									"inline-flex items-center gap-3 pl-1 pr-5 py-1 rounded-full",
+									"text-sm text-primary border border-border-subtle bg-surface",
+									"transition-[color,background-color,border-color] duration-200 ease-out",
+									"hover-supported:hover:border-interactive hover-supported:hover:text-interactive",
+								)}
+								aria-label={`Konto: ${customer.firstName} ${customer.lastName}`}
+							>
+								<span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-interactive text-white font-display text-[11px]">
+									{initials(customer)}
+								</span>
+								{customer.firstName}
+							</Link>
+						) : (
+							<Link
+								href="/logowanie"
+								className="py-3 text-sm text-primary transition-[color] duration-200 ease-out hover-supported:hover:text-interactive"
+							>
+								Zaloguj się
+							</Link>
+						)}
 
-                    <button
-                        ref={triggerRef}
-                        type="button"
-                        className="md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 text-graphite-900 rounded-md hover-supported:hover:bg-rose-50 transition-[background-color] duration-150 ease-out"
-                        aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
-                        aria-expanded={menuOpen}
-                        aria-controls="mobile-nav"
-                        onClick={() => setMenuOpen((v) => !v)}
-                    >
-                        {menuOpen ? <X size={22} /> : <Menu size={22} />}
-                    </button>
-                </div>
-            </Container>
+						<Link
+							href="/rezerwacja"
+							className="px-7 py-3 rounded-full bg-interactive text-paper-200 text-sm transition-[background-color] duration-200 ease-out hover-supported:hover:bg-interactive-hover"
+						>
+							Zarezerwuj wizytę
+						</Link>
+					</div>
 
-            <AnimatePresence>
-                {menuOpen && (
-                    <motion.nav
-                        id="mobile-nav"
-                        aria-label="Główna nawigacja"
-                        className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-border-soft shadow-md overflow-hidden"
-                        initial={{opacity: 0, height: 0}}
-                        animate={{opacity: 1, height: "auto", transition: {duration: 0.22, ease: [0.23, 1, 0.32, 1]}}}
-                        exit={{opacity: 0, height: 0}}
-                        transition={{duration: 0.15, ease: [0.23, 1, 0.32, 1]}}
-                    >
-                        <Container className="py-2">
-                            {NAV_LINKS.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="block py-3.5 text-sm font-medium text-graphite-900 border-b border-border-soft hover-supported:hover:text-rose-600 transition-[color] duration-150 ease-out"
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
+					<button
+						ref={triggerRef}
+						type="button"
+						onClick={() => setMenuOpen((v) => !v)}
+						aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
+						aria-expanded={menuOpen}
+						aria-controls="mobile-nav"
+						className="md:hidden flex flex-col justify-center items-center gap-3 w-18 h-18 shrink-0 bg-transparent border-none cursor-pointer"
+					>
+						<span className={cn("block h-px w-10 bg-primary transition-transform duration-200", menuOpen && "translate-y-[6.5px] rotate-45")} />
+						<span className={cn("block h-px w-10 bg-primary transition-opacity duration-200", menuOpen && "opacity-0")} />
+						<span className={cn("block h-px w-10 bg-primary transition-transform duration-200", menuOpen && "-translate-y-[6.5px] -rotate-45")} />
+					</button>
+				</div>
 
-                            {customer ? (
-                                <Link
-                                    href="/konto"
-                                    className="flex items-center gap-2.5 py-3.5 text-sm font-medium text-graphite-900 border-b border-border-soft"
-                                >
-                                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-rose-300 to-rose-500 text-white font-serif font-medium text-[11px]">
-                                        {initials(customer)}
-                                    </span>
-                                    <span>Twoje konto · {customer.firstName}</span>
-                                </Link>
-                            ) : (
-                                <Link
-                                    href="/logowanie"
-                                    className="block py-3.5 text-sm font-medium text-graphite-900 border-b border-border-soft hover-supported:hover:text-rose-600 transition-[color] duration-150 ease-out"
-                                >
-                                    Zaloguj się
-                                </Link>
-                            )}
+				<AnimatePresence>
+					{menuOpen && (
+						<motion.nav
+							id="mobile-nav"
+							aria-label="Główna nawigacja"
+							className="md:hidden absolute inset-x-0 top-full mt-4 rounded-[12px] bg-surface border border-border-subtle shadow-lg p-6 flex flex-col gap-2 overflow-hidden"
+							initial={{opacity: 0, y: -8}}
+							animate={{opacity: 1, y: 0}}
+							exit={{opacity: 0, y: -8}}
+							transition={{duration: 0.22, ease: [0.23, 1, 0.32, 1]}}
+						>
+							{NAV_LINKS.map((l) => (
+								<Link
+									key={l.href}
+									href={l.href}
+									className="px-6 py-5 rounded-md text-primary transition-[background-color] duration-150 hover-supported:hover:bg-surface-muted"
+								>
+									{l.label}
+								</Link>
+							))}
 
-                            <div className="pt-3 pb-2">
-                                <Link
-                                    href="/rezerwacja"
-                                    className={cn(buttonStyles({size: "md"}), "w-full")}
-                                >
-                                    Zarezerwuj wizytę
-                                </Link>
-                            </div>
-                        </Container>
-                    </motion.nav>
-                )}
-            </AnimatePresence>
-        </header>
-    )
+							<Link
+								href={customer ? "/konto" : "/logowanie"}
+								className="px-6 py-5 rounded-md text-primary transition-[background-color] duration-150 hover-supported:hover:bg-surface-muted"
+							>
+								{customer ? `Twoje konto · ${customer.firstName}` : "Zaloguj się"}
+							</Link>
+
+							<Link
+								href="/rezerwacja"
+								className="mt-4 px-8 py-5 rounded-full bg-interactive text-paper-200 text-sm text-center transition-[background-color] duration-200 ease-out hover-supported:hover:bg-interactive-hover"
+							>
+								Zarezerwuj wizytę
+							</Link>
+						</motion.nav>
+					)}
+				</AnimatePresence>
+			</div>
+		</header>
+	)
 }
