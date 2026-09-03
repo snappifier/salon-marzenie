@@ -5,7 +5,7 @@ import {landing, site} from "@/lib/content"
 
 export function Hero() {
 	return (
-		<section id="top" className="w-full px-[7%] pt-[50px] pb-[clamp(48px,7vw,80px)]">
+		<section id="top" className="w-full px-[7%] pt-[60px] pb-[clamp(48px,7vw,80px)]">
 			<div className="mx-auto text-center animate-mz-fade">
 				<div className="w-full flex justify-center items-center pb-4 gap-6 mb-10">
 					<Image
@@ -22,12 +22,12 @@ export function Hero() {
 					</div>
 				</div>
 
-				<h1 className="font-display font-normal text-[clamp(40px,7vw,60px)] leading-[1.2] mb-12 tracking-[-0.01em] text-balance max-w-[760px] mx-auto">
+				<h1 className="font-display font-normal text-[clamp(40px,7vw,60px)] leading-[1.2] mb-10 tracking-[-0.01em] text-balance max-w-[760px] mx-auto">
 					{landing.hero.headline}{" "}
 					<em className="italic text-interactive">{landing.hero.headlineHighlight}</em>
 				</h1>
 
-				<p className="text-lg leading-10 text-secondary mx-auto mb-8 max-w-3xl text-balance">
+				<p className="sm:text-[18px] text-sm/6 sm:leading-8 text-secondary mx-auto mb-10 max-w-3xl text-balance">
 					{landing.hero.subtitle}
 				</p>
 
@@ -47,13 +47,13 @@ export function Hero() {
 				</div>
 			</div>
 
-			<div className="mt-[clamp(40px,6vw,64px)] animate-mz-fade-only relative w-full aspect-[21/9] min-h-[280px] rounded-lg border border-border-subtle overflow-hidden">
+			<div className="mt-[clamp(40px,6vw,64px)] animate-mz-fade-only relative w-full sm:w-[95%] mx-auto aspect-[21/9] min-h-[280px] rounded-lg border border-border-subtle overflow-hidden border">
 				<Image
 					src="/srodek_salon.jpg"
 					alt="Wnętrze salonu Marzenie"
 					fill
 					sizes="86vw"
-					className="object-cover brightness-65"
+					className="object-cover brightness-65 w-5/10"
 				/>
 			</div>
 		</section>

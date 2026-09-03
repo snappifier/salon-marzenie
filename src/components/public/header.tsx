@@ -1,4 +1,3 @@
-// src/components/public/header.tsx
 "use client"
 
 import {useEffect, useRef, useState} from "react"
@@ -7,6 +6,7 @@ import {usePathname} from "next/navigation"
 import {AnimatePresence, motion} from "motion/react"
 import {site} from "@/lib/content"
 import {cn} from "@/lib/cn"
+import { Menu } from 'lucide-react';
 
 export interface HeaderCustomer {
 	firstName: string
@@ -62,16 +62,16 @@ export function PublicHeader({customer}: Props) {
 	return (
 		<header ref={headerRef} className="sticky top-1 z-50 w-full px-[7%] pt-3">
 			<div className="relative">
-				<div className="w-full flex items-center justify-between px-8 py-2 rounded-[12px] bg-paper-400/60 backdrop-blur-md backdrop-saturate-150 shadow-xs">
+				<div className="relative w-full flex items-center justify-between px-6 md:px-8 py-2 rounded-[12px] bg-paper-500/60 backdrop-blur-md backdrop-saturate-150 shadow-xs">
 					<Link
 						href="/"
-						className="font-display text-[25px] tracking-tight shrink-0 text-primary"
+						className="font-display text-[25px] tracking-tight shrink-0 text-primary flex-start flex-1"
 						aria-label={`${site.salonName} - strona główna`}
 					>
 						{site.salonName}
 					</Link>
 
-					<nav className="hidden md:flex gap-10 items-center text-sm tracking-tight" aria-label="Główna nawigacja">
+					<nav className="hidden md:flex gap-10 flex-2 items-center justify-center text-sm tracking-tight" aria-label="Główna nawigacja">
 						{NAV_LINKS.map((l) => (
 							<Link
 								key={l.href}
@@ -83,7 +83,7 @@ export function PublicHeader({customer}: Props) {
 						))}
 					</nav>
 
-					<div className="hidden md:flex items-center gap-6">
+					<div className="hidden md:flex items-center justify-end gap-6 flex-1">
 						{customer ? (
 							<Link
 								href="/konto"
@@ -117,19 +117,15 @@ export function PublicHeader({customer}: Props) {
 						</Link>
 					</div>
 
-					<button
+					<Menu
 						ref={triggerRef}
 						type="button"
 						onClick={() => setMenuOpen((v) => !v)}
 						aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
 						aria-expanded={menuOpen}
 						aria-controls="mobile-nav"
-						className="md:hidden flex flex-col justify-center items-center gap-3 w-18 h-18 shrink-0 bg-transparent border-none cursor-pointer"
-					>
-						<span className={cn("block h-px w-10 bg-primary transition-transform duration-200", menuOpen && "translate-y-[6.5px] rotate-45")} />
-						<span className={cn("block h-px w-10 bg-primary transition-opacity duration-200", menuOpen && "opacity-0")} />
-						<span className={cn("block h-px w-10 bg-primary transition-transform duration-200", menuOpen && "-translate-y-[6.5px] -rotate-45")} />
-					</button>
+						className="md:hidden flex flex-col justify-center items-center gap-3 w-8 h-8 shrink-0 bg-transparent border-none cursor-pointer"
+					/>
 				</div>
 
 				<AnimatePresence>
